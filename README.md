@@ -31,6 +31,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [ ] Make HealthKit writing configurable
 - [ ] Fix HealthKit prompt strings in Info.plist
 - Keep display on while meditating (optionally)
+- Fetch start time of next calendar event and start a session up to that start time
 
 ### Project infrastructure
 
