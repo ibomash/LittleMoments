@@ -37,6 +37,8 @@ There are many possible directions to take this work. Below are some ideas, with
 - [ ] Pick an open source license and set up a Github repo
 - [ ] Set up an Apple Developer account to release the app
 - [ ] Make a simple "About" screen
+- [ ] Get a real app icon
+- Set up a web page?
 
 ### Widgets
 
@@ -52,4 +54,9 @@ There are many possible directions to take this work. Below are some ideas, with
 
 ### Shortcuts
 
-- Add support for shortcut actions to start a meditation without a duration or with a pre-specified duration
+- Add support for shortcut actions to start a meditation without a duration or with a pre-specified 
+
+## Credits
+
+- The initial alpha app icon is from DALL-E. I think it would be great to commission a human artist for a final app icon.
+- I used ChatGPT Pro to help create this (given no prior experience with Swift and SwiftUI).
