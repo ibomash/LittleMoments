@@ -11,7 +11,7 @@ import SwiftUI
 struct Little_MomentsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TimerStartView()
         }
     }
 }

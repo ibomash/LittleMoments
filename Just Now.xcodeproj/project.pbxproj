@@ -14,6 +14,11 @@
 		F34D43CE29FFDBC4007070A8 /* Little_MomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43CD29FFDBC4007070A8 /* Little_MomentsTests.swift */; };
 		F34D43D829FFDBC4007070A8 /* Little_MomentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43D729FFDBC4007070A8 /* Little_MomentsUITests.swift */; };
 		F34D43DA29FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43D929FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift */; };
+		F34D43E72A0049B5007070A8 /* TimerStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43E62A0049B5007070A8 /* TimerStartView.swift */; };
+		F34D43E92A0055DB007070A8 /* LargeBlueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43E82A0055DB007070A8 /* LargeBlueButtonView.swift */; };
+		F34D43EB2A0061BC007070A8 /* TimerRunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */; };
+		F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */; };
+		F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,16 +39,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F34D43B929FFDBC3007070A8 /* Little Moments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Little Moments.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43B929FFDBC3007070A8 /* Just Now.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Just Now.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsApp.swift; sourceTree = "<group>"; };
 		F34D43BE29FFDBC3007070A8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F34D43C029FFDBC4007070A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F34D43C329FFDBC4007070A8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Little MomentsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Just NowTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43CD29FFDBC4007070A8 /* Little_MomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsTests.swift; sourceTree = "<group>"; };
-		F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Little MomentsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43D329FFDBC4007070A8 /* Just NowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Just NowUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43D729FFDBC4007070A8 /* Little_MomentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITests.swift; sourceTree = "<group>"; };
 		F34D43D929FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F34D43E62A0049B5007070A8 /* TimerStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStartView.swift; sourceTree = "<group>"; };
+		F34D43E82A0055DB007070A8 /* LargeBlueButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeBlueButtonView.swift; sourceTree = "<group>"; };
+		F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningView.swift; sourceTree = "<group>"; };
+		F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
+		F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Just Now.entitlements"; sourceTree = "<group>"; };
+		F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +85,12 @@
 		F34D43B029FFDBC3007070A8 = {
 			isa = PBXGroup;
 			children = (
+				F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */,
+				F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */,
+				F34D43E62A0049B5007070A8 /* TimerStartView.swift */,
+				F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */,
+				F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */,
+				F34D43E82A0055DB007070A8 /* LargeBlueButtonView.swift */,
 				F34D43BB29FFDBC3007070A8 /* Little Moments */,
 				F34D43CC29FFDBC4007070A8 /* Little MomentsTests */,
 				F34D43D629FFDBC4007070A8 /* Little MomentsUITests */,
@@ -84,9 +101,9 @@
 		F34D43BA29FFDBC3007070A8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F34D43B929FFDBC3007070A8 /* Little Moments.app */,
-				F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */,
-				F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */,
+				F34D43B929FFDBC3007070A8 /* Just Now.app */,
+				F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */,
+				F34D43D329FFDBC4007070A8 /* Just NowUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,9 +147,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F34D43B829FFDBC3007070A8 /* Little Moments */ = {
+		F34D43B829FFDBC3007070A8 /* Just Now */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little Moments" */;
+			buildConfigurationList = F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just Now" */;
 			buildPhases = (
 				F34D43B529FFDBC3007070A8 /* Sources */,
 				F34D43B629FFDBC3007070A8 /* Frameworks */,
@@ -142,14 +159,14 @@
 			);
 			dependencies = (
 			);
-			name = "Little Moments";
+			name = "Just Now";
 			productName = "Little Moments";
-			productReference = F34D43B929FFDBC3007070A8 /* Little Moments.app */;
+			productReference = F34D43B929FFDBC3007070A8 /* Just Now.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F34D43C829FFDBC4007070A8 /* Little MomentsTests */ = {
+		F34D43C829FFDBC4007070A8 /* Just NowTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsTests" */;
+			buildConfigurationList = F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowTests" */;
 			buildPhases = (
 				F34D43C529FFDBC4007070A8 /* Sources */,
 				F34D43C629FFDBC4007070A8 /* Frameworks */,
@@ -160,14 +177,14 @@
 			dependencies = (
 				F34D43CB29FFDBC4007070A8 /* PBXTargetDependency */,
 			);
-			name = "Little MomentsTests";
+			name = "Just NowTests";
 			productName = "Little MomentsTests";
-			productReference = F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */;
+			productReference = F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		F34D43D229FFDBC4007070A8 /* Little MomentsUITests */ = {
+		F34D43D229FFDBC4007070A8 /* Just NowUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsUITests" */;
+			buildConfigurationList = F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowUITests" */;
 			buildPhases = (
 				F34D43CF29FFDBC4007070A8 /* Sources */,
 				F34D43D029FFDBC4007070A8 /* Frameworks */,
@@ -178,9 +195,9 @@
 			dependencies = (
 				F34D43D529FFDBC4007070A8 /* PBXTargetDependency */,
 			);
-			name = "Little MomentsUITests";
+			name = "Just NowUITests";
 			productName = "Little MomentsUITests";
-			productReference = F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */;
+			productReference = F34D43D329FFDBC4007070A8 /* Just NowUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -206,7 +223,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Little Moments" */;
+			buildConfigurationList = F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Just Now" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -219,9 +236,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F34D43B829FFDBC3007070A8 /* Little Moments */,
-				F34D43C829FFDBC4007070A8 /* Little MomentsTests */,
-				F34D43D229FFDBC4007070A8 /* Little MomentsUITests */,
+				F34D43B829FFDBC3007070A8 /* Just Now */,
+				F34D43C829FFDBC4007070A8 /* Just NowTests */,
+				F34D43D229FFDBC4007070A8 /* Just NowUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -257,7 +274,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F34D43EB2A0061BC007070A8 /* TimerRunningView.swift in Sources */,
 				F34D43BF29FFDBC3007070A8 /* ContentView.swift in Sources */,
+				F34D43E72A0049B5007070A8 /* TimerStartView.swift in Sources */,
+				F34D43E92A0055DB007070A8 /* LargeBlueButtonView.swift in Sources */,
+				F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */,
+				F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */,
 				F34D43BD29FFDBC3007070A8 /* Little_MomentsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,12 +306,12 @@
 /* Begin PBXTargetDependency section */
 		F34D43CB29FFDBC4007070A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F34D43B829FFDBC3007070A8 /* Little Moments */;
+			target = F34D43B829FFDBC3007070A8 /* Just Now */;
 			targetProxy = F34D43CA29FFDBC4007070A8 /* PBXContainerItemProxy */;
 		};
 		F34D43D529FFDBC4007070A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F34D43B829FFDBC3007070A8 /* Little Moments */;
+			target = F34D43B829FFDBC3007070A8 /* Just Now */;
 			targetProxy = F34D43D429FFDBC4007070A8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -414,11 +436,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Just Now.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Little Moments/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -429,7 +454,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Just-Now";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -442,11 +467,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Just Now.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Little Moments/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -457,7 +485,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Just-Now";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -480,7 +508,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Little Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Little Moments";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Just Now.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Just Now";
 			};
 			name = Debug;
 		};
@@ -499,7 +527,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Little Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Little Moments";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Just Now.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Just Now";
 			};
 			name = Release;
 		};
@@ -540,7 +568,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Little Moments" */ = {
+		F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Just Now" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43DB29FFDBC4007070A8 /* Debug */,
@@ -549,7 +577,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little Moments" */ = {
+		F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just Now" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43DE29FFDBC4007070A8 /* Debug */,
@@ -558,7 +586,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsTests" */ = {
+		F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43E129FFDBC4007070A8 /* Debug */,
@@ -567,7 +595,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsUITests" */ = {
+		F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43E429FFDBC4007070A8 /* Debug */,
