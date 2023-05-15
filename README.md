@@ -32,6 +32,12 @@ There are many possible directions to take this work. Below are some ideas, with
 - [ ] Fix HealthKit prompt strings in Info.plist
 - Keep display on while meditating (optionally)
 
+### Project infrastructure
+
+- [ ] Pick an open source license and set up a Github repo
+- [ ] Set up an Apple Developer account to release the app
+- [ ] Make a simple "About" screen
+
 ### Widgets
 
 - Design and implement a home screen widget with a prompt for starting meditation
