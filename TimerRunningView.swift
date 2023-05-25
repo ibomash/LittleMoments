@@ -18,31 +18,66 @@ struct TimerRunningView: View {
     
     var body: some View {
         VStack {
-//            ZStack {
-//                Circle()
-//                    .stroke(lineWidth: 20)
-//                    .opacity(0.2)
-//                    .foregroundColor(Color.blue)
-//
-//                Circle()
-//                    .trim(from: 0, to: timerViewModel.progress)
-//                    .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-//                    .foregroundColor(Color.blue)
-//                    .rotationEffect(Angle(degrees: 270))
-//                    // .animation(.linear)
-//
-//                Text("\(timerViewModel.timeRemaining)")
-//                    .font(.largeTitle)
-//                    .fontWeight(.bold)
-//            }
-//            .frame(width: 200, height: 200)
-            
-            Text("\(timerViewModel.timeElapsedFormatted)")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .frame(width: 200, height: 200)
-            
+            Spacer()
+
+            // Show elapsed time and a ring if we have a target time
+           ZStack {
+               Circle()
+                   .stroke(lineWidth: 10)
+                   .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
+                   .foregroundColor(Color.blue)
+                   .animation(.linear)
+
+               Circle()
+                   .trim(from: 0, to: timerViewModel.progress)
+                   .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
+                   .foregroundColor(Color.blue)
+                   .rotationEffect(Angle(degrees: 270))
+                   .animation(.linear)
+
+               Text("\(timerViewModel.timeElapsedFormatted)")
+                   .font(.largeTitle)
+                   .fontWeight(.bold)
+                   .frame(width: 200, height: 200)
+           }
+           .frame(width: 200, height: 200)
+           // Add some spacing
+              .padding(.bottom, 20)
+
+            Spacer()
+
+            // Bell controls
             HStack {
+                Button(action: {
+                    // TODO: Instead of just setting, this should toggle
+                    timerViewModel.bellDurationSeconds = 3 * 60
+                }) {
+                    Text("3")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: 80)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+
+                // Add padding to left-justify the previous button
+                .padding(.leading)
+            }
+
+            // Timer controls
+            HStack {
+                // Cancel button
+                Button(action: {
+                    timerViewModel.reset()
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "x.circle.fill")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                .padding()
+
                 Button(action: {
                     timerViewModel.isRunning.toggle()
                     if timerViewModel.isRunning {
@@ -68,10 +103,12 @@ struct TimerRunningView: View {
             }
         }
         .onAppear {
-            timerViewModel.start() // Set your desired initial time in minutes
+            timerViewModel.start()
         }
         .onDisappear {
-            timerViewModel.writeToHealthStore()
+            if timerViewModel.secondsElapsed > 0 {
+                timerViewModel.writeToHealthStore()
+            }
         }
     }
 }

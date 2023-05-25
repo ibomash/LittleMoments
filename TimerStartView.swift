@@ -18,24 +18,38 @@ struct TimerStartView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Select Meditation Duration")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 20)
+                Text("My prompt string")
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 20)
 
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 2), spacing: 20) {
-                    ForEach(durationOptions, id: \.self) { duration in
-                        LargeBlueButtonView(buttonText: "\(duration) min") {
-                            selectedDuration = duration
-                            showTimerRunningView = true
-                        }
+                Spacer()
+
+                HStack {
+                    Button(action: {
+                        showTimerRunningView = true
+                    }) {
+                        Image(systemName: "play.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 80)
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+                    .padding()
+                    
+                    LargeBlueButtonView(buttonText: "3") {
+                        // This does not work!
+                        // TODO: Use .sheet(item:) to specify the timing
+                        // And do we really need the local timerViewModel variable for something??
+                        // And: Fix how this button looks somehow.
+                        showTimerRunningView = true
+                        timerViewModel.bellDurationSeconds = 3 * 60
                     }
                 }
-                .padding(.horizontal, 20)
-                
-                Spacer()
             }
-            .navigationBarTitle("MeditateMe", displayMode: .large)
+            .navigationBarTitle("Just Now", displayMode: .large)
         }
         .sheet(isPresented: $showTimerRunningView) {
             TimerRunningView()
@@ -58,20 +72,3 @@ struct TimerStartView_Previews: PreviewProvider {
         TimerStartView()
     }
 }
-
-
-
-//
-//import SwiftUI
-//
-//struct TimerStartView: View {
-//    var body: some View {
-//        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-//    }
-//}
-//
-//struct TimerStartView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TimerStartView()
-//    }
-//}

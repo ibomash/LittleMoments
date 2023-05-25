@@ -22,14 +22,17 @@ There are many possible directions to take this work. Below are some ideas, with
 
 ### Basic session triggering and timing
 
-- [ ] Decide how the "launcher" screen should look and implement it
+- [x] Decide how the "launcher" screen should look and implement it
   - Just a prompt and a "start" button?
   - Launch right into a timer session?
   - "Start" button but also some duration options?
+  - [ ] Fix setting a bell duration when starting
+  - [ ] Fix how the buttons look on the "launcher" screen
 - [ ] Implement visual and audio feedback for a timer of a given duration
+- [ ] Ensure timer runs in the background (or figure out keeping screen on)
 - Allow duration to be specified on the timer screen?
 - [ ] Make HealthKit writing configurable
-- [ ] Fix HealthKit prompt strings in Info.plist
+- [ ] Update HealthKit prompt strings in Info.plist (finalize the language)
 - Keep display on while meditating (optionally)
 - Fetch start time of next calendar event and start a session up to that start time
 
@@ -40,6 +43,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [ ] Make a simple "About" screen
 - [ ] Get a real app icon
 - Set up a web page?
+- Fix the folder structure!
 
 ### Widgets
 

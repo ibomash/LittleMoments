@@ -10,12 +10,26 @@ import Foundation
 class TimerViewModel: ObservableObject {
     @Published var secondsElapsed: Int = 0
     @Published var isRunning: Bool = false
+    @Published var bellDurationSeconds: Int? = nil
     var timer: Timer? = nil
     
     var timeElapsedFormatted: String {
         let minutes = secondsElapsed / 60
         let seconds = secondsElapsed % 60
         return String(format: "%02d:%02d", minutes, seconds)
+    }
+
+    var hasEndTarget: Bool {
+        return bellDurationSeconds != nil
+    }
+
+    var progress: CGFloat {
+        guard let bellDuration = bellDurationSeconds else { return 0.0 }
+        // Cap the progress value at 1.0
+        if secondsElapsed >= bellDuration {
+            return 1.0
+        }
+        return CGFloat(secondsElapsed) / CGFloat(bellDuration)
     }
 
     func start() {
