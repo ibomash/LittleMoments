@@ -8,113 +8,113 @@
 import SwiftUI
 
 struct TimerRunningView: View {
-    @State private var progress: CGFloat = 0.0
-    @State private var isPaused: Bool = false
-    @State private var showIntermediateBell: Bool = false
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    //@ObservedObject private var timerViewModel = TimerViewModel()
-    @StateObject var timerViewModel = TimerViewModel()
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        VStack {
-            Spacer()
+  @State private var progress: CGFloat = 0.0
+  @State private var isPaused: Bool = false
+  @State private var showIntermediateBell: Bool = false
+  let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+  //@ObservedObject private var timerViewModel = TimerViewModel()
+  @StateObject var timerViewModel = TimerViewModel()
+  @Environment(\.presentationMode) var presentationMode
 
-            // Show elapsed time and a ring if we have a target time
-           ZStack {
-               Circle()
-                   .stroke(lineWidth: 10)
-                   .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
-                   .foregroundColor(Color.blue)
-                   .animation(.linear)
+  var body: some View {
+    VStack {
+      Spacer()
 
-               Circle()
-                   .trim(from: 0, to: timerViewModel.progress)
-                   .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
-                   .foregroundColor(Color.blue)
-                   .rotationEffect(Angle(degrees: 270))
-                   .animation(.linear)
+      // Show elapsed time and a ring if we have a target time
+      ZStack {
+        Circle()
+          .stroke(lineWidth: 10)
+          .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
+          .foregroundColor(Color.blue)
+          .animation(.linear)
 
-               Text("\(timerViewModel.timeElapsedFormatted)")
-                   .font(.largeTitle)
-                   .fontWeight(.bold)
-                   .frame(width: 200, height: 200)
-           }
-           .frame(width: 200, height: 200)
-           // Add some spacing
-              .padding(.bottom, 20)
+        Circle()
+          .trim(from: 0, to: timerViewModel.progress)
+          .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
+          .foregroundColor(Color.blue)
+          .rotationEffect(Angle(degrees: 270))
+          .animation(.linear)
 
-            Spacer()
+        Text("\(timerViewModel.timeElapsedFormatted)")
+          .font(.largeTitle)
+          .fontWeight(.bold)
+          .frame(width: 200, height: 200)
+      }
+      .frame(width: 200, height: 200)
+      // Add some spacing
+      .padding(.bottom, 20)
 
-            // Bell controls
-            HStack {
-                Button(action: {
-                    // TODO: Instead of just setting, this should toggle
-                    timerViewModel.bellDurationSeconds = 3 * 60
-                }) {
-                    Text("3")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, minHeight: 80)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
+      Spacer()
 
-                // Add padding to left-justify the previous button
-                .padding(.leading)
-            }
-
-            // Timer controls
-            HStack {
-                // Cancel button
-                Button(action: {
-                    timerViewModel.reset()
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "x.circle.fill")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                }
-                .padding()
-
-                Button(action: {
-                    timerViewModel.isRunning.toggle()
-                    if timerViewModel.isRunning {
-                        timerViewModel.start()
-                    } else {
-                        timerViewModel.pause()
-                    }
-                }) {
-                    Image(systemName: timerViewModel.isRunning ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                }
-                .padding()
-
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "stop.fill")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                }
-                .padding()
-            }
+      // Bell controls
+      HStack {
+        Button(action: {
+          // TODO: Instead of just setting, this should toggle
+          timerViewModel.bellDurationSeconds = 3 * 60
+        }) {
+          Text("3")
+            .font(.title2)
+            .fontWeight(.bold)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, minHeight: 80)
+            .background(Color.blue)
+            .cornerRadius(10)
         }
-        .onAppear {
+
+        // Add padding to left-justify the previous button
+        .padding(.leading)
+      }
+
+      // Timer controls
+      HStack {
+        // Cancel button
+        Button(action: {
+          timerViewModel.reset()
+          presentationMode.wrappedValue.dismiss()
+        }) {
+          Image(systemName: "x.circle.fill")
+            .resizable()
+            .frame(width: 24, height: 24)
+        }
+        .padding()
+
+        Button(action: {
+          timerViewModel.isRunning.toggle()
+          if timerViewModel.isRunning {
             timerViewModel.start()
+          } else {
+            timerViewModel.pause()
+          }
+        }) {
+          Image(systemName: timerViewModel.isRunning ? "pause.fill" : "play.fill")
+            .resizable()
+            .frame(width: 24, height: 24)
         }
-        .onDisappear {
-            if timerViewModel.secondsElapsed > 0 {
-                timerViewModel.writeToHealthStore()
-            }
+        .padding()
+
+        Button(action: {
+          presentationMode.wrappedValue.dismiss()
+        }) {
+          Image(systemName: "stop.fill")
+            .resizable()
+            .frame(width: 24, height: 24)
         }
+        .padding()
+      }
     }
+    .onAppear {
+      timerViewModel.start()
+    }
+    .onDisappear {
+      if timerViewModel.secondsElapsed > 0 {
+        timerViewModel.writeToHealthStore()
+      }
+    }
+  }
 }
 
 struct TimerRunningView_Previews: PreviewProvider {
-    static var previews: some View {
-        TimerRunningView()
-    }
+  static var previews: some View {
+    TimerRunningView()
+  }
 }

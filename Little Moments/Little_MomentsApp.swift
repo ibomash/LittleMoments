@@ -9,9 +9,9 @@ import SwiftUI
 
 @main
 struct Little_MomentsApp: App {
-    var body: some Scene {
-        WindowGroup {
-            TimerStartView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      TimerStartView()
     }
+  }
 }

@@ -154,6 +154,7 @@
 				F34D43B529FFDBC3007070A8 /* Sources */,
 				F34D43B629FFDBC3007070A8 /* Frameworks */,
 				F34D43B729FFDBC3007070A8 /* Resources */,
+				F3F647D02A1EEE3100A00D9A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -268,6 +269,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F3F647D02A1EEE3100A00D9A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PATH=$PATH:/opt/homebrew/bin\n\nif which swift-format >/dev/null; then\n    swift-format format -i -r \"${PROJECT_DIR}\"\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F34D43B529FFDBC3007070A8 /* Sources */ = {
