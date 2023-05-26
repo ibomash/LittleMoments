@@ -31,7 +31,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [ ] Implement visual and audio feedback for a timer of a given duration
 - [ ] Ensure timer runs in the background (or figure out keeping screen on)
 - Allow duration to be specified on the timer screen?
-- [ ] Make HealthKit writing configurable
+- [ ] Make HealthKit writing configurable (includes making a Settings page…)
 - [ ] Update HealthKit prompt strings in Info.plist (finalize the language)
 - Keep display on while meditating (optionally)
 - Fetch start time of next calendar event and start a session up to that start time
@@ -65,3 +65,4 @@ There are many possible directions to take this work. Below are some ideas, with
 
 - The initial alpha app icon is from DALL-E. I think it would be great to commission a human artist for a final app icon.
 - I used ChatGPT Pro to help create this (given no prior experience with Swift and SwiftUI).
+- Sound file downloaded from https://freesound.org/people/fauxpress/sounds/42095/

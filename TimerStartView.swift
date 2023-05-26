@@ -54,6 +54,8 @@ struct TimerStartView: View {
       TimerRunningView()
     }
     .onAppear {
+      SoundManager.playSound()
+
       HealthKitManager.shared.requestAuthorization { (success, error) in
         if success {
           print("Permission granted")
