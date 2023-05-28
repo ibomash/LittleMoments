@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct TimerRunningView: View {
-  @State private var progress: CGFloat = 0.0
   @State private var isPaused: Bool = false
   @State private var showIntermediateBell: Bool = false
   let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -26,14 +25,14 @@ struct TimerRunningView: View {
           .stroke(lineWidth: 10)
           .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
           .foregroundColor(Color.blue)
-          .animation(.linear)
+          .animation(.linear, value: timerViewModel.hasEndTarget)
 
         Circle()
           .trim(from: 0, to: timerViewModel.progress)
           .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
           .foregroundColor(Color.blue)
           .rotationEffect(Angle(degrees: 270))
-          .animation(.linear)
+          .animation(.linear, value: timerViewModel.progress)
 
         Text("\(timerViewModel.timeElapsedFormatted)")
           .font(.largeTitle)
@@ -50,7 +49,7 @@ struct TimerRunningView: View {
       HStack {
         Button(action: {
           // TODO: Instead of just setting, this should toggle
-          timerViewModel.bellDurationSeconds = 3 * 60
+          timerViewModel.scheduledAlert = OneTimeScheduledBellAlert(targetTimeInMin: 3)
         }) {
           Text("3")
             .font(.title2)

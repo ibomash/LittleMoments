@@ -10,7 +10,7 @@ import Foundation
 class TimerViewModel: ObservableObject {
   @Published var secondsElapsed: Int = 0
   @Published var isRunning: Bool = false
-  @Published var bellDurationSeconds: Int? = nil
+  @Published var scheduledAlert: ScheduledAlert?
   var timer: Timer? = nil
 
   var timeElapsedFormatted: String {
@@ -20,22 +20,23 @@ class TimerViewModel: ObservableObject {
   }
 
   var hasEndTarget: Bool {
-    return bellDurationSeconds != nil
+    if let scheduledAlert { return scheduledAlert.hasTarget } else { return false }
   }
 
   var progress: CGFloat {
-    guard let bellDuration = bellDurationSeconds else { return 0.0 }
-    // Cap the progress value at 1.0
-    if secondsElapsed >= bellDuration {
-      return 1.0
+    if !hasEndTarget {
+      return 0.0
     }
-    return CGFloat(secondsElapsed) / CGFloat(bellDuration)
+    return scheduledAlert?.getProgress(numSecondsElapsed: secondsElapsed) ?? 0.0
   }
 
   func start() {
     timer?.invalidate()
     timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-      self?.secondsElapsed += 1
+      if let self {
+        self.secondsElapsed += 1
+        self.scheduledAlert?.checkTrigger(numSecondsElapsed: self.secondsElapsed)
+      }
     }
     isRunning = true
   }

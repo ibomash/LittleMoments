@@ -28,7 +28,7 @@ There are many possible directions to take this work. Below are some ideas, with
   - "Start" button but also some duration options?
   - [ ] Fix setting a bell duration when starting
   - [ ] Fix how the buttons look on the "launcher" screen
-- [ ] Implement visual and audio feedback for a timer of a given duration
+- [x] Implement visual and audio feedback for a timer of a given duration
 - [ ] Ensure timer runs in the background (or figure out keeping screen on)
 - Allow duration to be specified on the timer screen?
 - [ ] Make HealthKit writing configurable (includes making a Settings page…)
@@ -59,7 +59,7 @@ There are many possible directions to take this work. Below are some ideas, with
 
 ### Shortcuts
 
-- Add support for shortcut actions to start a meditation without a duration or with a pre-specified 
+- Add support for shortcut actions to start a meditation without a duration or with a pre-specified duration (App Intents)
 
 ## Credits
 

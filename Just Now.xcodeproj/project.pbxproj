@@ -20,6 +20,7 @@
 		F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */; };
 		F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */; };
 		F3B114DA2A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif in Resources */ = {isa = PBXBuildFile; fileRef = F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */; };
+		F3B114DC2A22337A0066ADFA /* ScheduledBellAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */; };
 		F3F3CD792A1EFCEA009A20E1 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 		F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Just Now.entitlements"; sourceTree = "<group>"; };
 		F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "42095__fauxpress__bell-meditation.aif"; sourceTree = "<group>"; };
+		F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledBellAlert.swift; sourceTree = "<group>"; };
 		F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,6 +93,7 @@
 			children = (
 				F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */,
 				F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */,
+				F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */,
 				F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */,
 				F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */,
 				F34D43E62A0049B5007070A8 /* TimerStartView.swift */,
@@ -309,6 +312,7 @@
 				F34D43E92A0055DB007070A8 /* LargeBlueButtonView.swift in Sources */,
 				F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */,
 				F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */,
+				F3B114DC2A22337A0066ADFA /* ScheduledBellAlert.swift in Sources */,
 				F34D43BD29FFDBC3007070A8 /* Little_MomentsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

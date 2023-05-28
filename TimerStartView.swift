@@ -44,7 +44,6 @@ struct TimerStartView: View {
             // And do we really need the local timerViewModel variable for something??
             // And: Fix how this button looks somehow.
             showTimerRunningView = true
-            timerViewModel.bellDurationSeconds = 3 * 60
           }
         }
       }
@@ -54,8 +53,7 @@ struct TimerStartView: View {
       TimerRunningView()
     }
     .onAppear {
-      SoundManager.playSound()
-
+      // TODO: Do this in the Settings screen
       HealthKitManager.shared.requestAuthorization { (success, error) in
         if success {
           print("Permission granted")
