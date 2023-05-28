@@ -17,10 +17,18 @@ struct TimerStartView: View {
   var body: some View {
     NavigationView {
       VStack {
-        Text("My prompt string")
-          .font(.title)
-          .multilineTextAlignment(.center)
-          .padding(.vertical, 20)
+        Spacer()
+
+        Text(
+          "What if you deeply let go, in this moment, of the “self” that sat down to meditate just now?"
+        )
+        .font(.title)
+        .multilineTextAlignment(.center)
+        .padding(.vertical, 20)
+        .italic()
+        .lineSpacing(20)
+        .frame(minWidth: 200, maxWidth: 300)
+        .multilineTextAlignment(.center)
 
         Spacer()
 
@@ -32,22 +40,22 @@ struct TimerStartView: View {
               .resizable()
               .frame(width: 24, height: 24)
           }
-          .frame(maxWidth: .infinity, minHeight: 80)
+          .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
           .foregroundColor(.white)
           .background(Color.blue)
           .cornerRadius(10)
           .padding()
 
-          LargeBlueButtonView(buttonText: "3") {
-            // This does not work!
-            // TODO: Use .sheet(item:) to specify the timing
-            // And do we really need the local timerViewModel variable for something??
-            // And: Fix how this button looks somehow.
-            showTimerRunningView = true
-          }
+          //          LargeBlueButtonView(buttonText: "3") {
+          //            // This does not work!
+          //            // TODO: Use .sheet(item:) to specify the timing
+          //            // And do we really need the local timerViewModel variable for something??
+          //            // And: Fix how this button looks somehow.
+          //            showTimerRunningView = true
+          //          }
         }
       }
-      .navigationBarTitle("Just Now", displayMode: .large)
+      .frame(maxHeight: .infinity)
     }
     .sheet(isPresented: $showTimerRunningView) {
       TimerRunningView()

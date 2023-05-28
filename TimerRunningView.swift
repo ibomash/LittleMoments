@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TimerRunningView: View {
+  let timerButtonValues = [1, 3, 5, 10, 15, 20]
+  let buttonsPerRow = 3
   @State private var isPaused: Bool = false
   @State private var showIntermediateBell: Bool = false
   let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -46,23 +48,33 @@ struct TimerRunningView: View {
       Spacer()
 
       // Bell controls
-      HStack {
-        Button(action: {
-          // TODO: Instead of just setting, this should toggle
-          timerViewModel.scheduledAlert = OneTimeScheduledBellAlert(targetTimeInMin: 3)
-        }) {
-          Text("3")
-            .font(.title2)
-            .fontWeight(.bold)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, minHeight: 80)
-            .background(Color.blue)
-            .cornerRadius(10)
+      Grid {
+        ForEach(0..<2) { rowIndex in
+          GridRow {
+            ForEach(0..<buttonsPerRow) { columnIndex in
+              let index = rowIndex * buttonsPerRow + columnIndex
+              if index < timerButtonValues.count {
+                let buttonValue = timerButtonValues[index]
+                Button(action: {
+                  // Handle button tap
+                  timerViewModel.scheduledAlert = OneTimeScheduledBellAlert(
+                    targetTimeInMin: buttonValue)
+                }) {
+                  Text("\(buttonValue) min")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                }
+              } else {
+                Spacer()
+              }
+            }
+          }
         }
-
-        // Add padding to left-justify the previous button
-        .padding(.leading)
       }
+      .padding()
 
       // Timer controls
       HStack {
