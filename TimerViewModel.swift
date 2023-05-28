@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import UIKit
 
 class TimerViewModel: ObservableObject {
   @Published var secondsElapsed: Int = 0
   @Published var isRunning: Bool = false
   @Published var scheduledAlert: ScheduledAlert?
   var timer: Timer? = nil
+  var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
   var timeElapsedFormatted: String {
     let minutes = secondsElapsed / 60
@@ -38,20 +40,33 @@ class TimerViewModel: ObservableObject {
         self.scheduledAlert?.checkTrigger(numSecondsElapsed: self.secondsElapsed)
       }
     }
-    isRunning = true
+    self.backgroundTask = UIApplication.shared.beginBackgroundTask(
+      withName: "Timer Background Task"
+    ) {
+      UIApplication.shared.endBackgroundTask(self.backgroundTask)
+      self.backgroundTask = .invalid
+    }
   }
 
   func pause() {
     timer?.invalidate()
     timer = nil
-    isRunning = false
+    if backgroundTask != .invalid {
+      UIApplication.shared.endBackgroundTask(backgroundTask)
+      backgroundTask = .invalid
+    }
   }
 
   func reset() {
     timer?.invalidate()
     timer = nil
     secondsElapsed = 0
-    isRunning = false
+    timer?.invalidate()
+    timer = nil
+    if backgroundTask != .invalid {
+      UIApplication.shared.endBackgroundTask(backgroundTask)
+      backgroundTask = .invalid
+    }
   }
 
   func writeToHealthStore() {

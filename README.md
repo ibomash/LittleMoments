@@ -28,7 +28,8 @@ There are many possible directions to take this work. Below are some ideas, with
   - "Start" button but also some duration options?
   - Ability to set a bell duration when starting
 - [x] Implement visual and audio feedback for a timer of a given duration
-- [ ] Ensure timer runs in the background (or figure out keeping screen on)
+- [x] Ensure timer runs in the background (or figure out keeping screen on)
+  - [ ] Count by time deltas, not individual seconds (get rid of pausing?)
 - Allow duration to be specified on the timer screen?
 - [ ] Make HealthKit writing configurable (includes making a Settings page…)
 - [ ] Update HealthKit prompt strings in Info.plist (finalize the language)
