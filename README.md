@@ -34,7 +34,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [ ] Figure out where to allocate / deallocate sound memory
 - [ ] Make HealthKit writing configurable (includes making a Settings page…)
 - [ ] Update HealthKit prompt strings in Info.plist (finalize the language)
-- Keep display on while meditating (optionally)
+- [x] Keep display on while meditating (optionally)
 - Fetch start time of next calendar event and start a session up to that start time
 
 ### Project infrastructure

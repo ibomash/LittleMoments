@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct TimerRunningView: View {
   let timerButtonValues = [1, 3, 5, 10, 15, 20]
@@ -116,11 +117,13 @@ struct TimerRunningView: View {
     .onAppear {
       timerViewModel.start()
       SoundManager.playSound()
+      UIApplication.shared.isIdleTimerDisabled = true
     }
     .onDisappear {
       if timerViewModel.secondsElapsed > 0 {
         timerViewModel.writeToHealthStore()
       }
+      UIApplication.shared.isIdleTimerDisabled = false
     }
   }
 }
