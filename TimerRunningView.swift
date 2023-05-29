@@ -115,6 +115,7 @@ struct TimerRunningView: View {
     }
     .onAppear {
       timerViewModel.start()
+      SoundManager.playSound()
     }
     .onDisappear {
       if timerViewModel.secondsElapsed > 0 {

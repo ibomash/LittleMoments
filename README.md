@@ -31,6 +31,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Ensure timer runs in the background (or figure out keeping screen on)
   - [ ] Count by time deltas, not individual seconds (get rid of pausing?)
 - Allow duration to be specified on the timer screen?
+- [ ] Figure out where to allocate / deallocate sound memory
 - [ ] Make HealthKit writing configurable (includes making a Settings page…)
 - [ ] Update HealthKit prompt strings in Info.plist (finalize the language)
 - Keep display on while meditating (optionally)
