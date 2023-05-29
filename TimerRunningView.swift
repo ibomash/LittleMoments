@@ -8,13 +8,32 @@
 import SwiftUI
 import UIKit
 
+struct ImageButton: View {
+  let imageName: String
+  let buttonText: String
+  let action: () -> Void
+
+  var body: some View {
+    Button(action: action) {
+      HStack {
+        Image(systemName: imageName)
+        Text(buttonText)
+      }
+      .frame(maxWidth: .infinity)
+      .padding()
+      .foregroundColor(.white)
+      .background(Color.blue)
+      .cornerRadius(10)
+    }
+  }
+}
+
 struct TimerRunningView: View {
   let timerButtonValues = [1, 3, 5, 10, 15, 20]
   let buttonsPerRow = 3
   @State private var isPaused: Bool = false
   @State private var showIntermediateBell: Bool = false
   let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-  //@ObservedObject private var timerViewModel = TimerViewModel()
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
 
@@ -43,7 +62,6 @@ struct TimerRunningView: View {
           .frame(width: 200, height: 200)
       }
       .frame(width: 200, height: 200)
-      // Add some spacing
       .padding(.bottom, 20)
 
       Spacer()
@@ -80,37 +98,22 @@ struct TimerRunningView: View {
       // Timer controls
       HStack {
         // Cancel button
-        Button(action: {
-          timerViewModel.reset()
-          presentationMode.wrappedValue.dismiss()
-        }) {
-          Image(systemName: "x.circle.fill")
-            .resizable()
-            .frame(width: 24, height: 24)
-        }
-        .padding()
-
-        Button(action: {
-          timerViewModel.isRunning.toggle()
-          if timerViewModel.isRunning {
-            timerViewModel.start()
-          } else {
-            timerViewModel.pause()
+        ImageButton(
+          imageName: "xmark.circle.fill", buttonText: "Cancel",
+          action: {
+            timerViewModel.reset()
+            presentationMode.wrappedValue.dismiss()
           }
-        }) {
-          Image(systemName: timerViewModel.isRunning ? "pause.fill" : "play.fill")
-            .resizable()
-            .frame(width: 24, height: 24)
-        }
+        )
         .padding()
 
-        Button(action: {
-          presentationMode.wrappedValue.dismiss()
-        }) {
-          Image(systemName: "stop.fill")
-            .resizable()
-            .frame(width: 24, height: 24)
-        }
+        // Complete button
+        ImageButton(
+          imageName: "checkmark.circle.fill", buttonText: "Complete",
+          action: {
+            presentationMode.wrappedValue.dismiss()
+          }
+        )
         .padding()
       }
     }
@@ -120,9 +123,7 @@ struct TimerRunningView: View {
       UIApplication.shared.isIdleTimerDisabled = true
     }
     .onDisappear {
-      if timerViewModel.secondsElapsed > 0 {
-        timerViewModel.writeToHealthStore()
-      }
+      timerViewModel.writeToHealthStore()
       UIApplication.shared.isIdleTimerDisabled = false
     }
   }

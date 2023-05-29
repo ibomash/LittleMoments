@@ -29,7 +29,7 @@ There are many possible directions to take this work. Below are some ideas, with
   - Ability to set a bell duration when starting
 - [x] Implement visual and audio feedback for a timer of a given duration
 - [x] Ensure timer runs in the background (or figure out keeping screen on)
-  - [ ] Count by time deltas, not individual seconds (get rid of pausing?)
+  - [x] Count by time deltas, not individual seconds (get rid of pausing?)
 - Allow duration to be specified on the timer screen?
 - [x] Figure out where to allocate / deallocate sound memory
 - [ ] Make HealthKit writing configurable (includes making a Settings page…)
