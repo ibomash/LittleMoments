@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct Little_MomentsApp: App {
+  init() {
+    SoundManager.initialize()
+  }
+
   var body: some Scene {
     WindowGroup {
       TimerStartView()
     }
+  }
+
+  func onExitCommand() {
+    SoundManager.dispose()
   }
 }
