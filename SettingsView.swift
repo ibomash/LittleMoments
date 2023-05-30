@@ -12,7 +12,7 @@ struct SettingsView: View {
   @Environment(\.presentationMode)
   var presentationMode
 
-  @ObservedObject var settings: JustNowSettings = JustNowSettings()
+  @ObservedObject var settings: JustNowSettings = JustNowSettings.shared
 
   var body: some View {
     NavigationView {
@@ -53,18 +53,29 @@ struct SettingsView: View {
 }
 
 class JustNowSettings: ObservableObject {
-  @Published var writeToHealth: Bool = false {
-    didSet {
-      if writeToHealth {
+  static let shared = JustNowSettings()
+
+  private let userDefaults = UserDefaults.standard
+
+  var writeToHealth: Bool {
+    get {
+      return userDefaults.bool(forKey: "writeToHealth")
+    }
+    set {
+      if newValue {
         HealthKitManager.shared.requestAuthorization { (success, error) in
           if !success {
             print("HealthKit permission denied: ", error?.localizedDescription ?? "Unknown error")
-            self.writeToHealth = false
+            return
           }
         }
       }
+      userDefaults.set(newValue, forKey: "writeToHealth")
+      userDefaults.synchronize()
     }
   }
+
+  private init() {}
 }
 
 struct SettingsView_Previews: PreviewProvider {

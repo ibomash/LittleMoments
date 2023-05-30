@@ -65,6 +65,10 @@ class TimerViewModel: ObservableObject {
   }
 
   func writeToHealthStore() {
+    if !JustNowSettings.shared.writeToHealth {
+      return
+    }
+
     guard let startDate else { return }
     let endDate = Date()
 
