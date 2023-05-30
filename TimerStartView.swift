@@ -3,7 +3,6 @@
 //  Little Moments
 //
 //  Created by Illya Bomash on 5/1/23.
-//  With help from GPT-4.
 //
 
 import SwiftUI
@@ -61,15 +60,6 @@ struct TimerStartView: View {
     }
     .sheet(isPresented: $showSettingsView) {
       SettingsView()
-    }
-    .onAppear {
-      // TODO: Do this in the Settings screen
-      HealthKitManager.shared.requestAuthorization { (success, error) in
-        if !success {
-          print("HealthKit permission denied: ", error?.localizedDescription ?? "Unknown error")
-        }
-      }
-
     }
   }
 }

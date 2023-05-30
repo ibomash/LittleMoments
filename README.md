@@ -12,9 +12,7 @@ I envision a very simple and open-source iOS app with some basic widget and Shor
 
 ## What now
 
-The app's current state is pre-alpha.
-
-There is sufficient code to begin a timer and log the results to HealthKit, but it is not plugged into an end-to-end app experience yet.
+The app's current state is alpha. There are basic capabilities to start a session, set a bell, and log the results to Apple Health.
 
 ## Looking into the future
 
@@ -32,8 +30,8 @@ There are many possible directions to take this work. Below are some ideas, with
   - [x] Count by time deltas, not individual seconds (get rid of pausing?)
 - Allow duration to be specified on the timer screen?
 - [x] Figure out where to allocate / deallocate sound memory
-- [ ] Make HealthKit writing configurable (includes making a Settings page…)
-- [ ] Update HealthKit prompt strings in Info.plist (finalize the language)
+- [x] Make HealthKit writing configurable (includes making a Settings page…)
+- [x] Update HealthKit prompt strings in Info.plist (finalize the language)
 - [x] Keep display on while meditating (optionally)
 - Fetch start time of next calendar event and start a session up to that start time
 
@@ -41,10 +39,10 @@ There are many possible directions to take this work. Below are some ideas, with
 
 - [ ] Pick an open source license and set up a Github repo
 - [ ] Set up an Apple Developer account to release the app
-- [ ] Make a simple "About" screen
+- [ ] Make a simple "About" screen / update it for the source code location
 - [ ] Get a real app icon
 - Set up a web page?
-- Fix the folder structure!
+- [ ] Fix the folder structure!
 
 ### Widgets
 
