@@ -8,26 +8,6 @@
 import SwiftUI
 import UIKit
 
-struct ImageButton: View {
-  let imageName: String
-  let buttonText: String
-  let action: () -> Void
-
-  var body: some View {
-    Button(action: action) {
-      HStack {
-        Image(systemName: imageName)
-        Text(buttonText)
-      }
-      .frame(maxWidth: .infinity)
-      .padding()
-      .foregroundColor(.white)
-      .background(Color.blue)
-      .cornerRadius(10)
-    }
-  }
-}
-
 struct TimerRunningView: View {
   let timerButtonValues = [1, 3, 5, 10, 15, 20]
   let buttonsPerRow = 3

@@ -9,10 +9,8 @@
 import SwiftUI
 
 struct TimerStartView: View {
-  let durationOptions = [5, 10, 15, 20, 25, 30, 45, 60]  // in minutes
-  @State private var selectedDuration: Int = 0
   @State private var showTimerRunningView: Bool = false
-  @ObservedObject private var timerViewModel = TimerViewModel()
+  @State private var showSettingsView: Bool = false
 
   var body: some View {
     NavigationView {
@@ -34,25 +32,26 @@ struct TimerStartView: View {
 
         HStack {
           Button(action: {
-            showTimerRunningView = true
+            showSettingsView = true
           }) {
-            Image(systemName: "play.fill")
+            Image(systemName: "gear")
               .resizable()
-              .frame(width: 24, height: 24)
+              .frame(width: 36, height: 36)
           }
+          .frame(minWidth: 80, minHeight: 80, maxHeight: 80)
+          .padding()
+
+          ImageButton(
+            imageName: "play.fill", buttonText: "Start session",
+            action: {
+              showTimerRunningView = true
+            }
+          )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
           .foregroundColor(.white)
           .background(Color.blue)
           .cornerRadius(10)
           .padding()
-
-          //          LargeBlueButtonView(buttonText: "3") {
-          //            // This does not work!
-          //            // TODO: Use .sheet(item:) to specify the timing
-          //            // And do we really need the local timerViewModel variable for something??
-          //            // And: Fix how this button looks somehow.
-          //            showTimerRunningView = true
-          //          }
         }
       }
       .frame(maxHeight: .infinity)
@@ -60,13 +59,14 @@ struct TimerStartView: View {
     .sheet(isPresented: $showTimerRunningView) {
       TimerRunningView()
     }
+    .sheet(isPresented: $showSettingsView) {
+      SettingsView()
+    }
     .onAppear {
       // TODO: Do this in the Settings screen
       HealthKitManager.shared.requestAuthorization { (success, error) in
-        if success {
-          print("Permission granted")
-        } else {
-          print("Permission denied: ", error?.localizedDescription ?? "Unknown error")
+        if !success {
+          print("HealthKit permission denied: ", error?.localizedDescription ?? "Unknown error")
         }
       }
 
