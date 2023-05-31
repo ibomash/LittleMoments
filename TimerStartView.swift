@@ -12,7 +12,7 @@ struct TimerStartView: View {
   @State private var showSettingsView: Bool = false
 
   var body: some View {
-    NavigationView {
+    NavigationStack {
       VStack {
         Spacer()
 
