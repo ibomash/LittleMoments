@@ -1,5 +1,7 @@
 # Just Now app
 
+Copyright (c) 2023 Illya Bomash, licensed under a BSD-3 license.
+
 ## Why?
 
 Beyond longer sessions of formal meditation practice, many practitioners want to continue their journey "off the cushion" by (among other things) sprinkling short mindful glimpses throughout the day. Some will be brief recognitions of your "true self" in the middle of activity, but others may be brief meditations of a few minutes or less.
