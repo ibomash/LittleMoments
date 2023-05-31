@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		F34D43BD29FFDBC3007070A8 /* Little_MomentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */; };
-		F34D43BF29FFDBC3007070A8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43BE29FFDBC3007070A8 /* ContentView.swift */; };
 		F34D43C129FFDBC4007070A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F34D43C029FFDBC4007070A8 /* Assets.xcassets */; };
 		F34D43C429FFDBC4007070A8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F34D43C329FFDBC4007070A8 /* Preview Assets.xcassets */; };
 		F34D43CE29FFDBC4007070A8 /* Little_MomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43CD29FFDBC4007070A8 /* Little_MomentsTests.swift */; };
 		F34D43D829FFDBC4007070A8 /* Little_MomentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43D729FFDBC4007070A8 /* Little_MomentsUITests.swift */; };
 		F34D43DA29FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43D929FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift */; };
 		F34D43E72A0049B5007070A8 /* TimerStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43E62A0049B5007070A8 /* TimerStartView.swift */; };
-		F34D43E92A0055DB007070A8 /* LargeBlueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43E82A0055DB007070A8 /* LargeBlueButtonView.swift */; };
 		F34D43EB2A0061BC007070A8 /* TimerRunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */; };
 		F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */; };
 		F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */; };
@@ -46,7 +44,6 @@
 /* Begin PBXFileReference section */
 		F34D43B929FFDBC3007070A8 /* Just Now.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Just Now.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsApp.swift; sourceTree = "<group>"; };
-		F34D43BE29FFDBC3007070A8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F34D43C029FFDBC4007070A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F34D43C329FFDBC4007070A8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Just NowTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,7 +52,6 @@
 		F34D43D729FFDBC4007070A8 /* Little_MomentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITests.swift; sourceTree = "<group>"; };
 		F34D43D929FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F34D43E62A0049B5007070A8 /* TimerStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStartView.swift; sourceTree = "<group>"; };
-		F34D43E82A0055DB007070A8 /* LargeBlueButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeBlueButtonView.swift; sourceTree = "<group>"; };
 		F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningView.swift; sourceTree = "<group>"; };
 		F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Just Now.entitlements"; sourceTree = "<group>"; };
@@ -95,17 +91,7 @@
 		F34D43B029FFDBC3007070A8 = {
 			isa = PBXGroup;
 			children = (
-				F3759D562A253647001858F3 /* SettingsView.swift */,
-				F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */,
-				F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */,
-				F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */,
-				F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */,
 				F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */,
-				F34D43E62A0049B5007070A8 /* TimerStartView.swift */,
-				F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */,
-				F37EFAFC2A252F6800916DEE /* ImageButton.swift */,
-				F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */,
-				F34D43E82A0055DB007070A8 /* LargeBlueButtonView.swift */,
 				F34D43BB29FFDBC3007070A8 /* Little Moments */,
 				F34D43CC29FFDBC4007070A8 /* Little MomentsTests */,
 				F34D43D629FFDBC4007070A8 /* Little MomentsUITests */,
@@ -126,8 +112,16 @@
 		F34D43BB29FFDBC3007070A8 /* Little Moments */ = {
 			isa = PBXGroup;
 			children = (
+				F3759D562A253647001858F3 /* SettingsView.swift */,
+				F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */,
+				F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */,
+				F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */,
+				F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */,
+				F34D43E62A0049B5007070A8 /* TimerStartView.swift */,
+				F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */,
+				F37EFAFC2A252F6800916DEE /* ImageButton.swift */,
+				F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */,
 				F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */,
-				F34D43BE29FFDBC3007070A8 /* ContentView.swift */,
 				F34D43C029FFDBC4007070A8 /* Assets.xcassets */,
 				F34D43C229FFDBC4007070A8 /* Preview Content */,
 			);
@@ -313,9 +307,7 @@
 			files = (
 				F34D43EB2A0061BC007070A8 /* TimerRunningView.swift in Sources */,
 				F3F3CD792A1EFCEA009A20E1 /* SoundManager.swift in Sources */,
-				F34D43BF29FFDBC3007070A8 /* ContentView.swift in Sources */,
 				F34D43E72A0049B5007070A8 /* TimerStartView.swift in Sources */,
-				F34D43E92A0055DB007070A8 /* LargeBlueButtonView.swift in Sources */,
 				F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */,
 				F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */,
 				F37EFAFD2A252F6800916DEE /* ImageButton.swift in Sources */,
