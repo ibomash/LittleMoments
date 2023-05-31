@@ -5,40 +5,51 @@
 //  Created by Illya Bomash on 5/24/23.
 //
 
+import AVFoundation
 import AudioToolbox
 import Foundation
 
 class SoundManager {
-  static var bellSound: SystemSoundID = 0
+  static var soundURL: URL? = Bundle.main.url(
+    forResource: "42095__fauxpress__bell-meditation", withExtension: "aif")
+  static var audioPlayer: AVAudioPlayer?
 
   static func initialize() {
-    if bellSound != 0 {
+    if audioPlayer != nil {
       return
     }
 
-    if let soundURL = Bundle.main.url(
-      forResource: "42095__fauxpress__bell-meditation", withExtension: "aif")
-    {
-      AudioServicesCreateSystemSoundID(soundURL as CFURL, &SoundManager.bellSound)
-      print("Loaded my sound")
+    // Set the audio session category to playback
+    let audioSession = AVAudioSession.sharedInstance()
+    do {
+      try audioSession.setCategory(.playback)
+    } catch {
+      print("Error setting audio session category: \(error.localizedDescription)")
+    }
+
+    // Create an AVAudioPlayer instance and play the audio file
+    if let soundURL {
+      do {
+        audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+      } catch {
+        print("Error playing audio: \(error.localizedDescription)")
+      }
     } else {
-      print("Could not load my sound")
+      print("Could not find sound file")
     }
   }
 
   static func playSound() {
-    if bellSound == 0 {
-      print("Sound not loaded")
+    guard let audioPlayer else {
+      print("Audio player not initialized")
       return
     }
-
-    AudioServicesPlaySystemSound(SoundManager.bellSound)
+    if !audioPlayer.play() {
+      print("Error playing audio")
+    }
   }
 
   static func dispose() {
-    if bellSound != 0 {
-      AudioServicesDisposeSystemSoundID(bellSound)
-      bellSound = 0
-    }
+    audioPlayer = nil
   }
 }

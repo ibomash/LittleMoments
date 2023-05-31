@@ -31,7 +31,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Make HealthKit writing configurable (includes making a Settings page…)
 - [x] Update HealthKit prompt strings in Info.plist (finalize the language)
 - [x] Keep display on while meditating (optionally)
-- [ ] Add vibrations and/or decide to have the sound play even if the phone is muted
+- [x] Add vibrations and/or decide to have the sound play even if the phone is muted
 
 ### Project infrastructure
 

@@ -22,12 +22,15 @@ struct SettingsView: View {
         }
         Section(header: Text("About")) {
           Text("Coded by Illya Bomash in 2023.")
-            if let url = URL(string: "https://github.com/ibomash/LittleMoments") {
-                Link(destination: url) {
-                    Text("Code available on GitHub.")
-                }
+          if let url = URL(string: "https://github.com/ibomash/LittleMoments") {
+            Link(destination: url) {
+              Text("Code available on GitHub.")
             }
-          if let attributedString = try? AttributedString(markdown: "Enjoying it? Please offer _dana_ to teachers whose teachings resonate with you, or to people doing good things in your local community.") {
+          }
+          if let attributedString = try? AttributedString(
+            markdown:
+              "Enjoying it? Please offer _dana_ to teachers whose teachings resonate with you, or to people doing good things in your local community."
+          ) {
             Text(attributedString)
           }
 
