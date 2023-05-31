@@ -20,11 +20,15 @@ struct SettingsView: View {
         Section(header: Text("Health")) {
           Toggle(isOn: $settings.writeToHealth, label: { Text("Write sessions to Health") })
         }
-
         Section(header: Text("About")) {
           Text("Coded by Illya Bomash in 2023.")
+            if let url = URL(string: "https://github.com/ibomash/LittleMoments") {
+                Link(destination: url) {
+                    Text("Code available on GitHub.")
+                }
+            }
           Text(
-            "Enjoying it? Please offer dana to teachers whose teachings resonate with you, or to people trying to do well in your local community."
+            "Enjoying it? Please offer dana to teachers whose teachings resonate with you, or to people doing good things in your local community."
           )
         }
 

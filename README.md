@@ -1,4 +1,4 @@
-# Just Now app
+# Little Moments app
 
 Copyright (c) 2023 Illya Bomash, licensed under a BSD-3 license.
 
@@ -23,28 +23,24 @@ There are many possible directions to take this work. Below are some ideas, with
 ### Basic session triggering and timing
 
 - [x] Decide how the "launcher" screen should look and implement it
-  - Just a prompt and a "start" button?
-  - Launch right into a timer session?
-  - "Start" button but also some duration options?
-  - Ability to set a bell duration when starting
 - [x] Implement visual and audio feedback for a timer of a given duration
 - [x] Ensure timer runs in the background (or figure out keeping screen on)
   - [x] Count by time deltas, not individual seconds (get rid of pausing?)
-- Allow duration to be specified on the timer screen?
+- [x] Allow duration to be specified on the timer screen
 - [x] Figure out where to allocate / deallocate sound memory
 - [x] Make HealthKit writing configurable (includes making a Settings page…)
 - [x] Update HealthKit prompt strings in Info.plist (finalize the language)
 - [x] Keep display on while meditating (optionally)
-- Fetch start time of next calendar event and start a session up to that start time
+- [ ] Add vibrations and/or decide to have the sound play even if the phone is muted
 
 ### Project infrastructure
 
-- [ ] Pick an open source license and set up a Github repo
+- [x] Pick an open source license and set up a Github repo
 - [ ] Set up an Apple Developer account to release the app
-- [ ] Make a simple "About" screen / update it for the source code location
+- [x] Make a simple "About" screen / update it for the source code location
 - [ ] Get a real app icon
 - Set up a web page?
-- [ ] Fix the folder structure!
+- [x] Fix the folder structure
 
 ### Widgets
 
@@ -65,5 +61,5 @@ There are many possible directions to take this work. Below are some ideas, with
 ## Credits
 
 - The initial alpha app icon is from DALL-E. I think it would be great to commission a human artist for a final app icon.
-- I used ChatGPT Pro to help create this (given no prior experience with Swift and SwiftUI).
+- I used ChatGPT Plus to help create this (given no prior experience with Swift and SwiftUI).
 - Sound file downloaded from https://freesound.org/people/fauxpress/sounds/42095/
