@@ -27,9 +27,10 @@ struct SettingsView: View {
                     Text("Code available on GitHub.")
                 }
             }
-          Text(
-            "Enjoying it? Please offer dana to teachers whose teachings resonate with you, or to people doing good things in your local community."
-          )
+          if let attributedString = try? AttributedString(markdown: "Enjoying it? Please offer _dana_ to teachers whose teachings resonate with you, or to people doing good things in your local community.") {
+            Text(attributedString)
+          }
+
         }
 
         Section(header: Text("Credits")) {
