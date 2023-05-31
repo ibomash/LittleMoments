@@ -15,15 +15,12 @@ struct ImageButton: View {
 
   var body: some View {
     Button(action: action) {
-      HStack {
-        Image(systemName: imageName)
-        Text(buttonText)
-      }
-      .frame(maxWidth: .infinity)
-      .padding()
-      .foregroundColor(.white)
-      .background(Color.blue)
-      .cornerRadius(10)
+      Label(buttonText, systemImage: imageName)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .foregroundColor(.white)
+        .background(Color.blue)
+        .cornerRadius(10)
     }
   }
 }
