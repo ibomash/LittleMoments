@@ -42,19 +42,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F34D43B929FFDBC3007070A8 /* Just Now.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Just Now.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43B929FFDBC3007070A8 /* Little Moments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Little Moments.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsApp.swift; sourceTree = "<group>"; };
 		F34D43C029FFDBC4007070A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F34D43C329FFDBC4007070A8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Just NowTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Little MomentsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43CD29FFDBC4007070A8 /* Little_MomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsTests.swift; sourceTree = "<group>"; };
-		F34D43D329FFDBC4007070A8 /* Just NowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Just NowUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Little MomentsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43D729FFDBC4007070A8 /* Little_MomentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITests.swift; sourceTree = "<group>"; };
 		F34D43D929FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F34D43E62A0049B5007070A8 /* TimerStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStartView.swift; sourceTree = "<group>"; };
 		F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningView.swift; sourceTree = "<group>"; };
 		F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
-		F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Just Now.entitlements"; sourceTree = "<group>"; };
+		F34D43EE2A0F2A4F007070A8 /* Little Moments.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Little Moments.entitlements"; sourceTree = "<group>"; };
 		F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		F3759D562A253647001858F3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F37EFAFC2A252F6800916DEE /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 		F34D43B029FFDBC3007070A8 = {
 			isa = PBXGroup;
 			children = (
-				F34D43EE2A0F2A4F007070A8 /* Just Now.entitlements */,
+				F34D43EE2A0F2A4F007070A8 /* Little Moments.entitlements */,
 				F34D43BB29FFDBC3007070A8 /* Little Moments */,
 				F34D43CC29FFDBC4007070A8 /* Little MomentsTests */,
 				F34D43D629FFDBC4007070A8 /* Little MomentsUITests */,
@@ -102,9 +102,9 @@
 		F34D43BA29FFDBC3007070A8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F34D43B929FFDBC3007070A8 /* Just Now.app */,
-				F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */,
-				F34D43D329FFDBC4007070A8 /* Just NowUITests.xctest */,
+				F34D43B929FFDBC3007070A8 /* Little Moments.app */,
+				F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */,
+				F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -156,9 +156,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F34D43B829FFDBC3007070A8 /* Just Now */ = {
+		F34D43B829FFDBC3007070A8 /* Little Moments */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just Now" */;
+			buildConfigurationList = F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little Moments" */;
 			buildPhases = (
 				F34D43B529FFDBC3007070A8 /* Sources */,
 				F34D43B629FFDBC3007070A8 /* Frameworks */,
@@ -169,14 +169,14 @@
 			);
 			dependencies = (
 			);
-			name = "Just Now";
+			name = "Little Moments";
 			productName = "Little Moments";
-			productReference = F34D43B929FFDBC3007070A8 /* Just Now.app */;
+			productReference = F34D43B929FFDBC3007070A8 /* Little Moments.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F34D43C829FFDBC4007070A8 /* Just NowTests */ = {
+		F34D43C829FFDBC4007070A8 /* Little MomentsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowTests" */;
+			buildConfigurationList = F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsTests" */;
 			buildPhases = (
 				F34D43C529FFDBC4007070A8 /* Sources */,
 				F34D43C629FFDBC4007070A8 /* Frameworks */,
@@ -187,14 +187,14 @@
 			dependencies = (
 				F34D43CB29FFDBC4007070A8 /* PBXTargetDependency */,
 			);
-			name = "Just NowTests";
+			name = "Little MomentsTests";
 			productName = "Little MomentsTests";
-			productReference = F34D43C929FFDBC4007070A8 /* Just NowTests.xctest */;
+			productReference = F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		F34D43D229FFDBC4007070A8 /* Just NowUITests */ = {
+		F34D43D229FFDBC4007070A8 /* Little MomentsUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowUITests" */;
+			buildConfigurationList = F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsUITests" */;
 			buildPhases = (
 				F34D43CF29FFDBC4007070A8 /* Sources */,
 				F34D43D029FFDBC4007070A8 /* Frameworks */,
@@ -205,9 +205,9 @@
 			dependencies = (
 				F34D43D529FFDBC4007070A8 /* PBXTargetDependency */,
 			);
-			name = "Just NowUITests";
+			name = "Little MomentsUITests";
 			productName = "Little MomentsUITests";
-			productReference = F34D43D329FFDBC4007070A8 /* Just NowUITests.xctest */;
+			productReference = F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -233,7 +233,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Just Now" */;
+			buildConfigurationList = F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Little Moments" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -246,9 +246,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F34D43B829FFDBC3007070A8 /* Just Now */,
-				F34D43C829FFDBC4007070A8 /* Just NowTests */,
-				F34D43D229FFDBC4007070A8 /* Just NowUITests */,
+				F34D43B829FFDBC3007070A8 /* Little Moments */,
+				F34D43C829FFDBC4007070A8 /* Little MomentsTests */,
+				F34D43D229FFDBC4007070A8 /* Little MomentsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -339,12 +339,12 @@
 /* Begin PBXTargetDependency section */
 		F34D43CB29FFDBC4007070A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F34D43B829FFDBC3007070A8 /* Just Now */;
+			target = F34D43B829FFDBC3007070A8 /* Little Moments */;
 			targetProxy = F34D43CA29FFDBC4007070A8 /* PBXContainerItemProxy */;
 		};
 		F34D43D529FFDBC4007070A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F34D43B829FFDBC3007070A8 /* Just Now */;
+			target = F34D43B829FFDBC3007070A8 /* Little Moments */;
 			targetProxy = F34D43D429FFDBC4007070A8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -469,7 +469,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Just Now.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Little Moments.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Little Moments/Preview Content\"";
@@ -488,7 +488,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Just-Now";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -501,7 +501,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Just Now.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Little Moments.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Little Moments/Preview Content\"";
@@ -520,7 +520,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Just-Now";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -543,7 +543,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Just Now.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Just Now";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Little Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Little Moments";
 			};
 			name = Debug;
 		};
@@ -562,7 +562,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Just Now.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Just Now";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Little Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Little Moments";
 			};
 			name = Release;
 		};
@@ -603,7 +603,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Just Now" */ = {
+		F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "Little Moments" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43DB29FFDBC4007070A8 /* Debug */,
@@ -612,7 +612,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just Now" */ = {
+		F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little Moments" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43DE29FFDBC4007070A8 /* Debug */,
@@ -621,7 +621,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowTests" */ = {
+		F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43E129FFDBC4007070A8 /* Debug */,
@@ -630,7 +630,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Just NowUITests" */ = {
+		F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F34D43E429FFDBC4007070A8 /* Debug */,
