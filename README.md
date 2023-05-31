@@ -14,49 +14,49 @@ I envision a very simple and open-source iOS app with some basic widget and Shor
 
 ## What now
 
-The app's current state is alpha. There are basic capabilities to start a session, set a bell, and log the results to Apple Health.
+The app's current state is beta. There are basic capabilities to start a session, set a bell, and log the results to Apple Health. It's usable as a basic meditation timer.
 
 ## Looking into the future
 
 There are many possible directions to take this work. Below are some ideas, with an attempt to mark with check boxes goals for a 1.0 release.
 
-### Basic session triggering and timing
-
-- [x] Decide how the "launcher" screen should look and implement it
-- [x] Implement visual and audio feedback for a timer of a given duration
-- [x] Ensure timer runs in the background (or figure out keeping screen on)
-  - [x] Count by time deltas, not individual seconds (get rid of pausing?)
-- [x] Allow duration to be specified on the timer screen
-- [x] Figure out where to allocate / deallocate sound memory
-- [x] Make HealthKit writing configurable (includes making a Settings page…)
-- [x] Update HealthKit prompt strings in Info.plist (finalize the language)
-- [x] Keep display on while meditating (optionally)
-- [x] Add vibrations and/or decide to have the sound play even if the phone is muted
+### ✅ Basic session triggering and timing
 
 ### Project infrastructure
 
 - [x] Pick an open source license and set up a Github repo
-- [ ] Set up an Apple Developer account to release the app
+- [x] Set up an Apple Developer account to release the app
 - [x] Make a simple "About" screen / update it for the source code location
+- [ ] Share via TestFlight
 - [ ] Get a real app icon
-- Set up a web page?
-- [x] Fix the folder structure
+- Set up a web page? (Privacy policy?)
+- [ ] Go through the app submission process
+
+### Better session triggering and timing
+
+- Do a better job with duration buttons being toggles or showing which duration is selected
+- Support periodic bell reminders (e.g. every 5 minutes)?
+- Haptics alongside the bells?
 
 ### Widgets
 
 - Design and implement a home screen widget with a prompt for starting meditation
   - A rotating prompt phrase?
-  - Time since last meditation or number of sessions so far today?
+  - Time since last meditation?
 - Design and implement a lock screen widget with a prompt for starting meditation
 
 ### Prompting
 
-- Explore what kinds of "prompts" for brief glimpses are desired
-- Allow users to customize one or more sets of "prompts" to help enter the right space for a glimpse
+- Explore what kinds of "prompts" for brief glimpses are desired (e.g. a reminder phrase on the launch screen)
+- Allow users to customize one or more sets of "prompts" to help enter the right space for a glimpse?
 
 ### Shortcuts
 
 - Add support for shortcut actions to start a meditation without a duration or with a pre-specified duration (App Intents)
+
+### Live Activities for mindfulness reminders
+
+- Ability to start a Mindful Reminders live activity with periodic alerts, e.g. a chime / haptic feedback every 15 min, or every 15 sec
 
 ## Credits
 
