@@ -17,6 +17,7 @@
 		F34D43EB2A0061BC007070A8 /* TimerRunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */; };
 		F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */; };
 		F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */; };
+		F36AB24A2A28F1F900CD8EB5 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36AB2492A28F1F900CD8EB5 /* Launch Screen.storyboard */; };
 		F3759D572A253647001858F3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3759D562A253647001858F3 /* SettingsView.swift */; };
 		F37EFAFD2A252F6800916DEE /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37EFAFC2A252F6800916DEE /* ImageButton.swift */; };
 		F3B114DA2A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif in Resources */ = {isa = PBXBuildFile; fileRef = F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */; };
@@ -56,6 +57,7 @@
 		F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		F34D43EE2A0F2A4F007070A8 /* Little Moments.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Little Moments.entitlements"; sourceTree = "<group>"; };
 		F34D43EF2A0F2B1F007070A8 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		F36AB2492A28F1F900CD8EB5 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		F3759D562A253647001858F3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F37EFAFC2A252F6800916DEE /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "42095__fauxpress__bell-meditation.aif"; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				F37EFAFC2A252F6800916DEE /* ImageButton.swift */,
 				F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */,
 				F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */,
+				F36AB2492A28F1F900CD8EB5 /* Launch Screen.storyboard */,
 				F34D43C029FFDBC4007070A8 /* Assets.xcassets */,
 				F34D43C229FFDBC4007070A8 /* Preview Content */,
 			);
@@ -260,6 +263,7 @@
 			files = (
 				F34D43C429FFDBC4007070A8 /* Preview Assets.xcassets in Resources */,
 				F34D43C129FFDBC4007070A8 /* Assets.xcassets in Resources */,
+				F36AB24A2A28F1F900CD8EB5 /* Launch Screen.storyboard in Resources */,
 				F3B114DA2A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -476,6 +480,8 @@
 				DEVELOPMENT_TEAM = Z5NU48NAF9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Little Moments";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -487,7 +493,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -508,6 +514,8 @@
 				DEVELOPMENT_TEAM = Z5NU48NAF9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Little Moments";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -519,7 +527,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
