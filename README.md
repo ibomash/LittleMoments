@@ -54,9 +54,13 @@ There are many possible directions to take this work. Below are some ideas, with
 
 - Add support for shortcut actions to start a meditation without a duration or with a pre-specified duration (App Intents)
 
+### Multi-device
+
+- This app runs on iPad and macOS, but can't write to HealthKit on those devices, I think. We could add a simple database of past sessions to the app and sync it across devices using CloudKit, and write to HealthKit from iPhones.
+
 ### Live Activities for mindfulness reminders
 
-- Ability to start a Mindful Reminders live activity with periodic alerts, e.g. a chime / haptic feedback every 15 min, or every 15 sec
+- Ability to start a Mindful Reminders live activity with periodic alerts, e.g. a chime / haptic feedback every 15 min, or every 15 sec. Maybe this is a different "kind" of session? Maybe it's a different app?
 
 ## Credits
 
