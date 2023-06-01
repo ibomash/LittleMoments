@@ -20,6 +20,11 @@ struct SettingsView: View {
         Section(header: Text("Health")) {
           Toggle(isOn: $settings.writeToHealth, label: { Text("Write sessions to Health") })
         }
+
+        Section(header: Text("Sounds")) {
+          Toggle(isOn: $settings.ringBellAtStart, label: { Text("Ring bell at start of session") })
+        }
+
         Section(header: Text("About")) {
           Text("Coded by Illya Bomash in 2023.")
           if let url = URL(string: "https://github.com/ibomash/LittleMoments") {
@@ -65,7 +70,8 @@ class JustNowSettings: ObservableObject {
 
   private let userDefaults = UserDefaults.standard
 
-  var writeToHealth: Bool {
+  var writeToHealth: Bool
+  {
     get {
       return userDefaults.bool(forKey: "writeToHealth")
     }
@@ -79,6 +85,20 @@ class JustNowSettings: ObservableObject {
         }
       }
       userDefaults.set(newValue, forKey: "writeToHealth")
+      userDefaults.synchronize()
+    }
+  }
+
+  var ringBellAtStart: Bool {
+    get {
+      if let value = userDefaults.object(forKey: "ringBellAtStart") as? Bool {
+        return value
+      } else {
+        return true  // Default value
+      }
+    }
+    set {
+      userDefaults.set(newValue, forKey: "ringBellAtStart")
       userDefaults.synchronize()
     }
   }

@@ -99,8 +99,10 @@ struct TimerRunningView: View {
     }
     .onAppear {
       timerViewModel.start()
-      SoundManager.playSound()
       UIApplication.shared.isIdleTimerDisabled = true
+      if JustNowSettings.shared.ringBellAtStart {
+        SoundManager.playSound()
+      }
     }
     .onDisappear {
       timerViewModel.writeToHealthStore()
