@@ -10,8 +10,6 @@ import UIKit
 
 struct TimerRunningView: View {
   let buttonsPerRow = 3
-  // We don't need this?
-  let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
 
