@@ -19,11 +19,13 @@ class TimerViewModel: ObservableObject {
   private var startDate: Date? = nil
   var timer: Timer? = nil
   var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-  @Published var timeElapsedFormatted: String = "0:00"  // TODO: Don't publish this; make it the view's job to update regularly.
+  var timeElapsedFormatted: String {
+    return getTimeElapsedFormatted()
+  }
 
-  var secondsElapsed: Int {
+  var secondsElapsed: CGFloat {
     guard let startDate else { return 0 }
-    return Int(-startDate.timeIntervalSinceNow)
+    return -startDate.timeIntervalSinceNow
   }
 
   // Options for and actually scheduled "end time" alert
@@ -38,12 +40,13 @@ class TimerViewModel: ObservableObject {
     if !hasEndTarget {
       return 0.0
     }
-    return scheduledAlert?.getProgress(numSecondsElapsed: secondsElapsed) ?? 0.0
+    return scheduledAlert?.getProgress(secondsElapsed: secondsElapsed) ?? 0.0
   }
 
   func getTimeElapsedFormatted() -> String {
-    let minutes = secondsElapsed / 60
-    let seconds = secondsElapsed % 60
+    let fullSecondsElapsed = Int(secondsElapsed)
+    let minutes = fullSecondsElapsed / 60
+    let seconds = fullSecondsElapsed % 60
     return String(format: "%d:%02d", minutes, seconds)
   }
 
@@ -52,8 +55,7 @@ class TimerViewModel: ObservableObject {
     startDate = Date()
     timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
       if let self {
-        self.scheduledAlert?.checkTrigger(numSecondsElapsed: self.secondsElapsed)
-        self.timeElapsedFormatted = self.getTimeElapsedFormatted()
+        self.scheduledAlert?.checkTrigger(secondsElapsed: self.secondsElapsed)
       }
     }
     self.backgroundTask = UIApplication.shared.beginBackgroundTask(

@@ -11,8 +11,8 @@ protocol ScheduledAlert: Equatable {
   var name: String { get }
   var hasTarget: Bool { get }
 
-  func getProgress(numSecondsElapsed: Int) -> CGFloat
-  func checkTrigger(numSecondsElapsed: Int)
+  func getProgress(secondsElapsed: CGFloat) -> CGFloat
+  func checkTrigger(secondsElapsed: CGFloat)
 }
 
 class OneTimeScheduledBellAlert: ScheduledAlert {
@@ -21,33 +21,33 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
       && (lhs.hasTarget == rhs.hasTarget)
   }
 
-  let targetTimeInSec: Int
+  let targetTimeInSec: CGFloat
   let name: String
   var hasTriggered: Bool = false
   let hasTarget: Bool = true
 
-  func getProgress(numSecondsElapsed: Int) -> CGFloat {
-    if numSecondsElapsed > targetTimeInSec {
+  func getProgress(secondsElapsed: CGFloat) -> CGFloat {
+    if secondsElapsed > targetTimeInSec {
       return 1.0
     }
-    return CGFloat(numSecondsElapsed) / CGFloat(targetTimeInSec)
+    return CGFloat(secondsElapsed) / CGFloat(targetTimeInSec)
   }
 
   init(targetTimeInSec: Int, name: String) {
-    self.targetTimeInSec = targetTimeInSec
+    self.targetTimeInSec = CGFloat(targetTimeInSec)
     self.name = name
   }
 
   init(targetTimeInMin: Int) {
-    self.targetTimeInSec = targetTimeInMin * 60
+    self.targetTimeInSec = CGFloat(targetTimeInMin) * 60
     self.name = "\(targetTimeInMin) min"
   }
 
-  func checkTrigger(numSecondsElapsed: Int) {
+  func checkTrigger(secondsElapsed: CGFloat) {
     if hasTriggered {
       return
     }
-    if numSecondsElapsed >= targetTimeInSec {
+    if secondsElapsed >= targetTimeInSec {
       self.doTrigger()
       hasTriggered = true
     }
@@ -65,32 +65,33 @@ class RecurringScheduledBellAlert: ScheduledAlert {
       && (lhs.hasTarget == rhs.hasTarget) && (lhs.intervalInSec == rhs.intervalInSec)
   }
 
-  var targetTimeInSec: Int
+  var targetTimeInSec: CGFloat
   var name: String
   var hasTriggered: Bool = false
   let hasTarget: Bool = false
-  var intervalInSec: Int
+  var intervalInSec: CGFloat
 
   init(name: String, intervalInSec: Int) {
     // Raise an exception if intervalInSec is not greater than zero
     assert(intervalInSec > 0)
 
     self.name = name
-    self.targetTimeInSec = intervalInSec
-    self.intervalInSec = intervalInSec
+    self.targetTimeInSec = CGFloat(intervalInSec)
+    self.intervalInSec = CGFloat(intervalInSec)
   }
 
-  func getProgress(numSecondsElapsed: Int) -> CGFloat {
-    let timeUntilNextTrigger = (targetTimeInSec - numSecondsElapsed) % intervalInSec
+  func getProgress(secondsElapsed: CGFloat) -> CGFloat {
+    let timeUntilNextTrigger = (targetTimeInSec - secondsElapsed).truncatingRemainder(
+      dividingBy: intervalInSec)
     return CGFloat(timeUntilNextTrigger) / CGFloat(intervalInSec)
   }
 
-  func checkTrigger(numSecondsElapsed: Int) {
-    if !hasTriggered && numSecondsElapsed >= targetTimeInSec {
+  func checkTrigger(secondsElapsed: CGFloat) {
+    if !hasTriggered && secondsElapsed >= targetTimeInSec {
       doTrigger()
       targetTimeInSec += intervalInSec
       // If we've missed a trigger, catch up (shouldn't normally happen)
-      while targetTimeInSec < numSecondsElapsed {
+      while targetTimeInSec < secondsElapsed {
         targetTimeInSec += intervalInSec
       }
     }
