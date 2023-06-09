@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ScheduledAlert {
+protocol ScheduledAlert: Equatable {
   var name: String { get }
   var hasTarget: Bool { get }
 
@@ -16,6 +16,11 @@ protocol ScheduledAlert {
 }
 
 class OneTimeScheduledBellAlert: ScheduledAlert {
+  static func == (lhs: OneTimeScheduledBellAlert, rhs: OneTimeScheduledBellAlert) -> Bool {
+    return (lhs.targetTimeInSec == rhs.targetTimeInSec) && (lhs.name == rhs.name)
+      && (lhs.hasTarget == rhs.hasTarget)
+  }
+
   let targetTimeInSec: Int
   let name: String
   var hasTriggered: Bool = false
@@ -55,6 +60,11 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
 }
 
 class RecurringScheduledBellAlert: ScheduledAlert {
+  static func == (lhs: RecurringScheduledBellAlert, rhs: RecurringScheduledBellAlert) -> Bool {
+    return (lhs.targetTimeInSec == rhs.targetTimeInSec) && (lhs.name == rhs.name)
+      && (lhs.hasTarget == rhs.hasTarget) && (lhs.intervalInSec == rhs.intervalInSec)
+  }
+
   var targetTimeInSec: Int
   var name: String
   var hasTriggered: Bool = false

@@ -9,16 +9,26 @@ import Foundation
 import UIKit
 
 class TimerViewModel: ObservableObject {
-  @Published var timeElapsedFormatted: String = "0:00"
-  var startDate: Date? = nil
-  var scheduledAlert: ScheduledAlert?
+  // Components of the TimerViewModel:
+  // - A running timer. The timer is always running, but it might have been canceled as it's shutting down.
+  // - A set of options for scheduled "end time" alerts.
+  // - One optional scheduled "end time" alert.
+  // - One optional "interval" bell manager (future state).
+
+  // Running timer
+  private var startDate: Date? = nil
   var timer: Timer? = nil
   var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+  @Published var timeElapsedFormatted: String = "0:00"  // TODO: Don't publish this; make it the view's job to update regularly.
 
   var secondsElapsed: Int {
     guard let startDate else { return 0 }
     return Int(-startDate.timeIntervalSinceNow)
   }
+
+  // Options for and actually scheduled "end time" alert
+  @Published var scheduledAlertOptions: [OneTimeScheduledBellAlert]
+  @Published var scheduledAlert: OneTimeScheduledBellAlert?
 
   var hasEndTarget: Bool {
     if let scheduledAlert { return scheduledAlert.hasTarget } else { return false }
@@ -85,5 +95,11 @@ class TimerViewModel: ObservableObject {
         print("Failed to save mindful session: ", error?.localizedDescription ?? "Unknown error")
       }
     }
+  }
+
+  init() {
+    scheduledAlertOptions = [1, 3, 5, 10, 15, 20].map({
+      OneTimeScheduledBellAlert(targetTimeInMin: $0)
+    })
   }
 }

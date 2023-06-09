@@ -9,10 +9,8 @@ import SwiftUI
 import UIKit
 
 struct TimerRunningView: View {
-  let timerButtonValues = [1, 3, 5, 10, 15, 20]
   let buttonsPerRow = 3
-  @State private var isPaused: Bool = false
-  @State private var showIntermediateBell: Bool = false
+  // We don't need this?
   let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
@@ -52,18 +50,24 @@ struct TimerRunningView: View {
           GridRow {
             ForEach(0..<buttonsPerRow) { columnIndex in
               let index = rowIndex * buttonsPerRow + columnIndex
-              if index < timerButtonValues.count {
-                let buttonValue = timerButtonValues[index]
+              if index < timerViewModel.scheduledAlertOptions.count {
+                let scheduledAlertOption: OneTimeScheduledBellAlert =
+                  timerViewModel.scheduledAlertOptions[index]
                 Button(action: {
                   // Handle button tap
-                  timerViewModel.scheduledAlert = OneTimeScheduledBellAlert(
-                    targetTimeInMin: buttonValue)
+                  timerViewModel.scheduledAlert = scheduledAlertOption
                 }) {
-                  Text("\(buttonValue) min")
+                  Text(scheduledAlertOption.name)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
+                    .background(
+                      timerViewModel.scheduledAlert == scheduledAlertOption
+                        ? Color.white : Color.blue
+                    )
+                    .foregroundColor(
+                      timerViewModel.scheduledAlert == scheduledAlertOption
+                        ? Color.blue : .white
+                    )
                     .cornerRadius(8)
                 }
               } else {
