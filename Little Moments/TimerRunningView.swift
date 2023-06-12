@@ -55,21 +55,25 @@ struct TimerRunningView: View {
                   timerViewModel.scheduledAlertOptions[index]
                 Button(action: {
                   // Handle button tap
-                  timerViewModel.scheduledAlert = scheduledAlertOption
+                  if timerViewModel.scheduledAlert == scheduledAlertOption {
+                    timerViewModel.scheduledAlert = nil
+                  } else {
+                    timerViewModel.scheduledAlert = scheduledAlertOption
+                  }
                 }) {
                   Text(scheduledAlertOption.name)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(
                       timerViewModel.scheduledAlert == scheduledAlertOption
-                        ? Color.white : Color.blue
+                        ? Color.blue : Color.white
                     )
                     .foregroundColor(
                       timerViewModel.scheduledAlert == scheduledAlertOption
-                        ? Color.blue : .white
+                        ? Color.white : Color.blue
                     )
                     .cornerRadius(8)
-                }
+                }.foregroundColor(.blue)
               } else {
                 Spacer()
               }
