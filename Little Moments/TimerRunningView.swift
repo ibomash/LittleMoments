@@ -66,7 +66,7 @@ struct TimerRunningView: View {
                     .padding()
                     .background(
                       timerViewModel.scheduledAlert == scheduledAlertOption
-                        ? Color.blue : Color.white
+                        ? Color.blue : Color(UIColor.systemBackground)
                     )
                     .foregroundColor(
                       timerViewModel.scheduledAlert == scheduledAlertOption
