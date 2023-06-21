@@ -27,14 +27,14 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Pick an open source license and set up a Github repo
 - [x] Set up an Apple Developer account to release the app
 - [x] Make a simple "About" screen / update it for the source code location
-- [ ] Share via TestFlight
+- [x] Share via TestFlight
 - [ ] Get a real app icon
 - Set up a web page? (Privacy policy?)
 - [ ] Go through the app submission process
 
 ### Better session triggering and timing
 
-- Do a better job with duration buttons being toggles or showing which duration is selected
+- [x] Do a better job with duration buttons being toggles or showing which duration is selected
 - Support periodic bell reminders (e.g. every 5 minutes)?
 - Haptics alongside the bells?
 
@@ -53,6 +53,8 @@ There are many possible directions to take this work. Below are some ideas, with
 ### Shortcuts
 
 - Add support for shortcut actions to start a meditation without a duration or with a pre-specified duration (App Intents)
+  - [x] Add a basic Intent that can start the timer
+  - [ ] Create a predictable intent
 
 ### Multi-device
 

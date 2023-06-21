@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F33C64972A3A9FB000679DF0 /* StartTimerIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33C64962A3A9FB000679DF0 /* StartTimerIntent.swift */; };
 		F34D43BD29FFDBC3007070A8 /* Little_MomentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */; };
 		F34D43C129FFDBC4007070A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F34D43C029FFDBC4007070A8 /* Assets.xcassets */; };
 		F34D43C429FFDBC4007070A8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F34D43C329FFDBC4007070A8 /* Preview Assets.xcassets */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F33C64962A3A9FB000679DF0 /* StartTimerIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartTimerIntent.swift; sourceTree = "<group>"; };
 		F34D43B929FFDBC3007070A8 /* Little Moments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Little Moments.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsApp.swift; sourceTree = "<group>"; };
 		F34D43C029FFDBC4007070A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */,
 				F34D43E62A0049B5007070A8 /* TimerStartView.swift */,
 				F34D43EA2A0061BC007070A8 /* TimerRunningView.swift */,
+				F33C64962A3A9FB000679DF0 /* StartTimerIntent.swift */,
 				F37EFAFC2A252F6800916DEE /* ImageButton.swift */,
 				F34D43EC2A0080D5007070A8 /* TimerViewModel.swift */,
 				F34D43BC29FFDBC3007070A8 /* Little_MomentsApp.swift */,
@@ -313,6 +316,7 @@
 				F3F3CD792A1EFCEA009A20E1 /* SoundManager.swift in Sources */,
 				F34D43E72A0049B5007070A8 /* TimerStartView.swift in Sources */,
 				F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */,
+				F33C64972A3A9FB000679DF0 /* StartTimerIntent.swift in Sources */,
 				F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */,
 				F37EFAFD2A252F6800916DEE /* ImageButton.swift in Sources */,
 				F3B114DC2A22337A0066ADFA /* ScheduledBellAlert.swift in Sources */,

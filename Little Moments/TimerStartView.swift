@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct TimerStartView: View {
-  @State private var showTimerRunningView: Bool = false
-  @State private var showSettingsView: Bool = false
+
+  @EnvironmentObject private var vm: AppViewModel
 
   var body: some View {
     NavigationStack {
@@ -31,7 +31,7 @@ struct TimerStartView: View {
 
         HStack {
           Button(action: {
-            showSettingsView = true
+            vm.showSettingsView = true
           }) {
             Image(systemName: "gear")
               .resizable()
@@ -43,7 +43,7 @@ struct TimerStartView: View {
           ImageButton(
             imageName: "play.fill", buttonText: "Start session",
             action: {
-              showTimerRunningView = true
+              vm.showTimerRunningView = true
             }
           )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
@@ -55,10 +55,10 @@ struct TimerStartView: View {
       }
       .frame(maxHeight: .infinity)
     }
-    .sheet(isPresented: $showTimerRunningView) {
+    .sheet(isPresented: $vm.showTimerRunningView) {
       TimerRunningView()
     }
-    .sheet(isPresented: $showSettingsView) {
+    .sheet(isPresented: $vm.showSettingsView) {
       SettingsView()
     }
   }
