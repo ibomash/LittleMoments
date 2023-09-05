@@ -5,6 +5,7 @@
 //  Created by Illya Bomash on 5/1/23.
 //
 
+import AppIntents
 import SwiftUI
 
 struct TimerStartView: View {
@@ -43,6 +44,13 @@ struct TimerStartView: View {
           ImageButton(
             imageName: "play.fill", buttonText: "Start session",
             action: {
+              let ua = NSUserActivity(activityType: "net.bomash.illya.Little-Moments.start-timer")
+              ua.title = "Mindfulness session"
+              ua.isEligibleForPrediction = true
+              ua.persistentIdentifier = Date().ISO8601Format()
+              ua.becomeCurrent()
+              print("User activity made current: \(ua)")
+
               vm.showTimerRunningView = true
             }
           )

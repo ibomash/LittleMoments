@@ -8,7 +8,7 @@
 import AppIntents
 import Foundation
 
-struct StartTimer: AppIntent {
+struct StartTimerIntent: AppIntent {
   static var title: LocalizedStringResource = "Start a moment"
   static var description = IntentDescription("Start a timer for a new mindfulness moment")
 
