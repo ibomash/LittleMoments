@@ -17,10 +17,9 @@ struct TimerStartView: View {
         Spacer()
 
         Text(
-          "What if you deeply let go, in this moment, of the “self” that sat down to meditate just now?"
+          "🙏🏻"
         )
-        .font(.title)
-        .multilineTextAlignment(.center)
+        .font(.largeTitle)
         .padding(.vertical, 20)
         .italic()
         .lineSpacing(20)
