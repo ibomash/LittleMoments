@@ -29,7 +29,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Make a simple "About" screen / update it for the source code location
 - [x] Share via TestFlight
 - [ ] Get a real app icon
-- [ ] Change the launch page text
+- [x] Change the launch page text
 - Set up a web page? (Privacy policy?)
 - [ ] Go through the app submission process
 
