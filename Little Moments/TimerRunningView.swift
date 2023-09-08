@@ -114,6 +114,7 @@ struct TimerRunningView: View {
     }
     .onDisappear {
       timerViewModel.writeToHealthStore()
+      timerViewModel.reset()
       UIApplication.shared.isIdleTimerDisabled = false
     }
   }

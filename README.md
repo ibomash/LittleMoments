@@ -36,9 +36,9 @@ There are many possible directions to take this work. Below are some ideas, with
 ### Better session triggering and timing
 
 - [x] Do a better job with duration buttons being toggles or showing which duration is selected
-- [ ] Make timers work even when the app is in the background
-- [ ] Cancel the running timer when the timer running screen is dismissed
-- [ ] Add some capability for longer session times
+- [ ] Make timers work even when the app is in the background (see [here](https://chat.openai.com/share/e3588695-920b-4360-ae57-707bf672c473))
+- [x] Cancel the running timer when the timer running screen is dismissed
+- [ ] Add some capability for longer session times (over 20 minutes)
 
 ### Widgets
 
