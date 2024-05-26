@@ -108,7 +108,7 @@ class TimerViewModel: ObservableObject {
   }
 
   init() {
-    scheduledAlertOptions = [1, 3, 5, 10, 15, 20].map({
+    scheduledAlertOptions = [3, 5, 10, 15, 20, 25, 30, 45].map({
       OneTimeScheduledBellAlert(targetTimeInMin: $0)
     })
   }

@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 struct TimerRunningView: View {
-  let buttonsPerRow = 3
+  let buttonsPerRow = 4
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
 
@@ -46,6 +46,9 @@ struct TimerRunningView: View {
 
       // Bell controls
       Grid {
+        Text("Timer (minutes)")
+          // .frame(maxWidth: .infinity, alignment: .leading)
+          .foregroundColor(Color.gray)
         ForEach(0..<2) { rowIndex in
           GridRow {
             ForEach(0..<buttonsPerRow) { columnIndex in

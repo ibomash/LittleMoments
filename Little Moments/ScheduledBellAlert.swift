@@ -40,7 +40,7 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
 
   init(targetTimeInMin: Int) {
     self.targetTimeInSec = CGFloat(targetTimeInMin) * 60
-    self.name = "\(targetTimeInMin) min"
+    self.name = "\(targetTimeInMin)"
   }
 
   func checkTrigger(secondsElapsed: CGFloat) {
