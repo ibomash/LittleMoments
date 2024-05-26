@@ -25,6 +25,10 @@ struct SettingsView: View {
           Toggle(isOn: $settings.ringBellAtStart, label: { Text("Ring bell at start of session") })
         }
 
+        Section(header: Text("Display")) {
+          Toggle(isOn: $settings.showSeconds, label: { Text("Show seconds") })
+        }
+
         Section(header: Text("About")) {
           Text("Coded by Illya Bomash in 2023.")
           if let url = URL(string: "https://github.com/ibomash/LittleMoments") {
@@ -99,6 +103,20 @@ class JustNowSettings: ObservableObject {
     }
     set {
       userDefaults.set(newValue, forKey: "ringBellAtStart")
+      userDefaults.synchronize()
+    }
+  }
+
+  var showSeconds: Bool {
+    get {
+      if let value = userDefaults.object(forKey: "showSeconds") as? Bool {
+        return value
+      } else {
+        return true  // Default value
+      }
+    }
+    set {
+      userDefaults.set(newValue, forKey: "showSeconds")
       userDefaults.synchronize()
     }
   }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import UIKit
 
 class TimerViewModel: ObservableObject {
@@ -14,6 +15,8 @@ class TimerViewModel: ObservableObject {
   // - A set of options for scheduled "end time" alerts.
   // - One optional scheduled "end time" alert.
   // - One optional "interval" bell manager (future state).
+
+  @ObservedObject var settings: JustNowSettings = JustNowSettings.shared
 
   // Running timer
   private var startDate: Date? = nil
@@ -47,7 +50,12 @@ class TimerViewModel: ObservableObject {
     let fullSecondsElapsed = Int(secondsElapsed)
     let minutes = fullSecondsElapsed / 60
     let seconds = fullSecondsElapsed % 60
-    return String(format: "%d:%02d", minutes, seconds)
+
+    if settings.showSeconds {
+      return String(format: "%d:%02d", minutes, seconds)
+    } else {
+      return String(format: "%d", minutes)
+    }
   }
 
   func start() {
