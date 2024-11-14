@@ -118,5 +118,8 @@ class TimerViewModel: ObservableObject {
     scheduledAlertOptions = [3, 5, 10, 15, 20, 25, 30, 45].map({
       OneTimeScheduledBellAlert(targetTimeInMin: $0)
     })
+    #if targetEnvironment(simulator)
+      scheduledAlertOptions[0] = OneTimeScheduledBellAlert(targetTimeInSec: 5, name: "5 sec")
+    #endif
   }
 }
