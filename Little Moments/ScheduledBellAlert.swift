@@ -43,11 +43,15 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
     self.name = "\(targetTimeInMin)"
   }
 
+  func isDone(secondsElapsed: CGFloat) -> Bool {
+    return secondsElapsed >= targetTimeInSec
+  }
+
   func checkTrigger(secondsElapsed: CGFloat) {
     if hasTriggered {
       return
     }
-    if secondsElapsed >= targetTimeInSec {
+    if self.isDone(secondsElapsed: secondsElapsed) {
       self.doTrigger()
       hasTriggered = true
     }

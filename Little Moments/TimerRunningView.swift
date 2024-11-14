@@ -29,7 +29,7 @@ struct TimerRunningView: View {
           Circle()
             .trim(from: 0, to: timerViewModel.progress)
             .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
-            .foregroundColor(Color.blue)
+            .foregroundColor(timerViewModel.isDone ? Color.green : Color.blue)
             .rotationEffect(Angle(degrees: 270))
             .animation(.linear, value: timerViewModel.progress)
 

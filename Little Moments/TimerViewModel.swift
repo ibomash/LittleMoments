@@ -39,6 +39,13 @@ class TimerViewModel: ObservableObject {
     if let scheduledAlert { return scheduledAlert.hasTarget } else { return false }
   }
 
+  var isDone: Bool {
+    if !hasEndTarget {
+      return false
+    }
+    return scheduledAlert?.isDone(secondsElapsed: secondsElapsed) ?? false
+  }
+
   var progress: CGFloat {
     if !hasEndTarget {
       return 0.0
