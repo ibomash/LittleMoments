@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import UserNotifications
 
 struct TimerRunningView: View {
   let buttonsPerRow = 4
@@ -60,8 +61,42 @@ struct TimerRunningView: View {
                   // Handle button tap
                   if timerViewModel.scheduledAlert == scheduledAlertOption {
                     timerViewModel.scheduledAlert = nil
+                    // Remove pending notifications
+                    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
                   } else {
                     timerViewModel.scheduledAlert = scheduledAlertOption
+
+                    // Request notification permission
+                    UNUserNotificationCenter.current().requestAuthorization(options: [
+                      .alert, .sound,
+                    ]) { granted, error in
+                      if granted {
+                        // Create notification content
+                        let content = UNMutableNotificationContent()
+                        content.title = "Timer Complete"
+                        content.body = "Your \(scheduledAlertOption.name) minute timer has finished"
+                        content.sound = UNNotificationSound(
+                          named: UNNotificationSoundName(
+                            rawValue: "42095__fauxpress__bell-meditation.aif"))
+                        content.interruptionLevel = .timeSensitive
+
+                        // Create trigger
+                        let trigger = UNTimeIntervalNotificationTrigger(
+                          timeInterval: TimeInterval(scheduledAlertOption.targetTimeInSec),
+                          repeats: false
+                        )
+
+                        // Create request
+                        let request = UNNotificationRequest(
+                          identifier: "timerNotification",
+                          content: content,
+                          trigger: trigger
+                        )
+
+                        // Schedule notification
+                        UNUserNotificationCenter.current().add(request)
+                      }
+                    }
                   }
                 }) {
                   Text(scheduledAlertOption.name)
@@ -116,6 +151,7 @@ struct TimerRunningView: View {
       }
     }
     .onDisappear {
+      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
       timerViewModel.writeToHealthStore()
       timerViewModel.reset()
       UIApplication.shared.isIdleTimerDisabled = false
