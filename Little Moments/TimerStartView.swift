@@ -1,11 +1,5 @@
-//
-//  TimerStartView.swift
-//  Little Moments
-//
-//  Created by Illya Bomash on 5/1/23.
-//
-
 import SwiftUI
+import AppIntents
 
 struct TimerStartView: View {
   @State private var showTimerRunningView: Bool = false
@@ -43,6 +37,8 @@ struct TimerStartView: View {
             imageName: "play.fill", buttonText: "Start session",
             action: {
               showTimerRunningView = true
+              let intent = MeditationSessionIntent()
+              intent.donate(completion: nil)
             }
           )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
