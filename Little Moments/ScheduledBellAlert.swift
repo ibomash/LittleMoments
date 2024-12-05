@@ -51,7 +51,7 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
   }
 
   func doTrigger(secondsElapsed: CGFloat) {
-    let MAX_DELAY: CGFloat = 15.0
+    let MAX_DELAY: CGFloat = 5.0
     if secondsElapsed - targetTimeInSec > MAX_DELAY {
       print("Skipping sound due to delay")
       return
