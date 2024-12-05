@@ -1,10 +1,3 @@
-//
-//  ScheduledBellAlert.swift
-//  Just Now
-//
-//  Created by Illya Bomash on 5/27/23.
-//
-
 import Foundation
 
 protocol ScheduledAlert: Equatable {
@@ -52,12 +45,17 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
       return
     }
     if self.isDone(secondsElapsed: secondsElapsed) {
-      self.doTrigger()
+      self.doTrigger(secondsElapsed: secondsElapsed)
       hasTriggered = true
     }
   }
 
-  func doTrigger() {
+  func doTrigger(secondsElapsed: CGFloat) {
+    let MAX_DELAY: CGFloat = 15.0
+    if secondsElapsed - targetTimeInSec > MAX_DELAY {
+      print("Skipping sound due to delay")
+      return
+    }
     print("Triggered \(name) alert")
     SoundManager.playSound()
   }
