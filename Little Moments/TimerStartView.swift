@@ -1,15 +1,8 @@
-//
-//  TimerStartView.swift
-//  Little Moments
-//
-//  Created by Illya Bomash on 5/1/23.
-//
-
+import AppIntents
 import SwiftUI
 
 struct TimerStartView: View {
-  @State private var showTimerRunningView: Bool = false
-  @State private var showSettingsView: Bool = false
+  @StateObject private var appState = AppState.shared
 
   var body: some View {
     NavigationStack {
@@ -30,7 +23,7 @@ struct TimerStartView: View {
 
         HStack {
           Button(action: {
-            showSettingsView = true
+            appState.showSettingsView = true
           }) {
             Image(systemName: "gear")
               .resizable()
@@ -42,7 +35,14 @@ struct TimerStartView: View {
           ImageButton(
             imageName: "play.fill", buttonText: "Start session",
             action: {
-              showTimerRunningView = true
+              let intent = MeditationSessionIntent()
+              // Print the intent I'm donating
+              let donationManager = IntentDonationManager.shared
+              // Donate the intent and print confirmation for debugging purposes depending on success or failure
+              let donationID = donationManager.donate(intent: intent)
+              // Print the intent and result within my log message
+              print("Donated: \(intent) with result: \(donationID)")
+              appState.showTimerRunningView = true
             }
           )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
@@ -54,10 +54,10 @@ struct TimerStartView: View {
       }
       .frame(maxHeight: .infinity)
     }
-    .sheet(isPresented: $showTimerRunningView) {
+    .sheet(isPresented: $appState.showTimerRunningView) {
       TimerRunningView()
     }
-    .sheet(isPresented: $showSettingsView) {
+    .sheet(isPresented: $appState.showSettingsView) {
       SettingsView()
     }
   }
