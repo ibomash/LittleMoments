@@ -1,5 +1,5 @@
-import SwiftUI
 import AppIntents
+import SwiftUI
 
 struct TimerStartView: View {
   @State private var showTimerRunningView: Bool = false
@@ -36,9 +36,14 @@ struct TimerStartView: View {
           ImageButton(
             imageName: "play.fill", buttonText: "Start session",
             action: {
-              showTimerRunningView = true
               let intent = MeditationSessionIntent()
-              intent.donate(completion: nil)
+              // Print the intent I'm donating
+              let donationManager = IntentDonationManager.shared
+              // Donate the intent and print confirmation for debugging purposes depending on success or failure
+              let donationID = donationManager.donate(intent: intent)
+              // Print the intent and result within my log message
+              print("Donated: \(intent) with result: \(donationID)")
+              showTimerRunningView = true
             }
           )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
