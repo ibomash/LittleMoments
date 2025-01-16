@@ -2,7 +2,7 @@ import AppIntents
 import SwiftUI
 
 struct TimerStartView: View {
-  @State private var showTimerRunningView: Bool = false
+  @StateObject private var appState = AppState.shared
   @State private var showSettingsView: Bool = false
 
   var body: some View {
@@ -43,7 +43,7 @@ struct TimerStartView: View {
               let donationID = donationManager.donate(intent: intent)
               // Print the intent and result within my log message
               print("Donated: \(intent) with result: \(donationID)")
-              showTimerRunningView = true
+              appState.showTimerRunningView = true
             }
           )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
@@ -55,7 +55,7 @@ struct TimerStartView: View {
       }
       .frame(maxHeight: .infinity)
     }
-    .sheet(isPresented: $showTimerRunningView) {
+    .sheet(isPresented: $appState.showTimerRunningView) {
       TimerRunningView()
     }
     .sheet(isPresented: $showSettingsView) {
