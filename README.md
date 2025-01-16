@@ -37,7 +37,7 @@ There are many possible directions to take this work. Below are some ideas, with
 
 - [x] Do a better job with duration buttons being toggles or showing which duration is selected
 - [x] Make timers work even when the app is in the background. Current plan is to use notifications (downside: won't make a sound if phone is on vibrate - perhaps a feature).
-  - [ ] If we trigger the sound through the notification, don't also ring the in-app bell.
+  - [x] If we trigger the sound through the notification, don't also ring the in-app bell.
 - [x] Cancel the running timer when the timer running screen is dismissed
 - [x] Add some capability for longer session times (over 20 minutes)
 
@@ -55,7 +55,8 @@ There are many possible directions to take this work. Below are some ideas, with
 
 ### Shortcuts
 
-- Add support for shortcut actions to start a meditation without a duration or with a pre-specified duration (App Intents)
+- [x] Add support for a shortcut action to start a meditation without a duration
+- [ ] Add support for a shortcut action with a pre-specified duration?
 
 ### Multi-device
 
