@@ -3,7 +3,6 @@ import SwiftUI
 
 struct TimerStartView: View {
   @StateObject private var appState = AppState.shared
-  @State private var showSettingsView: Bool = false
 
   var body: some View {
     NavigationStack {
@@ -24,7 +23,7 @@ struct TimerStartView: View {
 
         HStack {
           Button(action: {
-            showSettingsView = true
+            appState.showSettingsView = true
           }) {
             Image(systemName: "gear")
               .resizable()
@@ -58,7 +57,7 @@ struct TimerStartView: View {
     .sheet(isPresented: $appState.showTimerRunningView) {
       TimerRunningView()
     }
-    .sheet(isPresented: $showSettingsView) {
+    .sheet(isPresented: $appState.showSettingsView) {
       SettingsView()
     }
   }
