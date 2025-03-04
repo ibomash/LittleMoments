@@ -1,39 +1,59 @@
 # Feature: [Feature Name]
 
 ## Overview
-- **Problem statement**: [What user/business problem are we solving?]
-- **Intended impact**: [How does this improve the user experience or business?]
-- **Background context**: [Relevant history or information]
+
+### Problem Statement
+[Describe the user or business problem that this feature addresses. What pain point or opportunity does it target?]
+
+### Intended Impact
+[Explain how this feature will improve the user experience or provide business value. What is the expected outcome?]
+
+### Background Context
+[Provide relevant history, user research, or information that helps frame the feature. Why is this important now?]
 
 ## Goals and Success Metrics
-- **Primary goal**: [The main outcome we want to achieve]
-- **Success metrics**: 
-  - [Specific, measurable indicator 1]
-  - [Specific, measurable indicator 2]
-- **Non-goals**: 
-  - [What's explicitly out of scope 1]
-  - [What's explicitly out of scope 2]
+
+### Primary Goal
+[State the main outcome the feature aims to achieve. What is the core purpose?]
+
+### Success Metrics
+[List specific, measurable indicators that will determine if the feature is successful. How will we know it's working?]
+
+### Non-goals
+[Explicitly state what is out of scope for this feature. What are we deliberately not trying to solve?]
 
 ## Requirements
-- **Functional requirements**:
-  - [What the feature must do 1]
-  - [What the feature must do 2]
-- **Non-functional requirements**:
-  - [Performance, reliability, etc. 1]
-  - [Performance, reliability, etc. 2]
-- **Constraints**:
-  - [Technical, business, or time limitation 1]
-  - [Technical, business, or time limitation 2]
+
+### Functional Requirements
+[List what the feature must do. Be specific about behavior and capabilities.]
+
+### Non-functional Requirements
+[Describe performance, reliability, usability, and other quality attributes the feature should have.]
+
+### Constraints
+[Outline technical, business, or time limitations that impact how the feature can be implemented.]
 
 ## User Experience
-- **User flows**: [How users will interact with the feature]
-- **Key screens/interactions**: [Major touchpoints]
-- **Edge cases**: [How to handle unusual scenarios]
+
+### User Flows
+[Describe the step-by-step journeys users will take when interacting with the feature.]
+
+### Key Screens/Interactions
+[Identify the major touchpoints users will have with the feature. Consider including wireframes or sketches if helpful.]
+
+### Edge Cases
+[Identify unusual scenarios and how they should be handled. What might go wrong and how do we address it?]
 
 ## Implementation Considerations
-- **Dependencies**: [Other features or systems this relies on]
-- **Phasing**: [How this might be rolled out in stages]
-- **Open questions**: [Areas needing further investigation]
+
+### Dependencies
+[List other features, systems, or components this feature relies on.]
+
+### Phasing
+[If applicable, describe how the feature might be rolled out in stages.]
+
+### Open Questions
+[Document areas needing further investigation or decisions that haven't been made yet.]
 
 ---
 
