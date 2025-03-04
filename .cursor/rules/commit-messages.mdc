@@ -40,9 +40,17 @@ actions:
          - Wrap body text at 72 characters
          - Use proper line breaks for readability
          - Each bullet point on its own line
-         - When using -m flag in git commit, use quotes and \n for line breaks:
+         - For proper line breaks in git commit, use one of these methods:
            ```
-           git commit -m "feat: Add new feature" -m "Longer description that\nwraps properly at 72 characters.\n\n- First bullet point\n- Second bullet point"
+           # Method 1: Using printf (recommended)
+           printf "feat: Add new feature\n\nDetailed description here.\n\n- First point\n- Second point" | git commit -F -
+           
+           # Method 2: Using a temporary file
+           printf "feat: Add new feature\n\nDetailed description here.\n\n- First point\n- Second point" > .git/COMMIT_EDITMSG
+           git commit -F .git/COMMIT_EDITMSG
+           
+           # Method 3: Using multiple -m flags (not recommended for complex messages)
+           git commit -m "feat: Add new feature" -m "Detailed description here." -m "- First point" -m "- Second point"
            ```
          
       4. Examples from this project:
