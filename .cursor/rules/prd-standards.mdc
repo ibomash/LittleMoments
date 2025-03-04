@@ -5,7 +5,7 @@ alwaysApply: false
 ---
 # Product Requirement Documents (PRDs) Standards
 
-Standards for creating and maintaining Product Requirement Documents in the Little Moments project.
+Standards for creating and maintaining Product Requirement Documents in the Just Now project.
 
 <rule>
 name: prd_standards
@@ -23,12 +23,13 @@ actions:
     message: |
       # Product Requirement Document (PRD) Guidelines
 
-      When creating Product Requirement Documents for Little Moments:
+      When creating Product Requirement Documents for Just Now:
 
       ## Location and Format
       - All PRDs must be placed in the `specs/` directory
       - Use Markdown (.md) format for all PRDs
-      - Follow a clear naming convention: `YYYY-MM-DD-feature-name.md`
+      - Always run `date +%Y-%m-%d` to get the current date before creating a new PRD
+      - Follow a clear naming convention: `YYYY-MM-DD-feature-name.md` using the current date
       - A template is available in `specs/TEMPLATE-feature-name.md`
 
       ## Document Structure
@@ -71,6 +72,7 @@ actions:
       - Excessive detail that constrains implementation options
       - Vague requirements that can't be verified
       - Missing success metrics or evaluation criteria
+      - Using incorrect or outdated dates in filenames
 
 examples:
   - input: |
