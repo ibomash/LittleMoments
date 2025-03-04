@@ -1,3 +1,8 @@
+---
+description: Generating commit messages
+globs: 
+alwaysApply: false
+---
 # Commit Message Standards
 
 Standards for writing commit messages in this repository.

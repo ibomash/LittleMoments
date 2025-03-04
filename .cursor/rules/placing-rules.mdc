@@ -30,6 +30,15 @@ actions:
     message: |
       When creating Cursor rules:
 
+      0. Always include a frontmatter block at the top of your file using YAML. For example:
+         ```
+         ---
+         description: Brief description of the rule
+         globs: your-glob-patterns (e.g., *.mdc)
+         alwaysApply: false
+         ---
+         ```
+
       1. Always place rule files in PROJECT_ROOT/.cursor/rules/:
          ```
          .cursor/rules/

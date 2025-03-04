@@ -1,3 +1,8 @@
+---
+description: Writing product requirements documents (PRDs)
+globs: ^specs/.*\\.md$
+alwaysApply: false
+---
 # Product Requirement Documents (PRDs) Standards
 
 Standards for creating and maintaining Product Requirement Documents in the Little Moments project.
