@@ -1,1 +1,119 @@
- 
+# Commit Message Standards
+
+Standards for writing commit messages in this repository.
+
+<rule>
+name: commit_messages
+description: Standards for writing clear and consistent commit messages
+filters:
+  - type: event
+    pattern: "git_commit"
+
+actions:
+  - type: suggest
+    message: |
+      When writing commit messages:
+
+      1. Use conventional commit types with a scope (optional) and description:
+         ```
+         type(scope): description
+         ```
+         
+         Common types used in this project:
+         - feat: New features or significant functionality additions
+         - fix: Bug fixes and corrections
+         - docs: Documentation changes only
+         - chore: Maintenance tasks, renaming, etc.
+         - config: Configuration changes
+         
+      2. Message Format Rules:
+         - Start with a lowercase type (feat, fix, etc.)
+         - Optional scope in parentheses
+         - Use colon and space after type/scope
+         - Write description in imperative mood
+         - Keep first line under 72 characters
+         - No period at the end of the first line
+         
+      3. Line Wrapping Rules:
+         - First line (subject): maximum 72 characters
+         - Leave one blank line after the subject
+         - Wrap body text at 72 characters
+         - Use proper line breaks for readability
+         - Each bullet point on its own line
+         - When using -m flag in git commit, use quotes and \n for line breaks:
+           ```
+           git commit -m "feat: Add new feature" -m "Longer description that\nwraps properly at 72 characters.\n\n- First bullet point\n- Second bullet point"
+           ```
+         
+      4. Examples from this project:
+         ```
+         feat: Add meditation session intent
+         fix: Don't play the timer after session is done
+         docs: Update README with current status
+         chore: Cleaning up project structure
+         config: Set up my developer account for the build
+         ```
+         
+      5. For larger changes:
+         - First line as summary (following above format)
+         - Blank line
+         - Detailed description with proper line wrapping
+         - Use bullet points for multiple items
+         
+      6. Focus on:
+         - What the change does, not how it does it
+         - Why the change was made
+         - Clear and concise language
+
+      7. When committing within a conversation:
+         - Reference the original request or problem being solved
+         - Include relevant context from the conversation that explains the change
+         - If addressing multiple conversation points, use a multi-line commit message
+         - Ensure proper line wrapping in the description
+         
+         Examples with conversation context:
+         ```
+         # Conversation: "The timer keeps running after session ends"
+         fix: Stop timer when meditation session completes
+         
+         Addresses user-reported issue where timer continues to run after the session
+         should have ended. This ensures the timer state properly reflects the 
+         meditation session status.
+         
+         # Conversation: "Add ability to customize bell sounds"
+         feat(audio): Support custom meditation bell sounds
+         
+         Implements user request for personalized bell sounds:
+         - Add sound selection UI
+         - Support local sound file import
+         - Persist sound preferences
+         ```
+
+examples:
+  - input: |
+      # Bad
+      fixed bug
+      
+      # Good
+      fix: Remove duplicate timer trigger in background mode
+  - input: |
+      # Bad
+      added stuff
+      
+      # Good
+      feat(timer): Add configurable start-of-session bell
+  - input: |
+      # Bad (missing context and poor wrapping)
+      feat: Add new button with some very long description that goes on and on and doesn't wrap properly making it hard to read in git log
+      
+      # Good (with context and proper wrapping)
+      feat(ui): Add quick-start meditation button
+      
+      Implements requested one-tap meditation start feature to improve ease of use
+      for daily practitioners. The button provides immediate access to the most
+      common meditation duration setting.
+
+metadata:
+  priority: high
+  version: 1.0
+</rule> 
