@@ -22,6 +22,7 @@
 		F3759D572A253647001858F3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3759D562A253647001858F3 /* SettingsView.swift */; };
 		F377493B2D397A6A001193C1 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F377493A2D397A6A001193C1 /* AppState.swift */; };
 		F37EFAFD2A252F6800916DEE /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37EFAFC2A252F6800916DEE /* ImageButton.swift */; };
+		F38FC06A2D76A7FC006C2ED5 /* TimerRunningViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC0692D76A7FC006C2ED5 /* TimerRunningViewTests.swift */; };
 		F3B114DA2A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif in Resources */ = {isa = PBXBuildFile; fileRef = F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */; };
 		F3B114DC2A22337A0066ADFA /* ScheduledBellAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */; };
 		F3F3CD792A1EFCEA009A20E1 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */; };
@@ -64,6 +65,7 @@
 		F3759D562A253647001858F3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F377493A2D397A6A001193C1 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		F37EFAFC2A252F6800916DEE /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
+		F38FC0692D76A7FC006C2ED5 /* TimerRunningViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningViewTests.swift; sourceTree = "<group>"; };
 		F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "42095__fauxpress__bell-meditation.aif"; sourceTree = "<group>"; };
 		F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledBellAlert.swift; sourceTree = "<group>"; };
 		F3C6FEA62AAB85FC00897A80 /* Little-Moments-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Little-Moments-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				F34D43CD29FFDBC4007070A8 /* Little_MomentsTests.swift */,
+				F38FC0692D76A7FC006C2ED5 /* TimerRunningViewTests.swift */,
 			);
 			path = "Little MomentsTests";
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F38FC06A2D76A7FC006C2ED5 /* TimerRunningViewTests.swift in Sources */,
 				F34D43CE29FFDBC4007070A8 /* Little_MomentsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

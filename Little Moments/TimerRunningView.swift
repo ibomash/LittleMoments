@@ -61,7 +61,8 @@ struct TimerRunningView: View {
                     ForEach(0..<buttonsPerRow) { columnIndex in
                       let index = rowIndex * buttonsPerRow + columnIndex
                       if index < timerViewModel.scheduledAlertOptions.count {
-                        let scheduledAlertOption: OneTimeScheduledBellAlert = timerViewModel.scheduledAlertOptions[index]
+                        let scheduledAlertOption: OneTimeScheduledBellAlert =
+                          timerViewModel.scheduledAlertOptions[index]
                         Button(action: {
                           if timerViewModel.scheduledAlert == scheduledAlertOption {
                             timerViewModel.scheduledAlert = nil
