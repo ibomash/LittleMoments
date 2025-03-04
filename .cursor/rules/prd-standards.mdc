@@ -1,0 +1,105 @@
+# Product Requirement Documents (PRDs) Standards
+
+Standards for creating and maintaining Product Requirement Documents in the Little Moments project.
+
+<rule>
+name: prd_standards
+description: Guidelines for creating and organizing Product Requirement Documents
+filters:
+  # Match markdown files in the specs directory
+  - type: file_path
+    pattern: "^specs/.*\\.md$"
+  # Match file creation events
+  - type: event
+    pattern: "file_create"
+
+actions:
+  - type: suggest
+    message: |
+      # Product Requirement Document (PRD) Guidelines
+
+      When creating Product Requirement Documents for Little Moments:
+
+      ## Location and Format
+      - All PRDs must be placed in the `specs/` directory
+      - Use Markdown (.md) format for all PRDs
+      - Follow a clear naming convention: `YYYY-MM-DD-feature-name.md`
+      - A template is available in `specs/TEMPLATE-feature-name.md`
+
+      ## Document Structure
+      Every PRD should include these sections:
+
+      1. **Overview**
+         - Problem statement: What user/business problem are we solving?
+         - Intended impact: How does this improve the user experience or business?
+         - Background context: Relevant history or information
+
+      2. **Goals and Success Metrics**
+         - Primary goal: The main outcome we want to achieve
+         - Success metrics: Specific, measurable indicators of success
+         - Non-goals: What's explicitly out of scope
+
+      3. **Requirements**
+         - Functional requirements: What the feature must do
+         - Non-functional requirements: Performance, reliability, etc.
+         - Constraints: Technical, business, or time limitations
+
+      4. **User Experience**
+         - User flows: How users will interact with the feature
+         - Key screens/interactions: Major touchpoints (can include wireframes)
+         - Edge cases: How to handle unusual scenarios
+
+      5. **Implementation Considerations**
+         - Dependencies: Other features or systems this relies on
+         - Phasing: How this might be rolled out in stages
+         - Open questions: Areas needing further investigation
+
+      ## Best Practices
+      - Focus on outcomes, not implementation details
+      - Be precise about scope: what's in and what's out
+      - Use concise language and bullet points
+      - Include diagrams where they add clarity
+      - Treat the PRD as a living document that will evolve
+
+      ## Anti-Patterns to Avoid
+      - Prescribing specific technical solutions
+      - Excessive detail that constrains implementation options
+      - Vague requirements that can't be verified
+      - Missing success metrics or evaluation criteria
+
+examples:
+  - input: |
+      # Feature: Quick Start Widget
+      
+      ## Overview
+      Users need a faster way to start meditation sessions from their home screen.
+      This feature will provide a home screen widget that allows one-tap session starts.
+      
+      ## Goals and Success Metrics
+      - Primary goal: Reduce friction to start meditation sessions
+      - Success metrics: 
+        - 20% increase in daily meditation sessions
+        - 15% increase in user retention
+      - Non-goals: 
+        - Complex widget customization options
+        
+      ## Requirements
+      - Widget must allow starting a session with a single tap
+      - Widget should display time since last meditation
+      - Widget must work on iOS 16+
+      
+      ## User Experience
+      - Widget appears on home screen with clear "Start" button
+      - Tapping launches app directly into a session
+      - Widget shows time elapsed since last session
+      
+      ## Implementation Considerations
+      - Depends on WidgetKit framework
+      - Could be phased: basic widget first, then add customization
+      - Open question: Should we allow duration selection in the widget?
+    output: "Well-structured PRD following the guidelines"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule> 
