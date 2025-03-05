@@ -52,11 +52,9 @@ struct TimerRunningView: View {
             Spacer()
 
             // Timer view
-            TimelineView(.periodic(from: Date(), by: 0.1)) { context in
-              TimerCircleView(timerViewModel: timerViewModel)
-                .frame(width: 200, height: 200)
-                .padding(.bottom, 20)
-            }
+            TimerCircleView(timerViewModel: timerViewModel)
+              .frame(width: 200, height: 200)
+              .padding(.bottom, 20)
 
             Spacer()
 
@@ -91,23 +89,25 @@ struct TimerCircleView: View {
   @ObservedObject var timerViewModel: TimerViewModel
 
   var body: some View {
-    ZStack {
-      Circle()
-        .stroke(lineWidth: 10)
-        .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
-        .foregroundColor(Color.blue)
-        .animation(.linear, value: timerViewModel.hasEndTarget)
+    TimelineView(.periodic(from: Date(), by: 0.1)) { _ in
+      ZStack {
+        Circle()
+          .stroke(lineWidth: 10)
+          .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
+          .foregroundColor(Color.blue)
+          .animation(.linear, value: timerViewModel.hasEndTarget)
 
-      Circle()
-        .trim(from: 0, to: timerViewModel.progress)
-        .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
-        .foregroundColor(timerViewModel.isDone ? Color.green : Color.blue)
-        .rotationEffect(Angle(degrees: 270))
-        .animation(.linear, value: timerViewModel.progress)
+        Circle()
+          .trim(from: 0, to: timerViewModel.progress)
+          .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
+          .foregroundColor(timerViewModel.isDone ? Color.green : Color.blue)
+          .rotationEffect(Angle(degrees: 270))
+          .animation(.linear, value: timerViewModel.progress)
 
-      Text("\(timerViewModel.timeElapsedFormatted)")
-        .font(.largeTitle)
-        .fontWeight(.bold)
+        Text("\(timerViewModel.timeElapsedFormatted)")
+          .font(.largeTitle)
+          .fontWeight(.bold)
+      }
     }
   }
 }
