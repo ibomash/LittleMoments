@@ -23,6 +23,16 @@
 		F377493B2D397A6A001193C1 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F377493A2D397A6A001193C1 /* AppState.swift */; };
 		F37EFAFD2A252F6800916DEE /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37EFAFC2A252F6800916DEE /* ImageButton.swift */; };
 		F38FC06A2D76A7FC006C2ED5 /* TimerRunningViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC0692D76A7FC006C2ED5 /* TimerRunningViewTests.swift */; };
+		F38FC0702D7B1B99006C2ED5 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC06B2D7B1B99006C2ED5 /* DIContainer.swift */; };
+		F38FC0712D7B1B99006C2ED5 /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC06E2D7B1B99006C2ED5 /* ServiceProvider.swift */; };
+		F38FC0722D7B1B99006C2ED5 /* ServiceImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC06C2D7B1B99006C2ED5 /* ServiceImports.swift */; };
+		F38FC0732D7B1B99006C2ED5 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC06D2D7B1B99006C2ED5 /* ServiceLocator.swift */; };
+		F38FC0782D7B1BD1006C2ED5 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC0742D7B1BD1006C2ED5 /* HealthKitService.swift */; };
+		F38FC0792D7B1BD1006C2ED5 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC0752D7B1BD1006C2ED5 /* SettingsService.swift */; };
+		F38FC07A2D7B1BD1006C2ED5 /* SoundService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC0762D7B1BD1006C2ED5 /* SoundService.swift */; };
+		F38FC07E2D7B1BE8006C2ED5 /* DIContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC07B2D7B1BE8006C2ED5 /* DIContainerTests.swift */; };
+		F38FC07F2D7B1BE8006C2ED5 /* ServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC07C2D7B1BE8006C2ED5 /* ServiceLocatorTests.swift */; };
+		F38FC0802D7B1BE8006C2ED5 /* SettingsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38FC07D2D7B1BE8006C2ED5 /* SettingsServiceTests.swift */; };
 		F3B114DA2A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif in Resources */ = {isa = PBXBuildFile; fileRef = F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */; };
 		F3B114DC2A22337A0066ADFA /* ScheduledBellAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */; };
 		F3F3CD792A1EFCEA009A20E1 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3CD782A1EFCEA009A20E1 /* SoundManager.swift */; };
@@ -66,6 +76,16 @@
 		F377493A2D397A6A001193C1 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		F37EFAFC2A252F6800916DEE /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		F38FC0692D76A7FC006C2ED5 /* TimerRunningViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningViewTests.swift; sourceTree = "<group>"; };
+		F38FC06B2D7B1B99006C2ED5 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
+		F38FC06C2D7B1B99006C2ED5 /* ServiceImports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceImports.swift; sourceTree = "<group>"; };
+		F38FC06D2D7B1B99006C2ED5 /* ServiceLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
+		F38FC06E2D7B1B99006C2ED5 /* ServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProvider.swift; sourceTree = "<group>"; };
+		F38FC0742D7B1BD1006C2ED5 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		F38FC0752D7B1BD1006C2ED5 /* SettingsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
+		F38FC0762D7B1BD1006C2ED5 /* SoundService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundService.swift; sourceTree = "<group>"; };
+		F38FC07B2D7B1BE8006C2ED5 /* DIContainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainerTests.swift; sourceTree = "<group>"; };
+		F38FC07C2D7B1BE8006C2ED5 /* ServiceLocatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLocatorTests.swift; sourceTree = "<group>"; };
+		F38FC07D2D7B1BE8006C2ED5 /* SettingsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsServiceTests.swift; sourceTree = "<group>"; };
 		F3B114D92A222F7F0066ADFA /* 42095__fauxpress__bell-meditation.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "42095__fauxpress__bell-meditation.aif"; sourceTree = "<group>"; };
 		F3B114DB2A22337A0066ADFA /* ScheduledBellAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledBellAlert.swift; sourceTree = "<group>"; };
 		F3C6FEA62AAB85FC00897A80 /* Little-Moments-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Little-Moments-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -121,6 +141,8 @@
 		F34D43BB29FFDBC3007070A8 /* Little Moments */ = {
 			isa = PBXGroup;
 			children = (
+				F38FC06F2D7B1B99006C2ED5 /* DI */,
+				F38FC0772D7B1BD1006C2ED5 /* Services */,
 				F377493A2D397A6A001193C1 /* AppState.swift */,
 				F3C6FEA62AAB85FC00897A80 /* Little-Moments-Info.plist */,
 				F3759D562A253647001858F3 /* SettingsView.swift */,
@@ -152,6 +174,9 @@
 		F34D43CC29FFDBC4007070A8 /* Little MomentsTests */ = {
 			isa = PBXGroup;
 			children = (
+				F38FC07B2D7B1BE8006C2ED5 /* DIContainerTests.swift */,
+				F38FC07C2D7B1BE8006C2ED5 /* ServiceLocatorTests.swift */,
+				F38FC07D2D7B1BE8006C2ED5 /* SettingsServiceTests.swift */,
 				F34D43CD29FFDBC4007070A8 /* Little_MomentsTests.swift */,
 				F38FC0692D76A7FC006C2ED5 /* TimerRunningViewTests.swift */,
 			);
@@ -165,6 +190,27 @@
 				F34D43D929FFDBC4007070A8 /* Little_MomentsUITestsLaunchTests.swift */,
 			);
 			path = "Little MomentsUITests";
+			sourceTree = "<group>";
+		};
+		F38FC06F2D7B1B99006C2ED5 /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				F38FC06B2D7B1B99006C2ED5 /* DIContainer.swift */,
+				F38FC06C2D7B1B99006C2ED5 /* ServiceImports.swift */,
+				F38FC06D2D7B1B99006C2ED5 /* ServiceLocator.swift */,
+				F38FC06E2D7B1B99006C2ED5 /* ServiceProvider.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
+		F38FC0772D7B1BD1006C2ED5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F38FC0742D7B1BD1006C2ED5 /* HealthKitService.swift */,
+				F38FC0752D7B1BD1006C2ED5 /* SettingsService.swift */,
+				F38FC0762D7B1BD1006C2ED5 /* SoundService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -326,6 +372,13 @@
 				F34D43ED2A0080D5007070A8 /* TimerViewModel.swift in Sources */,
 				F34D43F02A0F2B1F007070A8 /* HealthKitManager.swift in Sources */,
 				F37EFAFD2A252F6800916DEE /* ImageButton.swift in Sources */,
+				F38FC0702D7B1B99006C2ED5 /* DIContainer.swift in Sources */,
+				F38FC0712D7B1B99006C2ED5 /* ServiceProvider.swift in Sources */,
+				F38FC0722D7B1B99006C2ED5 /* ServiceImports.swift in Sources */,
+				F38FC0782D7B1BD1006C2ED5 /* HealthKitService.swift in Sources */,
+				F38FC0792D7B1BD1006C2ED5 /* SettingsService.swift in Sources */,
+				F38FC07A2D7B1BD1006C2ED5 /* SoundService.swift in Sources */,
+				F38FC0732D7B1B99006C2ED5 /* ServiceLocator.swift in Sources */,
 				F377493B2D397A6A001193C1 /* AppState.swift in Sources */,
 				F337208A2D029B0C003A4B94 /* MeditationSessionIntent.swift in Sources */,
 				F3B114DC2A22337A0066ADFA /* ScheduledBellAlert.swift in Sources */,
@@ -340,6 +393,9 @@
 			files = (
 				F38FC06A2D76A7FC006C2ED5 /* TimerRunningViewTests.swift in Sources */,
 				F34D43CE29FFDBC4007070A8 /* Little_MomentsTests.swift in Sources */,
+				F38FC07E2D7B1BE8006C2ED5 /* DIContainerTests.swift in Sources */,
+				F38FC07F2D7B1BE8006C2ED5 /* ServiceLocatorTests.swift in Sources */,
+				F38FC0802D7B1BE8006C2ED5 /* SettingsServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

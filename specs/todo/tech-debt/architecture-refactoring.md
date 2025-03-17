@@ -83,3 +83,86 @@ Refactoring the architecture will:
 
 - 1 iOS developer (part-time)
 - Access to testing devices running different iOS versions 
+
+## To-Do List (Commits)
+
+### Phase 1: Dependency Injection Framework
+
+1. **Create DI Container Interface**
+   - Define the core DI container protocol
+   - Implement a basic container class
+   - Add documentation and usage examples
+
+2. **Refactor Settings Service**
+   - Define `SettingsServiceProtocol`
+   - Create implementation that wraps current `JustNowSettings.shared`
+   - Update initialization to use DI
+
+3. **Refactor HealthKit Manager**
+   - Define `HealthKitServiceProtocol`
+   - Create implementation that wraps current `HealthKitManager.shared`
+   - Add proper error handling and dependency injection
+
+4. **Refactor Sound Services**
+   - Create `SoundServiceProtocol`
+   - Implement concrete service class
+   - Add unit tests with mock implementations
+
+5. **Create Service Locator**
+   - Implement app-wide service locator pattern
+   - Configure app initialization to register all services
+   - Add documentation for registering new services
+
+### Phase 2: MVVM Architecture Implementation
+
+6. **Create Base ViewModel Infrastructure**
+   - Define base ViewModel protocols/classes
+   - Add observable property wrappers
+   - Document MVVM pattern usage
+
+7. **Refactor Timer Feature to MVVM**
+   - Create TimerViewModel
+   - Remove business logic from TimerView
+   - Add unit tests for TimerViewModel
+
+8. **Refactor Settings UI to MVVM**
+   - Create SettingsViewModel
+   - Separate UI and business logic
+   - Add view state management
+
+9. **Refactor Health Data Views to MVVM**
+   - Create HealthDataViewModel
+   - Implement proper data transformation logic
+   - Add unit tests
+
+10. **Implement Coordinators Pattern**
+    - Create app navigation coordinator
+    - Remove direct navigation between views
+    - Implement hierarchical coordinator structure
+
+### Phase 3: Naming and Organization Cleanup
+
+11. **Standardize App Naming**
+    - Decide on final naming convention
+    - Update all "JustNow" references to "Little Moments" (or vice versa)
+    - Update documentation and comments
+
+12. **Reorganize Project Structure**
+    - Create feature-based directory structure
+    - Move files to appropriate locations
+    - Update imports and references
+
+13. **Clean Up Model Layer**
+    - Create proper domain models
+    - Remove redundant model code
+    - Add serialization/deserialization tests
+
+14. **Implement Style Guide**
+    - Create coding style documentation
+    - Configure SwiftLint with appropriate rules
+    - Fix style violations
+
+15. **Documentation Update**
+    - Update README with new architecture description
+    - Add architecture diagrams
+    - Document key patterns and extension points 
