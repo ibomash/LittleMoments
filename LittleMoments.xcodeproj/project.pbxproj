@@ -1,0 +1,858 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F383C4612D88D4A50035132E /* Little_MomentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C43F2D88D4A50035132E /* Little_MomentsApp.swift */; };
+		F383C4622D88D4A50035132E /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4462D88D4A50035132E /* HealthKitManager.swift */; };
+		F383C4632D88D4A50035132E /* ScheduledBellAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4422D88D4A50035132E /* ScheduledBellAlert.swift */; };
+		F383C4642D88D4A50035132E /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4542D88D4A50035132E /* ImageButton.swift */; };
+		F383C4652D88D4A50035132E /* TimerStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4592D88D4A50035132E /* TimerStartView.swift */; };
+		F383C4662D88D4A50035132E /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4432D88D4A50035132E /* SoundManager.swift */; };
+		F383C4672D88D4A50035132E /* TimerRunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4582D88D4A50035132E /* TimerRunningView.swift */; };
+		F383C4682D88D4A50035132E /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4482D88D4A50035132E /* AppState.swift */; };
+		F383C4692D88D4A50035132E /* MeditationSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C44C2D88D4A50035132E /* MeditationSessionIntent.swift */; };
+		F383C46A2D88D4A50035132E /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4562D88D4A50035132E /* TimerViewModel.swift */; };
+		F383C46B2D88D4A50035132E /* JustNowSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C44F2D88D4A50035132E /* JustNowSettings.swift */; };
+		F383C46C2D88D4A50035132E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4512D88D4A50035132E /* SettingsView.swift */; };
+		F383C4702D88E77B0035132E /* Little_MomentsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C46E2D88E77B0035132E /* Little_MomentsUITestsLaunchTests.swift */; };
+		F383C4712D88E77B0035132E /* Little_MomentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C46D2D88E77B0035132E /* Little_MomentsUITests.swift */; };
+		F383C4772D88E7880035132E /* Little_MomentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4722D88E7880035132E /* Little_MomentsTests.swift */; };
+		F383C4782D88E7880035132E /* TimerRunningViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383C4742D88E7880035132E /* TimerRunningViewTests.swift */; };
+		F383C4812D88EAF00035132E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F383C47A2D88EAF00035132E /* Preview Assets.xcassets */; };
+		F383C4822D88EAF00035132E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F383C47E2D88EAF00035132E /* Assets.xcassets */; };
+		F383C4832D88EAF00035132E /* 42095__fauxpress__bell-meditation.aif in Resources */ = {isa = PBXBuildFile; fileRef = F383C47C2D88EAF00035132E /* 42095__fauxpress__bell-meditation.aif */; };
+		F383C4842D88EAF00035132E /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F383C47F2D88EAF00035132E /* Launch.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F34D43CA29FFDBC4007070A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F34D43B129FFDBC3007070A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F34D43B829FFDBC3007070A8;
+			remoteInfo = "Little Moments";
+		};
+		F34D43D429FFDBC4007070A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F34D43B129FFDBC3007070A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F34D43B829FFDBC3007070A8;
+			remoteInfo = "Little Moments";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F34D43B929FFDBC3007070A8 /* Little Moments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Little Moments.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Little MomentsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Little MomentsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F34D43EE2A0F2A4F007070A8 /* Little Moments.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Little Moments.entitlements"; sourceTree = "<group>"; };
+		F383C43F2D88D4A50035132E /* Little_MomentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsApp.swift; sourceTree = "<group>"; };
+		F383C4422D88D4A50035132E /* ScheduledBellAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledBellAlert.swift; sourceTree = "<group>"; };
+		F383C4432D88D4A50035132E /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		F383C4462D88D4A50035132E /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		F383C4482D88D4A50035132E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		F383C44C2D88D4A50035132E /* MeditationSessionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeditationSessionIntent.swift; sourceTree = "<group>"; };
+		F383C44F2D88D4A50035132E /* JustNowSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JustNowSettings.swift; sourceTree = "<group>"; };
+		F383C4512D88D4A50035132E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F383C4542D88D4A50035132E /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
+		F383C4562D88D4A50035132E /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
+		F383C4582D88D4A50035132E /* TimerRunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningView.swift; sourceTree = "<group>"; };
+		F383C4592D88D4A50035132E /* TimerStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStartView.swift; sourceTree = "<group>"; };
+		F383C46D2D88E77B0035132E /* Little_MomentsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITests.swift; sourceTree = "<group>"; };
+		F383C46E2D88E77B0035132E /* Little_MomentsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F383C4722D88E7880035132E /* Little_MomentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Little_MomentsTests.swift; sourceTree = "<group>"; };
+		F383C4742D88E7880035132E /* TimerRunningViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningViewTests.swift; sourceTree = "<group>"; };
+		F383C47A2D88EAF00035132E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F383C47C2D88EAF00035132E /* 42095__fauxpress__bell-meditation.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "42095__fauxpress__bell-meditation.aif"; sourceTree = "<group>"; };
+		F383C47E2D88EAF00035132E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F383C47F2D88EAF00035132E /* Launch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F34D43B629FFDBC3007070A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F34D43C629FFDBC4007070A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F34D43D029FFDBC4007070A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F34D43B029FFDBC3007070A8 = {
+			isa = PBXGroup;
+			children = (
+				F34D43EE2A0F2A4F007070A8 /* Little Moments.entitlements */,
+				F383C46F2D88E77B0035132E /* UITests */,
+				F383C4762D88E7880035132E /* UnitTests */,
+				F383C4602D88D4A50035132E /* LittleMoments */,
+				F34D43BA29FFDBC3007070A8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F34D43BA29FFDBC3007070A8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F34D43B929FFDBC3007070A8 /* Little Moments.app */,
+				F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */,
+				F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F383C4402D88D4A50035132E /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				F383C43F2D88D4A50035132E /* Little_MomentsApp.swift */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		F383C4412D88D4A50035132E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4402D88D4A50035132E /* iOS */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F383C4442D88D4A50035132E /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4422D88D4A50035132E /* ScheduledBellAlert.swift */,
+				F383C4432D88D4A50035132E /* SoundManager.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		F383C4452D88D4A50035132E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F383C4472D88D4A50035132E /* Health */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4462D88D4A50035132E /* HealthKitManager.swift */,
+			);
+			path = Health;
+			sourceTree = "<group>";
+		};
+		F383C4492D88D4A50035132E /* State */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4482D88D4A50035132E /* AppState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		F383C44A2D88D4A50035132E /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F383C44B2D88D4A50035132E /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4442D88D4A50035132E /* Audio */,
+				F383C4452D88D4A50035132E /* Extensions */,
+				F383C4472D88D4A50035132E /* Health */,
+				F383C4492D88D4A50035132E /* State */,
+				F383C44A2D88D4A50035132E /* Utilities */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		F383C44D2D88D4A50035132E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F383C44C2D88D4A50035132E /* MeditationSessionIntent.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F383C44E2D88D4A50035132E /* Meditation */ = {
+			isa = PBXGroup;
+			children = (
+				F383C44D2D88D4A50035132E /* Models */,
+			);
+			path = Meditation;
+			sourceTree = "<group>";
+		};
+		F383C4502D88D4A50035132E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F383C44F2D88D4A50035132E /* JustNowSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F383C4522D88D4A50035132E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4512D88D4A50035132E /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F383C4532D88D4A50035132E /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4502D88D4A50035132E /* Models */,
+				F383C4522D88D4A50035132E /* Views */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F383C4552D88D4A50035132E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4542D88D4A50035132E /* ImageButton.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		F383C4572D88D4A50035132E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4562D88D4A50035132E /* TimerViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F383C45A2D88D4A50035132E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4582D88D4A50035132E /* TimerRunningView.swift */,
+				F383C4592D88D4A50035132E /* TimerStartView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F383C45B2D88D4A50035132E /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4572D88D4A50035132E /* Models */,
+				F383C45A2D88D4A50035132E /* Views */,
+			);
+			path = Timer;
+			sourceTree = "<group>";
+		};
+		F383C45C2D88D4A50035132E /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				F383C44E2D88D4A50035132E /* Meditation */,
+				F383C4532D88D4A50035132E /* Settings */,
+				F383C4552D88D4A50035132E /* Shared */,
+				F383C45B2D88D4A50035132E /* Timer */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		F383C4602D88D4A50035132E /* LittleMoments */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4802D88EAF00035132E /* Resources */,
+				F383C4412D88D4A50035132E /* App */,
+				F383C44B2D88D4A50035132E /* Core */,
+				F383C45C2D88D4A50035132E /* Features */,
+			);
+			path = LittleMoments;
+			sourceTree = SOURCE_ROOT;
+		};
+		F383C46F2D88E77B0035132E /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				F383C46D2D88E77B0035132E /* Little_MomentsUITests.swift */,
+				F383C46E2D88E77B0035132E /* Little_MomentsUITestsLaunchTests.swift */,
+			);
+			name = UITests;
+			path = Tests/UITests;
+			sourceTree = SOURCE_ROOT;
+		};
+		F383C4732D88E7880035132E /* CoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4722D88E7880035132E /* Little_MomentsTests.swift */,
+			);
+			path = CoreTests;
+			sourceTree = "<group>";
+		};
+		F383C4752D88E7880035132E /* TimerTests */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4742D88E7880035132E /* TimerRunningViewTests.swift */,
+			);
+			path = TimerTests;
+			sourceTree = "<group>";
+		};
+		F383C4762D88E7880035132E /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4732D88E7880035132E /* CoreTests */,
+				F383C4752D88E7880035132E /* TimerTests */,
+			);
+			name = UnitTests;
+			path = Tests/UnitTests;
+			sourceTree = SOURCE_ROOT;
+		};
+		F383C4792D88EAF00035132E /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		F383C47B2D88EAF00035132E /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				F383C47A2D88EAF00035132E /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F383C47D2D88EAF00035132E /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				F383C47C2D88EAF00035132E /* 42095__fauxpress__bell-meditation.aif */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		F383C4802D88EAF00035132E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F383C4792D88EAF00035132E /* Localization */,
+				F383C47B2D88EAF00035132E /* Preview Content */,
+				F383C47D2D88EAF00035132E /* Sounds */,
+				F383C47E2D88EAF00035132E /* Assets.xcassets */,
+				F383C47F2D88EAF00035132E /* Launch.storyboard */,
+			);
+			name = Resources;
+			path = LittleMoments/Resources;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F34D43B829FFDBC3007070A8 /* Little Moments */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little Moments" */;
+			buildPhases = (
+				F34D43B529FFDBC3007070A8 /* Sources */,
+				F34D43B629FFDBC3007070A8 /* Frameworks */,
+				F34D43B729FFDBC3007070A8 /* Resources */,
+				F3F647D02A1EEE3100A00D9A /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Little Moments";
+			productName = "Little Moments";
+			productReference = F34D43B929FFDBC3007070A8 /* Little Moments.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F34D43C829FFDBC4007070A8 /* Little MomentsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsTests" */;
+			buildPhases = (
+				F34D43C529FFDBC4007070A8 /* Sources */,
+				F34D43C629FFDBC4007070A8 /* Frameworks */,
+				F34D43C729FFDBC4007070A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F34D43CB29FFDBC4007070A8 /* PBXTargetDependency */,
+			);
+			name = "Little MomentsTests";
+			productName = "Little MomentsTests";
+			productReference = F34D43C929FFDBC4007070A8 /* Little MomentsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F34D43D229FFDBC4007070A8 /* Little MomentsUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsUITests" */;
+			buildPhases = (
+				F34D43CF29FFDBC4007070A8 /* Sources */,
+				F34D43D029FFDBC4007070A8 /* Frameworks */,
+				F34D43D129FFDBC4007070A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F34D43D529FFDBC4007070A8 /* PBXTargetDependency */,
+			);
+			name = "Little MomentsUITests";
+			productName = "Little MomentsUITests";
+			productReference = F34D43D329FFDBC4007070A8 /* Little MomentsUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F34D43B129FFDBC3007070A8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					F34D43B829FFDBC3007070A8 = {
+						CreatedOnToolsVersion = 14.3;
+					};
+					F34D43C829FFDBC4007070A8 = {
+						CreatedOnToolsVersion = 14.3;
+						TestTargetID = F34D43B829FFDBC3007070A8;
+					};
+					F34D43D229FFDBC4007070A8 = {
+						CreatedOnToolsVersion = 14.3;
+						TestTargetID = F34D43B829FFDBC3007070A8;
+					};
+				};
+			};
+			buildConfigurationList = F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "LittleMoments" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F34D43B029FFDBC3007070A8;
+			productRefGroup = F34D43BA29FFDBC3007070A8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F34D43B829FFDBC3007070A8 /* Little Moments */,
+				F34D43C829FFDBC4007070A8 /* Little MomentsTests */,
+				F34D43D229FFDBC4007070A8 /* Little MomentsUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F34D43B729FFDBC3007070A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F383C4812D88EAF00035132E /* Preview Assets.xcassets in Resources */,
+				F383C4822D88EAF00035132E /* Assets.xcassets in Resources */,
+				F383C4832D88EAF00035132E /* 42095__fauxpress__bell-meditation.aif in Resources */,
+				F383C4842D88EAF00035132E /* Launch.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F34D43C729FFDBC4007070A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F34D43D129FFDBC4007070A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F3F647D02A1EEE3100A00D9A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PATH=$PATH:/opt/homebrew/bin\n\nif which swift-format >/dev/null; then\n    swift-format format -i -r \"${PROJECT_DIR}\"\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F34D43B529FFDBC3007070A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F383C4612D88D4A50035132E /* Little_MomentsApp.swift in Sources */,
+				F383C4622D88D4A50035132E /* HealthKitManager.swift in Sources */,
+				F383C4632D88D4A50035132E /* ScheduledBellAlert.swift in Sources */,
+				F383C4642D88D4A50035132E /* ImageButton.swift in Sources */,
+				F383C4652D88D4A50035132E /* TimerStartView.swift in Sources */,
+				F383C4662D88D4A50035132E /* SoundManager.swift in Sources */,
+				F383C4672D88D4A50035132E /* TimerRunningView.swift in Sources */,
+				F383C4682D88D4A50035132E /* AppState.swift in Sources */,
+				F383C4692D88D4A50035132E /* MeditationSessionIntent.swift in Sources */,
+				F383C46A2D88D4A50035132E /* TimerViewModel.swift in Sources */,
+				F383C46B2D88D4A50035132E /* JustNowSettings.swift in Sources */,
+				F383C46C2D88D4A50035132E /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F34D43C529FFDBC4007070A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F383C4772D88E7880035132E /* Little_MomentsTests.swift in Sources */,
+				F383C4782D88E7880035132E /* TimerRunningViewTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F34D43CF29FFDBC4007070A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F383C4702D88E77B0035132E /* Little_MomentsUITestsLaunchTests.swift in Sources */,
+				F383C4712D88E77B0035132E /* Little_MomentsUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F34D43CB29FFDBC4007070A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F34D43B829FFDBC3007070A8 /* Little Moments */;
+			targetProxy = F34D43CA29FFDBC4007070A8 /* PBXContainerItemProxy */;
+		};
+		F34D43D529FFDBC4007070A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F34D43B829FFDBC3007070A8 /* Little Moments */;
+			targetProxy = F34D43D429FFDBC4007070A8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F34D43DB29FFDBC4007070A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F34D43DC29FFDBC4007070A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F34D43DE29FFDBC4007070A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Little Moments.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_ASSET_PATHS = "\"LittleMoments/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = Z5NU48NAF9;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Little-Moments-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Little Moments";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F34D43DF29FFDBC4007070A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Little Moments.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_ASSET_PATHS = "\"LittleMoments/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = Z5NU48NAF9;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Little-Moments-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Little Moments";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Just Now will write your minfulness minutes to Apple Health";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-Moments";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F34D43E129FFDBC4007070A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-MomentsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Little Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Little Moments";
+			};
+			name = Debug;
+		};
+		F34D43E229FFDBC4007070A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-MomentsTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Little Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Little Moments";
+			};
+			name = Release;
+		};
+		F34D43E429FFDBC4007070A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-MomentsUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Little Moments";
+			};
+			name = Debug;
+		};
+		F34D43E529FFDBC4007070A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.bomash.illya.Little-MomentsUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Little Moments";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F34D43B429FFDBC3007070A8 /* Build configuration list for PBXProject "LittleMoments" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F34D43DB29FFDBC4007070A8 /* Debug */,
+				F34D43DC29FFDBC4007070A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F34D43DD29FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little Moments" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F34D43DE29FFDBC4007070A8 /* Debug */,
+				F34D43DF29FFDBC4007070A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F34D43E029FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F34D43E129FFDBC4007070A8 /* Debug */,
+				F34D43E229FFDBC4007070A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F34D43E329FFDBC4007070A8 /* Build configuration list for PBXNativeTarget "Little MomentsUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F34D43E429FFDBC4007070A8 /* Debug */,
+				F34D43E529FFDBC4007070A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F34D43B129FFDBC3007070A8 /* Project object */;
+}
