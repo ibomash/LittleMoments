@@ -225,136 +225,21 @@ LittleMoments/
 
 #### 4. Plan and Implement Folder Structure
 
-- [ ] Map current files to target locations in the new structure
+- [x] Map current files to target locations in the new structure
   ```
   # Create a mapping document of:
   # Current location -> New location
   ```
 
-## File Mapping Plan
-
-Based on the current codebase analysis, here's the detailed mapping of existing Swift files to the new directory structure:
-
-### App Entry Point:
-```
-./Little Moments/Little_MomentsApp.swift -> LittleMoments/App/iOS/Little_MomentsApp.swift
-```
-
-### Features:
-
-#### Timer Feature:
-```
-./Little Moments/TimerViewModel.swift -> LittleMoments/Features/Timer/Models/TimerViewModel.swift
-./Little Moments/TimerStartView.swift -> LittleMoments/Features/Timer/Views/TimerStartView.swift
-./Little Moments/TimerRunningView.swift -> LittleMoments/Features/Timer/Views/TimerRunningView.swift
-```
-
-#### Settings Feature:
-```
-./Little Moments/SettingsView.swift -> LittleMoments/Features/Settings/Views/SettingsView.swift
-# Note: JustNowSettings class needs to be extracted from SettingsView.swift to a new file
-echo "# JustNowSettings model extracted from SettingsView.swift" > "LittleMoments/Features/Settings/Models/JustNowSettings.swift"
-echo "# Don't forget to manually extract JustNowSettings class from SettingsView.swift" >> "LittleMoments/Features/Settings/Models/JustNowSettings.swift"
-```
-
-#### Meditation Feature:
-```
-./Little Moments/MeditationSessionIntent.swift -> LittleMoments/Features/Meditation/Models/MeditationSessionIntent.swift
-```
-
-#### Shared UI Components:
-```
-./Little Moments/ImageButton.swift -> LittleMoments/Features/Shared/ImageButton.swift
-```
-
-### Core Functionality:
-
-#### App State Management:
-```
-./Little Moments/AppState.swift -> LittleMoments/Core/State/AppState.swift
-```
-
-#### Health Integration:
-```
-./Little Moments/HealthKitManager.swift -> LittleMoments/Core/Health/HealthKitManager.swift
-```
-
-#### Audio Functionality:
-```
-./Little Moments/SoundManager.swift -> LittleMoments/Core/Audio/SoundManager.swift
-./Little Moments/ScheduledBellAlert.swift -> LittleMoments/Core/Audio/ScheduledBellAlert.swift
-```
-
-### Tests:
-```
-./Little MomentsTests/Little_MomentsTests.swift -> Tests/UnitTests/CoreTests/Little_MomentsTests.swift
-./Little MomentsTests/TimerRunningViewTests.swift -> Tests/UnitTests/TimerTests/TimerRunningViewTests.swift
-./Little MomentsUITests/Little_MomentsUITests.swift -> Tests/UITests/Little_MomentsUITests.swift
-./Little MomentsUITests/Little_MomentsUITestsLaunchTests.swift -> Tests/UITests/Little_MomentsUITestsLaunchTests.swift
-```
-
-### Migration Shell Script
-
-Below is a shell script to automate the file migration according to the mapping plan. This script creates the necessary directories and moves files to their new locations while preserving the original files until the migration is verified:
-
-### Migration Shell Script
-
-A shell script has been created to automate the file migration according to the mapping plan above. The script creates the necessary directories and copies files to their new locations while preserving the original files until the migration is verified.
-
-**Script location:** `migrate-files.sh`
-
-To run the migration script:
-
-```bash
-# Make sure the script is executable
-chmod +x migrate-files.sh
-
-# Run the script
-./migrate-files.sh
-```
-
-The script uses `cp` instead of `mv` for safety during the initial migration. After verifying that everything works correctly, you can either run the script again with `mv` or manually remove the original files.
-
-### Import Updates Required
-
-After moving the files, some import statements will need to be updated due to the new module structure. Here are the files that will likely need import updates:
-
-1. **TimerStartView.swift and TimerRunningView.swift**
-   - May need to import the Models module to access TimerViewModel
-
-2. **MeditationSessionIntent.swift**
-   - May need to import Core.State to access AppState
-
-3. **TimerViewModel.swift**
-   - May need to import Core.Health to access HealthKitManager
-   - May need to import Core.Audio to access SoundManager
-
-4. **ScheduledBellAlert.swift**
-   - May need to import Core.Audio to access SoundManager
-
-Once the migration is complete, each file should be checked for import dependencies and updated accordingly.
-
-### Additional Refactoring Tasks
-
-During the migration, the following refactoring tasks should also be performed to improve code organization:
-
-1. **Extract `JustNowSettings` from SettingsView.swift**
-   - Create a new file: `LittleMoments/Features/Settings/Models/JustNowSettings.swift`
-   - Move the `JustNowSettings` class from SettingsView.swift to this new file
-   - Update imports in SettingsView.swift to reference the new model file
-   - Update imports in any other files that use JustNowSettings (like TimerViewModel.swift)
-
-This separation will maintain proper Model-View separation and make the codebase more maintainable.
-
 #### 5. Update Project References
 
-- [ ] Update Xcode project file references
+- [x] Update Xcode project file references
   ```bash
   # Either manually via Xcode or with a tool to update file references
   ```
   Test: All files should be properly referenced in Xcode with no red missing file indicators
 
-- [ ] Fix any import statements that need to be updated
+- [x] Fix any import statements that need to be updated
   ```
   # Check and update import statements if folder structure required changes
   ```
