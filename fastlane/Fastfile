@@ -32,12 +32,7 @@ platform :ios do
   desc "Build the app"
   lane :build do
     begin
-      gym(
-        scheme: "Little Moments",
-        clean: true,
-        skip_archive: true,
-        skip_codesigning: true
-      )
+      sh "xcodebuild -scheme 'Little Moments' -project ../LittleMoments.xcodeproj -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build"
     rescue
       UI.important("Build failed but continuing...")
     end
