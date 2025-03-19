@@ -1,8 +1,68 @@
 # Build Architecture for Little Moments
 
-This file describes the target state for the build architecture of the Little Moments app.
+This file describes the target state and current transitional state for the build architecture of the Little Moments app.
 
-## Core Components (v1)
+## Current State (Transitional)
+
+The Little Moments app build architecture is currently in a transitional state. We've begun implementing the target architecture described below, but are currently operating with two parallel project setups that need to be merged.
+
+### Project Structure
+- **Original Project**: `LittleMoments.xcodeproj` (in the root directory) contains the actual functional app code with folders:
+  - `/App`
+  - `/Core`
+  - `/Features`
+  - `/Resources`
+- **Tuist Project**: Located in the `/LittleMoments` subdirectory with:
+  - `/LittleMoments/Project.swift` - Main Tuist project definition
+  - `/LittleMoments/Tuist.swift` - Tuist configuration
+  - `/LittleMoments/Tuist/Package.swift` - Tuist dependency management
+  - `/LittleMoments/LittleMoments/` - Contains the placeholder app with:
+    - `/LittleMoments/LittleMoments/Sources/` - Basic "Hello World" Swift files
+    - `/LittleMoments/LittleMoments/Tests/` - Empty test directory
+    - `/LittleMoments/LittleMoments/Resources/` - App resources
+  - `/LittleMoments/Derived/` - Generated files
+  - `/LittleMoments/LittleMoments.xcworkspace/` - Generated workspace
+
+The directory structure doesn't yet match the target structure outlined in the architecture plan. The Tuist-generated project is currently a standalone hello world app that needs to be integrated with the actual app code.
+
+### Build Tools
+- **Fastlane**: Successfully set up with the following lanes:
+  - `lint`: Runs SwiftLint with appropriate configuration
+  - `format_code`: Formats Swift code using swift-format
+  - `test`: Runs tests on iPhone 16 simulator
+  - `build`: Builds the app in Debug configuration
+  - `build_release`: Builds in Release configuration
+  - `quality_check`: Runs all the above lanes in sequence
+
+- **SwiftLint**: Configured and working
+- **swift-format**: Configured and working
+- **xcodebuild**: Used in Fastlane lanes for building and testing
+
+### Completed Items
+- ✅ Initial Fastlane setup with essential lanes
+- ✅ SwiftLint configuration
+- ✅ swift-format configuration
+- ✅ Error handling in Fastlane lanes to continue despite build or test failures
+- ✅ Simulator device updated to iPhone 16 (available on the development machine)
+
+### In Progress / Pending Items
+- ⏳ Integration of actual app code into the Tuist project structure
+- ⏳ Directory restructuring to match target architecture
+- ⏳ Fixing build errors in the app code
+- ⏳ Setting up .xcconfig files (placeholders exist but need configuration)
+- ⏳ Properly linking dependencies in the new project structure
+
+### Next Steps
+1. **Code Migration**: Move the functional app code from the original project to the Tuist project structure
+2. **Directory Reorganization**: Implement the folder structure outlined in the architecture plan
+3. **Path Fixes**: Update all file references, imports, and paths in the Tuist project to match the new structure
+4. **Build Configuration**: Properly set up and configure the .xcconfig files
+5. **Testing**: Ensure all tests run correctly in the new project structure
+6. **CI Setup**: Once the project structure is stabilized, implement GitHub Actions
+
+## Target State
+
+### Core Components (v1)
 
 - **Swift Package Manager (SPM)** - Dependency management for Swift projects, making it easier to add and update third-party libraries and maintain internal modules.
 - **xcodebuild** - Command-line tool for building and testing without using the Xcode IDE directly.

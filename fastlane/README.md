@@ -45,7 +45,15 @@ Run tests
 [bundle exec] fastlane ios build
 ```
 
-Build the app
+Build app
+
+### ios build_release
+
+```sh
+[bundle exec] fastlane ios build_release
+```
+
+Build app for release
 
 ### ios quality_check
 
@@ -53,7 +61,7 @@ Build the app
 [bundle exec] fastlane ios quality_check
 ```
 
-Run all quality checks and tests
+Format, lint, test, and build
 
 ----
 

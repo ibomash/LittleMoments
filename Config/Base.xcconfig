@@ -1,0 +1,23 @@
+// Base.xcconfig
+// Common build settings for all configurations
+
+// Product Bundle Identifier
+PRODUCT_BUNDLE_IDENTIFIER = net.bomash.illya.Little-Moments
+
+// iOS Deployment Target
+IPHONEOS_DEPLOYMENT_TARGET = 16.0
+
+// Swift Version
+SWIFT_VERSION = 5.0
+
+// Enable Bitcode
+ENABLE_BITCODE = NO
+
+// Code Signing
+CODE_SIGN_STYLE = Automatic
+
+// Debug Information Format
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// GCC_OPTIMIZATION_LEVEL
+GCC_OPTIMIZATION_LEVEL = 0 

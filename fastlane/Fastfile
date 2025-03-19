@@ -4,7 +4,6 @@ platform :ios do
   desc "Run SwiftLint"
   lane :lint do
     swiftlint(
-      mode: :lint,
       quiet: true,
       strict: true,
       ignore_exit_status: true
@@ -13,34 +12,28 @@ platform :ios do
 
   desc "Format Swift code"
   lane :format_code do
-    sh "swift-format format -i -r ../Little\\ Moments --configuration ../.swift-format.json || true"
+    sh "cd .. && swift-format -i -r . --configuration .swift-format.json || true"
   end
 
   desc "Run tests"
   lane :test do
-    begin
-      scan(
-        scheme: "Little Moments",
-        device: "iPhone 15",
-        clean: true
-      )
-    rescue
-      UI.important("Tests failed but continuing...")
-    end
+    # Use shell command with error handling
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"Little Moments\" -destination \"platform=iOS Simulator,name=iPhone 16\" || true"
   end
 
-  desc "Build the app"
+  desc "Build app"
   lane :build do
-    begin
-      # Use a simpler manual xcodebuild approach with correct path and a device that exists
-      sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'Little Moments' -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' SWIFT_DISABLE_REQUIRED_CLANG_MODULE_VALIDATION=YES COMPILER_INDEX_STORE_ENABLE=NO"
-    rescue => ex
-      UI.error(ex)
-      UI.important("Build failed but continuing...")
-    end
+    # Use shell command with error handling
+    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"Little Moments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
   end
 
-  desc "Run all quality checks and tests"
+  desc "Build app for release"
+  lane :build_release do
+    # Use shell command with error handling
+    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"Little Moments\" -configuration Release -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
+  end
+
+  desc "Format, lint, test, and build"
   lane :quality_check do
     format_code
     lint

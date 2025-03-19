@@ -1,0 +1,24 @@
+// Debug.xcconfig
+// Debug-specific build settings
+
+#include "Base.xcconfig"
+
+// Debug Information Format for Debug builds
+DEBUG_INFORMATION_FORMAT = dwarf
+
+// Enable Testability
+ENABLE_TESTABILITY = YES
+
+// Swift Optimization Level
+SWIFT_OPTIMIZATION_LEVEL = -Onone
+
+// GCC Preprocessor Definitions
+GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 $(inherited)
+
+// Swift Active Compilation Conditions
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG
+
+// Enable Warnings
+GCC_WARN_UNUSED_VARIABLE = YES
+GCC_WARN_UNUSED_FUNCTION = YES
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES 
