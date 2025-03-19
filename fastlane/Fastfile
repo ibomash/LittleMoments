@@ -32,8 +32,10 @@ platform :ios do
   desc "Build the app"
   lane :build do
     begin
-      sh "xcodebuild -scheme 'Little Moments' -project ../LittleMoments.xcodeproj -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build"
-    rescue
+      # Use a simpler manual xcodebuild approach with correct path and a device that exists
+      sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'Little Moments' -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' SWIFT_DISABLE_REQUIRED_CLANG_MODULE_VALIDATION=YES COMPILER_INDEX_STORE_ENABLE=NO"
+    rescue => ex
+      UI.error(ex)
       UI.important("Build failed but continuing...")
     end
   end
