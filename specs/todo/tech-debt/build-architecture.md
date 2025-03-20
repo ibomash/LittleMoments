@@ -89,6 +89,10 @@ The directory structure doesn't yet match the target structure outlined in the a
 
 ```
 LittleMoments/
+├── Tuist/                            # Tuist configuration
+│   ├── Project.swift                 # Defines the Tuist project
+│   ├── Dependencies.swift            # (Optional) Tuist dependency management
+│   ├── Config.swift                  # (Optional) Tuist configurations
 ├── .github/                          # GitHub specific files
 │   └── workflows/                    # GitHub Actions workflows
 │       ├── ci.yml                    # Continuous integration workflow
@@ -137,18 +141,18 @@ LittleMoments/
 │   │   │   ├── SoundManager.swift
 │   │   │   └── ScheduledBellAlert.swift
 │   │   └── Utilities/                # Utility functions
-│   └── Resources/                    # App resources
-│       ├── Assets.xcassets/          # Image assets
-│       ├── Sounds/                   # Sound files
-│       │   └── 42095__fauxpress__bell-meditation.aif
-│       ├── Localization/             # Localized strings (future)
-│       └── Launch.storyboard         # Launch screen
-├── Tests/                            # Test files
-│   ├── UnitTests/                    # Unit tests
-│   │   ├── TimerTests/               # Tests for Timer feature
-│   │   │   └── TimerRunningViewTests.swift
-│   │   └── CoreTests/                # Tests for core functionality
-│   └── UITests/                      # UI tests
+│   ├── Resources/                    # App resources
+│   │   ├── Assets.xcassets/          # Image assets
+│   │   ├── Sounds/                   # Sound files
+│   │   │   └── 42095__fauxpress__bell-meditation.aif
+│   │   ├── Localization/             # Localized strings (future)
+│   │   └── Launch.storyboard         # Launch screen
+│   └── Tests/                        # Test files
+│       ├── UnitTests/                # Unit tests
+│       │   ├── TimerTests/           # Tests for Timer feature
+│       │   │   └── TimerRunningViewTests.swift
+│       │   └── CoreTests/            # Tests for core functionality
+│       └── UITests/                  # UI tests
 ├── Little Moments.entitlements       # App entitlements
 └── Little-Moments-Info.plist         # Info.plist file
 ```

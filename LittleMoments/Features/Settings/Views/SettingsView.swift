@@ -6,7 +6,7 @@
 //
 
 // Add import for JustNowSettings
-import Foundation
+// import Foundation
 import SwiftUI
 
 // Import JustNowSettings from Models folder

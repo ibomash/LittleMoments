@@ -19,7 +19,7 @@ platform :ios do
   desc "Run tests"
   lane :test do
     begin
-      sh("cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'Little Moments' -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test")
+      sh("cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'LittleMoments' -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' test")
     rescue
       UI.important("Tests failed but continuing...")
     end
@@ -28,7 +28,7 @@ platform :ios do
   desc "Build the app"
   lane :build do
     begin
-      sh("cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'Little Moments' -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build")
+      sh("cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'LittleMoments' -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build")
     rescue => ex
       UI.error(ex)
       UI.important("Build failed but continuing...")
@@ -38,7 +38,7 @@ platform :ios do
   desc "Build the app for release"
   lane :build_release do
     begin
-      sh("cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'Little Moments' -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build")
+      sh("cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme 'LittleMoments' -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build")
     rescue => ex
       UI.error(ex)
       UI.important("Release build failed but continuing...")

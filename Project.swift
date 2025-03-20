@@ -4,8 +4,8 @@ let project = Project(
   name: "LittleMoments",
   settings: .settings(
     configurations: [
-      .debug(name: "Debug", xcconfig: "../Config/Debug.xcconfig"),
-      .release(name: "Release", xcconfig: "../Config/Release.xcconfig"),
+      .debug(name: "Debug", xcconfig: "Config/Debug.xcconfig"),
+      .release(name: "Release", xcconfig: "Config/Release.xcconfig"),
     ]
   ),
   targets: [
@@ -13,26 +13,21 @@ let project = Project(
       name: "LittleMoments",
       destinations: .iOS,
       product: .app,
-      bundleId: "net.bomash.illya.Little-Moments",
-      infoPlist: .file(path: "../Little-Moments-Info.plist"),
-      sources: ["../LittleMoments/**/*.swift"],
-      resources: [
-        "../LittleMoments/**/Resources/**/*",
-        "../LittleMoments/**/*.storyboard",
-        "../LittleMoments/**/*.xcassets",
-      ],
-      entitlements: .file(path: "../Little Moments.entitlements"),
+      bundleId: "net.bomash.illya.LittleMoments",
+      infoPlist: .file(path: "Little-Moments-Info.plist"),
+      sources: ["LittleMoments/Core/**", "LittleMoments/Features/**", "LittleMoments/App/iOS/**"],
+      resources: ["LittleMoments/Resources/**"],
       dependencies: []
     ),
     .target(
       name: "LittleMomentsTests",
       destinations: .iOS,
       product: .unitTests,
-      bundleId: "net.bomash.illya.Little-MomentsTests",
+      bundleId: "net.bomash.illya.LittleMomentsTests",
       infoPlist: .default,
-      sources: ["../Tests/**/*.swift"],
-      resources: [],
-      dependencies: [.target(name: "LittleMoments")]
+      sources: ["LittleMoments/Tests/**"],
+//      entitlements: .file(path: "Little Moments.entitlements"),
+      dependencies: []
     ),
   ]
 )

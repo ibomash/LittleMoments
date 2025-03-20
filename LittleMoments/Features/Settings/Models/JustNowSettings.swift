@@ -5,7 +5,7 @@
 //  Created during migration
 //
 
-import Foundation
+// import Foundation
 // Add import for HealthKitManager which is in Core/Health
 import HealthKit
 import SwiftUI

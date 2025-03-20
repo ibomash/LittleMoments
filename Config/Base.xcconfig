@@ -2,10 +2,10 @@
 // Common build settings for all configurations
 
 // Product Bundle Identifier
-PRODUCT_BUNDLE_IDENTIFIER = net.bomash.illya.Little-Moments
+PRODUCT_BUNDLE_IDENTIFIER = net.bomash.illya.LittleMoments
 
-// iOS Deployment Target
-IPHONEOS_DEPLOYMENT_TARGET = 16.0
+// Development team
+DEVELOPMENT_TEAM = Z5NU48NAF9
 
 // Swift Version
 SWIFT_VERSION = 5.0

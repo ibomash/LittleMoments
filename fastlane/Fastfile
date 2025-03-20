@@ -18,19 +18,19 @@ platform :ios do
   desc "Run tests"
   lane :test do
     # Use shell command with error handling
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"Little Moments\" -destination \"platform=iOS Simulator,name=iPhone 16\" || true"
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -destination \"platform=iOS Simulator,name=iPhone 16\" || true"
   end
 
   desc "Build app"
   lane :build do
     # Use shell command with error handling
-    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"Little Moments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
+    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
   end
 
   desc "Build app for release"
   lane :build_release do
     # Use shell command with error handling
-    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"Little Moments\" -configuration Release -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
+    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Release -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
   end
 
   desc "Format, lint, test, and build"

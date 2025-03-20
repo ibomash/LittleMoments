@@ -5,7 +5,7 @@
 //  Created by Illya Bomash on 5/12/23.
 //
 
-import Foundation
+// import Foundation
 import HealthKit
 
 class HealthKitManager {
