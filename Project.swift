@@ -27,7 +27,6 @@ let project = Project(
       bundleId: "net.bomash.illya.LittleMomentsTests",
       infoPlist: .default,
       sources: ["LittleMoments/Tests/**"],
-//      entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: []
     ),
   ]
