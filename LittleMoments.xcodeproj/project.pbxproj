@@ -82,6 +82,7 @@
 		CFF5E2B8312E4491ED6D6A99 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		D5E7FFEF8B037B913B5508CC /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		D60021AF36447DA1D2AE9338 /* TimerRunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerRunningView.swift; sourceTree = "<group>"; };
+		F0A0F8D75B7A9FD34ACA9E1F /* Little Moments.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Little Moments.entitlements"; sourceTree = "<group>"; };
 		FCC15F1523FC162F6A1E01E3 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -237,6 +238,7 @@
 				4EB583CEF86E2F835A29275C /* Config */,
 				4BE8D63DF496D70388272985 /* Derived */,
 				8781946F11168CC9C7411A5D /* LittleMoments */,
+				F0A0F8D75B7A9FD34ACA9E1F /* Little Moments.entitlements */,
 				411DAEEAA95330EBC3DAE5A1 /* Little-Moments-Info.plist */,
 			);
 			name = Project;
@@ -603,6 +605,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Little Moments.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Little-Moments-Info.plist";
@@ -681,6 +684,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Little Moments.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Little-Moments-Info.plist";

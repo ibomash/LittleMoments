@@ -17,6 +17,7 @@ let project = Project(
       infoPlist: .file(path: "Little-Moments-Info.plist"),
       sources: ["LittleMoments/Core/**", "LittleMoments/Features/**", "LittleMoments/App/iOS/**"],
       resources: ["LittleMoments/Resources/**"],
+      entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: []
     ),
     .target(

@@ -7,6 +7,10 @@ PRODUCT_BUNDLE_IDENTIFIER = net.bomash.illya.LittleMoments
 // Development team
 DEVELOPMENT_TEAM = Z5NU48NAF9
 
+// Version Information
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
 // Swift Version
 SWIFT_VERSION = 5.0
 
