@@ -2,7 +2,7 @@ import SwiftUI
 import XCTest
 
 /// @testable import allows access to internal members of the app module
-@testable import Little_Moments
+@testable import LittleMoments
 
 /// Test suite for TimerRunningView and its associated TimerViewModel
 /// These tests verify both the view model logic and basic view creation

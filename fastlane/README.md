@@ -47,14 +47,6 @@ Run tests
 
 Build app
 
-### ios build_release
-
-```sh
-[bundle exec] fastlane ios build_release
-```
-
-Build app for release
-
 ### ios quality_check
 
 ```sh

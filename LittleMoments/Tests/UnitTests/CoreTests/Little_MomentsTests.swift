@@ -7,7 +7,7 @@
 
 import XCTest
 
-@testable import Little_Moments
+@testable import LittleMoments
 
 final class Little_MomentsTests: XCTestCase {
 

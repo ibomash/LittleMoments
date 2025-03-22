@@ -12,25 +12,19 @@ platform :ios do
 
   desc "Format Swift code"
   lane :format_code do
-    sh "cd .. && swift-format -i -r . --configuration .swift-format.json || true"
+    sh "cd .. && swift-format -i -r . --configuration .swift-format.json"
   end
 
   desc "Run tests"
   lane :test do
-    # Use shell command with error handling
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -destination \"platform=iOS Simulator,name=iPhone 16\" || true"
+    # Run tests with Debug configuration which is known to avoid module import issues
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\""
   end
 
   desc "Build app"
   lane :build do
     # Use shell command with error handling
-    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
-  end
-
-  desc "Build app for release"
-  lane :build_release do
-    # Use shell command with error handling
-    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Release -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build || true"
+    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build"
   end
 
   desc "Format, lint, test, and build"
