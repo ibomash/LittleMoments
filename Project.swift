@@ -27,7 +27,9 @@ let project = Project(
       bundleId: "net.bomash.illya.LittleMomentsTests",
       infoPlist: .default,
       sources: ["LittleMoments/Tests/**"],
-      dependencies: []
+      dependencies: [
+        .target(name: "LittleMoments")
+      ]
     ),
   ]
 )
