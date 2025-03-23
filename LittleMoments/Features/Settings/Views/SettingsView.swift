@@ -5,8 +5,11 @@
 //  Created by Illya Bomash on 5/29/23.
 //
 
-import Foundation
+// Add import for JustNowSettings
+// import Foundation
 import SwiftUI
+
+// Import JustNowSettings from Models folder
 
 struct SettingsView: View {
   @Environment(\.presentationMode)
@@ -69,60 +72,7 @@ struct SettingsView: View {
   }
 }
 
-class JustNowSettings: ObservableObject {
-  static let shared = JustNowSettings()
-
-  private let userDefaults = UserDefaults.standard
-
-  var writeToHealth: Bool
-  {
-    get {
-      return userDefaults.bool(forKey: "writeToHealth")
-    }
-    set {
-      if newValue {
-        HealthKitManager.shared.requestAuthorization { (success, error) in
-          if !success {
-            print("HealthKit permission denied: ", error?.localizedDescription ?? "Unknown error")
-            return
-          }
-        }
-      }
-      userDefaults.set(newValue, forKey: "writeToHealth")
-      userDefaults.synchronize()
-    }
-  }
-
-  var ringBellAtStart: Bool {
-    get {
-      if let value = userDefaults.object(forKey: "ringBellAtStart") as? Bool {
-        return value
-      } else {
-        return true  // Default value
-      }
-    }
-    set {
-      userDefaults.set(newValue, forKey: "ringBellAtStart")
-      userDefaults.synchronize()
-    }
-  }
-
-  var showSeconds: Bool {
-    get {
-      if let value = userDefaults.object(forKey: "showSeconds") as? Bool {
-        return value
-      } else {
-        return true  // Default value
-      }
-    }
-    set {
-      userDefaults.set(newValue, forKey: "showSeconds")
-      userDefaults.synchronize()
-    }
-  }
-
-  private init() {}
-}
+// JustNowSettings class has been moved to LittleMoments/Features/Settings/Models/JustNowSettings.swift
 
 struct SettingsView_Previews: PreviewProvider {
   static var previews: some View {

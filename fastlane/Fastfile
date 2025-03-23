@@ -1,0 +1,37 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Run SwiftLint"
+  lane :lint do
+    swiftlint(
+      quiet: true,
+      strict: true,
+      ignore_exit_status: true
+    )
+  end
+
+  desc "Format Swift code"
+  lane :format_code do
+    sh "cd .. && swift-format -i -r . --configuration .swift-format.json"
+  end
+
+  desc "Run tests"
+  lane :test do
+    # Run tests with Debug configuration which is known to avoid module import issues
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\""
+  end
+
+  desc "Build app"
+  lane :build do
+    # Use shell command with error handling
+    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build"
+  end
+
+  desc "Format, lint, test, and build"
+  lane :quality_check do
+    format_code
+    lint
+    test
+    build
+  end
+end 

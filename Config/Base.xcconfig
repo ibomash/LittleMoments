@@ -1,0 +1,27 @@
+// Base.xcconfig
+// Common build settings for all configurations
+
+// Product Bundle Identifier
+PRODUCT_BUNDLE_IDENTIFIER = net.bomash.illya.LittleMoments
+
+// Development team
+DEVELOPMENT_TEAM = Z5NU48NAF9
+
+// Version Information
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
+// Swift Version
+SWIFT_VERSION = 5.0
+
+// Enable Bitcode
+ENABLE_BITCODE = NO
+
+// Code Signing
+CODE_SIGN_STYLE = Automatic
+
+// Debug Information Format
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// GCC_OPTIMIZATION_LEVEL
+GCC_OPTIMIZATION_LEVEL = 0 

@@ -5,7 +5,8 @@
 //  Created by Illya Bomash on 5/1/23.
 //
 
-import Foundation
+// Add import for JustNowSettings
+// import Foundation
 import SwiftUI
 import UIKit
 
