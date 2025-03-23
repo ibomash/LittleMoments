@@ -73,4 +73,13 @@ fastlane/test_output
 iOSInjectionProject/
 
 # macOS
-.DS_Store 
+.DS_Store
+
+# Tuist-generated files
+Derived/
+*.xcodeproj
+*.xcworkspace
+!Package.swift.project.xcworkspace  # Add this exception if needed for Swift Package Manager
+
+# Other files to ignore
+.git.bak/ 
