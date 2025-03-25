@@ -1,13 +1,15 @@
 import ProjectDescription
 
+let marketingVersion = "1.2.3"
+let buildVersion = "42"
+
+let baseSettings: [String: SettingValue] = [
+    "MARKETING_VERSION": .string(marketingVersion),
+    "CURRENT_PROJECT_VERSION": .string(buildVersion)
+]
+
 let project = Project(
   name: "LittleMoments",
-  settings: .settings(
-    configurations: [
-      .debug(name: "Debug", xcconfig: "Config/Debug.xcconfig"),
-      .release(name: "Release", xcconfig: "Config/Release.xcconfig"),
-    ]
-  ),
   targets: [
     .target(
       name: "LittleMoments",
@@ -18,7 +20,10 @@ let project = Project(
       sources: ["LittleMoments/Core/**", "LittleMoments/Features/**", "LittleMoments/App/iOS/**"],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
-      dependencies: []
+      dependencies: [],
+      settings: .settings(
+        base: baseSettings
+      )
     ),
     .target(
       name: "LittleMomentsTests",
