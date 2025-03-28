@@ -31,10 +31,37 @@ let project = Project(
       product: .unitTests,
       bundleId: "net.bomash.illya.LittleMomentsTests",
       infoPlist: .default,
-      sources: ["LittleMoments/Tests/**"],
+      sources: ["LittleMoments/Tests/UnitTests/**"],
       dependencies: [
         .target(name: "LittleMoments")
       ]
     ),
+    .target(
+      name: "LittleMomentsUITests",
+      destinations: .iOS,
+      product: .uiTests,
+      bundleId: "net.bomash.illya.LittleMomentsUITests",
+      infoPlist: .default,
+      sources: ["LittleMoments/Tests/UITests/**"],
+      dependencies: [
+        .target(name: "LittleMoments")
+      ]
+    ),
+  ],
+  schemes: [
+    .scheme(
+      name: "LittleMoments",
+      shared: true,
+      buildAction: .buildAction(targets: ["LittleMoments"]),
+      testAction: .targets(
+        ["LittleMomentsTests", "LittleMomentsUITests"],
+        configuration: .debug,
+        options: .options(coverage: true, codeCoverageTargets: ["LittleMoments"])
+      ),
+      runAction: .runAction(configuration: .debug),
+      archiveAction: .archiveAction(configuration: .release),
+      profileAction: .profileAction(configuration: .release),
+      analyzeAction: .analyzeAction(configuration: .debug)
+    )
   ]
 )
