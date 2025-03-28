@@ -9,6 +9,12 @@ import XCTest
 final class TimerRunningViewTests: XCTestCase {
   /// The view model instance used across all tests
   var timerViewModel: TimerViewModel!
+  
+  /// Helper method to set showSeconds setting
+  private func setShowSeconds(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "showSeconds")
+    UserDefaults.standard.synchronize()
+  }
 
   /// Set up method runs before each test
   /// Creates a fresh TimerViewModel instance to ensure tests start with a clean state
@@ -25,13 +31,42 @@ final class TimerRunningViewTests: XCTestCase {
     super.tearDown()
   }
 
-  /// Tests the initial state of the TimerViewModel
+  /// Tests the initial state of the TimerViewModel with both showSeconds settings
   /// Verifies that all properties are properly initialized to their default values
   func testTimerViewModelInitialState() {
+    // Test with showSeconds = true
+    setShowSeconds(true)
     XCTAssertEqual(timerViewModel.timeElapsedFormatted, "0:00")
     XCTAssertFalse(timerViewModel.hasEndTarget)
     XCTAssertFalse(timerViewModel.isDone)
     XCTAssertEqual(timerViewModel.progress, 0.0)
+
+    // Test with showSeconds = false
+    setShowSeconds(false)
+    XCTAssertEqual(timerViewModel.timeElapsedFormatted, "0")
+    XCTAssertFalse(timerViewModel.hasEndTarget)
+    XCTAssertFalse(timerViewModel.isDone)
+    XCTAssertEqual(timerViewModel.progress, 0.0)
+  }
+
+  /// Tests that time formatting respects showSeconds setting after time has elapsed
+  func testTimeFormattingWithSettings() {
+    timerViewModel.start()
+    
+    // Wait for 1 second to elapse
+    let expectation = XCTestExpectation(description: "Timer running")
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { // Wait just over 1 second
+      // Test with showSeconds = true
+      self.setShowSeconds(true)
+      XCTAssertEqual(self.timerViewModel.timeElapsedFormatted, "0:01")
+      
+      // Test with showSeconds = false
+      self.setShowSeconds(false)
+      XCTAssertEqual(self.timerViewModel.timeElapsedFormatted, "0")
+      expectation.fulfill()
+    }
+    
+    wait(for: [expectation], timeout: 2)
   }
 
   /// Tests the scheduled alert functionality
@@ -79,6 +114,9 @@ final class TimerRunningViewTests: XCTestCase {
   /// Tests the timer reset functionality
   /// Verifies that resetting the timer properly clears all state
   func testTimerReset() {
+    // Ensure showSeconds is true for consistent formatting
+    setShowSeconds(true)
+    
     timerViewModel.start()
 
     // Wait briefly then reset
