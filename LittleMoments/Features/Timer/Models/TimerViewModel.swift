@@ -8,7 +8,6 @@
 // Add import for JustNowSettings
 // import Foundation
 import SwiftUI
-import UIKit
 
 class TimerViewModel: ObservableObject {
   // Components of the TimerViewModel:

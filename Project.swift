@@ -1,7 +1,7 @@
 import ProjectDescription
 
-let marketingVersion = "1.2.3"
-let buildVersion = "42"
+let marketingVersion = "0.2.0"
+let buildVersion = "51"
 
 let baseSettings: [String: SettingValue] = [
     "MARKETING_VERSION": .string(marketingVersion),

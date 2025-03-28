@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 import UserNotifications
 
 struct TimerRunningView: View {
