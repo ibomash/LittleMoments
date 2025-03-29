@@ -2,6 +2,7 @@ import ActivityKit
 import SwiftUI
 import WidgetKit
 
+@main
 struct MeditationWidgets: WidgetBundle {
   @WidgetBundleBuilder
   var body: some Widget {
@@ -42,6 +43,7 @@ struct MeditationLiveActivityWidget: Widget {
           }
           .buttonStyle(.bordered)
           .tint(.blue)
+          .widgetURL(URL(string: "littlemoments://endSession"))
         }
       } compactLeading: {
         Image(systemName: "timer")
@@ -62,4 +64,4 @@ struct MeditationLiveActivityWidget: Widget {
 
     return String(format: "%d:%02d", minutes, secs)
   }
-}
+} 

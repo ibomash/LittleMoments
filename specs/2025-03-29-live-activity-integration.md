@@ -151,11 +151,11 @@ LittleMoments/
 - [x] UI tests for Live Activity views
 
 ### Phase 3: Integration with Timer
-- [ ] Update TimerViewModel to start/stop Live Activities
-- [ ] Update TimerRunningView to handle Live Activity lifecycle
-- [ ] Add live activity updating
-- [ ] Add end session functionality from Live Activity
-- [ ] Unit tests for timer integration
+- [x] Update TimerViewModel to start/stop Live Activities
+- [x] Update TimerRunningView to handle Live Activity lifecycle
+- [x] Add live activity updating
+- [x] Add end session functionality from Live Activity
+- [x] Unit tests for timer integration
 
 ### Phase 4: Haptic Feedback and Refinements
 - [ ] Add haptic feedback for session completion

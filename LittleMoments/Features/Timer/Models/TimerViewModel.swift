@@ -6,8 +6,9 @@
 //
 
 // Add import for JustNowSettings
-// import Foundation
+import Foundation
 import SwiftUI
+import ActivityKit
 
 class TimerViewModel: ObservableObject {
   // Components of the TimerViewModel:
@@ -121,6 +122,36 @@ class TimerViewModel: ObservableObject {
         print("Failed to save mindful session: ", error?.localizedDescription ?? "Unknown error")
       }
     }
+  }
+
+  // Live Activity functions
+  func startLiveActivity() {
+    guard JustNowSettings.shared.enableLiveActivities else { return }
+    
+    let targetSeconds = scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
+    print("Starting live activity with target seconds: \(targetSeconds ?? 0)")
+    LiveActivityManager.shared.startActivity(
+      sessionName: "Meditation",
+      targetTimeInSeconds: targetSeconds
+    )
+  }
+  
+  func updateLiveActivity() {
+    guard JustNowSettings.shared.enableLiveActivities else { return }
+    LiveActivityManager.shared.updateActivity(secondsElapsed: secondsElapsed)
+  }
+  
+  func endLiveActivity(completed: Bool = true) {
+    guard JustNowSettings.shared.enableLiveActivities else { return }
+    
+    if completed {
+      LiveActivityManager.shared.updateActivity(
+        secondsElapsed: secondsElapsed,
+        isCompleted: true
+      )
+    }
+    
+    LiveActivityManager.shared.endActivity()
   }
 
   init() {

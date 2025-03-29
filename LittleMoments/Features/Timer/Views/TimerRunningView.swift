@@ -69,14 +69,21 @@ struct TimerRunningView: View {
     }
     .onAppear {
       timerViewModel.start()
+      timerViewModel.startLiveActivity()
       UIApplication.shared.isIdleTimerDisabled = true
       if JustNowSettings.shared.ringBellAtStart {
         SoundManager.playSound()
+      }
+      
+      // Update timer for Live Activity
+      Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+        timerViewModel.updateLiveActivity()
       }
     }
     .onDisappear {
       UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
       timerViewModel.writeToHealthStore()
+      timerViewModel.endLiveActivity()
       timerViewModel.reset()
       UIApplication.shared.isIdleTimerDisabled = false
     }
@@ -204,6 +211,7 @@ struct TimerControlButtons: View {
         imageName: "xmark.circle.fill",
         buttonText: "Cancel",
         action: {
+          timerViewModel.endLiveActivity(completed: false)
           timerViewModel.reset()
           presentationMode.wrappedValue.dismiss()
         }
@@ -214,6 +222,7 @@ struct TimerControlButtons: View {
         imageName: "checkmark.circle.fill",
         buttonText: "Complete",
         action: {
+          timerViewModel.endLiveActivity(completed: true)
           presentationMode.wrappedValue.dismiss()
         }
       )

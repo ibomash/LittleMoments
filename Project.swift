@@ -17,7 +17,13 @@ let project = Project(
       product: .app,
       bundleId: "net.bomash.illya.LittleMoments",
       infoPlist: .file(path: "Little-Moments-Info.plist"),
-      sources: ["LittleMoments/Core/**", "LittleMoments/Features/**", "LittleMoments/App/iOS/**"],
+      sources: [
+        "LittleMoments/Core/**", 
+        "LittleMoments/Features/**",
+        "LittleMoments/App/iOS/**",
+        // Exclude files that are part of the widget extension
+        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift"
+      ],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: [
@@ -50,17 +56,10 @@ let project = Project(
       product: .appExtension,
       productName: "LittleMomentsWidgetExtension",
       bundleId: "net.bomash.illya.LittleMoments.WidgetExtension",
-      infoPlist: .extendingDefault(with: [
-        "CFBundleDisplayName": "LittleMoments Widgets",
-        "NSExtension": [
-          "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
-        ],
-      ]),
-      sources: [
-        "LittleMoments/Features/LiveActivity/Views/**",
-        "LittleMoments/Features/LiveActivity/Models/**",
-      ],
+      infoPlist: .file(path: "LittleMoments/WidgetExtension/WidgetExtension-Info.plist"),
+      sources: ["LittleMoments/WidgetExtension/**"],
       resources: ["LittleMoments/Resources/**"],
+      entitlements: .file(path: "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements"),
       dependencies: [
         .sdk(name: "SwiftUI", type: .framework),
         .sdk(name: "WidgetKit", type: .framework),
