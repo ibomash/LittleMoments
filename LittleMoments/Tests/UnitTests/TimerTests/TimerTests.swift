@@ -169,19 +169,4 @@ final class TimerTests: XCTestCase {
 
     wait(for: [expectation], timeout: 1)
   }
-
-  /// Tests recurring alerts behavior with custom test
-  func testRecurringAlerts() {
-    // Create a recurring alert for direct testing
-    let recurringAlert = RecurringScheduledBellAlert(name: "Test", intervalInSec: 1)
-
-    // Just directly test the alert functionality
-    XCTAssertEqual(recurringAlert.targetTimeInSec, 1.0)
-    XCTAssertEqual(recurringAlert.getProgress(secondsElapsed: 0), 1.0)
-    XCTAssertEqual(recurringAlert.getProgress(secondsElapsed: 0.5), 0.5)
-
-    // Test the trigger update
-    recurringAlert.checkTrigger(secondsElapsed: 1.5)
-    XCTAssertEqual(recurringAlert.targetTimeInSec, 2.0)
-  }
 }

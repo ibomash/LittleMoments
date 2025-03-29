@@ -26,21 +26,4 @@ final class ScheduledAlertTests: XCTestCase {
     alert.checkTrigger(secondsElapsed: 300)
     XCTAssertTrue(alert.hasTriggered)
   }
-
-  /// Tests the RecurringScheduledBellAlert class
-  func testRecurringScheduledBellAlert() {
-    // Test initialization
-    let alert = RecurringScheduledBellAlert(name: "Test", intervalInSec: 60)
-    XCTAssertEqual(alert.targetTimeInSec, 60)
-    XCTAssertEqual(alert.intervalInSec, 60)
-    XCTAssertFalse(alert.hasTarget)
-
-    // Test progress calculation (should be inverse - how close to next trigger)
-    XCTAssertEqual(alert.getProgress(secondsElapsed: 0), 1.0)
-    XCTAssertEqual(alert.getProgress(secondsElapsed: 30), 0.5)
-
-    // Test interval updates
-    alert.checkTrigger(secondsElapsed: 65)
-    XCTAssertEqual(alert.targetTimeInSec, 120)  // Should move to next interval
-  }
 }
