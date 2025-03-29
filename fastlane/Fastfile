@@ -15,16 +15,30 @@ platform :ios do
     sh "cd .. && swift-format -i -r . --configuration .swift-format.json"
   end
 
-  desc "Run tests"
-  lane :test do
-    # Run tests with Debug configuration which is known to avoid module import issues
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\""
+  desc "Generate Xcode project with Tuist"
+  lane :generate do
+    sh "cd .. && tuist generate"
   end
 
-  desc "Build app"
+  desc "Run unit tests"
+  lane :test_unit do
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsTests"
+  end
+
+  desc "Run UI tests"
+  lane :test_ui do
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsUITests"
+  end
+
+  desc "Run all tests"
+  lane :test do
+    test_unit
+    test_ui
+  end
+
+  desc "Build app with Tuist"
   lane :build do
-    # Use shell command with error handling
-    sh "cd .. && xcodebuild -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" build"
+    sh "cd .. && tuist build"
   end
 
   desc "Format, lint, test, and build"

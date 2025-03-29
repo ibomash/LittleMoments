@@ -31,13 +31,37 @@ Run SwiftLint
 
 Format Swift code
 
+### ios generate
+
+```sh
+[bundle exec] fastlane ios generate
+```
+
+Generate Xcode project with Tuist
+
+### ios test_unit
+
+```sh
+[bundle exec] fastlane ios test_unit
+```
+
+Run unit tests
+
+### ios test_ui
+
+```sh
+[bundle exec] fastlane ios test_ui
+```
+
+Run UI tests
+
 ### ios test
 
 ```sh
 [bundle exec] fastlane ios test
 ```
 
-Run tests
+Run all tests
 
 ### ios build
 
@@ -45,7 +69,7 @@ Run tests
 [bundle exec] fastlane ios build
 ```
 
-Build app
+Build app with Tuist
 
 ### ios quality_check
 
