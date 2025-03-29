@@ -137,11 +137,11 @@ LittleMoments/
 ```
 
 ### Phase 1: Basic Live Activity Setup
-- [ ] Update project entitlements to support Live Activities
-- [ ] Create MeditationLiveActivityAttributes model
-- [ ] Create LiveActivityManager class
-- [ ] Update JustNowSettings to include Live Activity settings
-- [ ] Unit tests for LiveActivityManager
+- [x] Update project entitlements to support Live Activities
+- [x] Create MeditationLiveActivityAttributes model
+- [x] Create LiveActivityManager class
+- [x] Update JustNowSettings to include Live Activity settings
+- [x] Unit tests for LiveActivityManager
 
 ### Phase 2: Live Activity UI Implementation
 - [ ] Create MeditationLiveActivityView for Lock Screen view

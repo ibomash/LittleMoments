@@ -51,5 +51,9 @@
     <string>Little Moments needs access to your health data to record meditation sessions.</string>
     <key>NSHealthUpdateUsageDescription</key>
     <string>Little Moments needs access to your health data to record meditation sessions.</string>
+    <key>NSSupportsLiveActivities</key>
+    <true/>
+    <key>NSSupportsLiveActivitiesFrequentUpdates</key>
+    <true/>
 </dict>
 </plist> 

@@ -22,8 +22,20 @@ let project = Project(
       entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: [],
       settings: .settings(
-        base: baseSettings
-      )
+        base: baseSettings,
+        configurations: [
+          .debug(name: "Debug", settings: [
+            "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+            "SUPPORTS_MACCATALYST": "NO",
+            "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG"
+          ]),
+          .release(name: "Release", settings: [
+            "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+            "SUPPORTS_MACCATALYST": "NO"
+          ])
+        ]
+      ),
+      additionalFiles: []
     ),
     .target(
       name: "LittleMomentsTests",

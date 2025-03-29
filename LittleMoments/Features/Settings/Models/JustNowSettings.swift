@@ -60,6 +60,20 @@ class JustNowSettings: ObservableObject {
       userDefaults.synchronize()
     }
   }
+  
+  var enableLiveActivities: Bool {
+    get {
+      if let value = userDefaults.object(forKey: "enableLiveActivities") as? Bool {
+        return value
+      } else {
+        return true  // Default value
+      }
+    }
+    set {
+      userDefaults.set(newValue, forKey: "enableLiveActivities")
+      userDefaults.synchronize()
+    }
+  }
 
   private init() {}
 }
