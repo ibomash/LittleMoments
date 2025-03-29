@@ -53,14 +53,15 @@ class LiveActivityManager {
   /// Updates an existing Live Activity with current session progress
   /// - Parameters:
   ///   - secondsElapsed: Current elapsed time of the session in seconds
+  ///   - targetTimeInSeconds: Optional target duration in seconds (nil for untimed sessions)
   ///   - isCompleted: Whether the session has been completed
-  func updateActivity(secondsElapsed: Double, isCompleted: Bool = false) {
+  func updateActivity(secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false) {
     print("Updating live activity with seconds elapsed: \(secondsElapsed), isCompleted: \(isCompleted)")
     Task {
       // Create updated state with new time and completion status
       let updatedState = MeditationLiveActivityAttributes.ContentState(
         secondsElapsed: secondsElapsed,
-        targetTimeInSeconds: activity?.content.state.targetTimeInSeconds,
+        targetTimeInSeconds: targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds,
         isCompleted: isCompleted
       )
 

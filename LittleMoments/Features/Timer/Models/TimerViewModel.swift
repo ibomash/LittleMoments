@@ -34,7 +34,20 @@ class TimerViewModel: ObservableObject {
 
   // Options for and actually scheduled "end time" alert
   @Published var scheduledAlertOptions: [OneTimeScheduledBellAlert]
-  @Published var scheduledAlert: OneTimeScheduledBellAlert?
+  @Published var scheduledAlert: OneTimeScheduledBellAlert? {
+    didSet {
+      // Update Live Activity when timer duration changes
+      if JustNowSettings.shared.enableLiveActivities {
+        let targetSeconds = scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
+        print("Updating live activity with new target seconds: \(targetSeconds ?? 0)")
+        // We need to update the Live Activity with the new target time
+        LiveActivityManager.shared.updateActivity(
+          secondsElapsed: secondsElapsed,
+          targetTimeInSeconds: targetSeconds
+        )
+      }
+    }
+  }
 
   var hasEndTarget: Bool {
     if let scheduledAlert { return scheduledAlert.hasTarget } else { return false }
