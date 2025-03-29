@@ -1,5 +1,7 @@
 default_platform(:ios)
 
+# Use `fastlane ...` directly rather than `bundle exec fastlane ...`
+
 platform :ios do
   desc "Run SwiftLint"
   lane :lint do
