@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class Little_MomentsUITests: XCTestCase {
+final class LittleMomentsUITests: XCTestCase {
 
   let app = XCUIApplication()
 

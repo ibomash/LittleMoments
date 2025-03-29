@@ -19,8 +19,8 @@ class TimerViewModel: ObservableObject {
   @ObservedObject var settings: JustNowSettings = JustNowSettings.shared
 
   // Running timer
-  private var startDate: Date? = nil
-  var timer: Timer? = nil
+  private var startDate: Date?
+  var timer: Timer?
   var backgroundTask: UIBackgroundTaskIdentifier = .invalid
   var timeElapsedFormatted: String {
     return getTimeElapsedFormatted()
@@ -96,18 +96,23 @@ class TimerViewModel: ObservableObject {
       return
     }
 
-    guard let startDate else { return }
+    guard let startDate else {
+      print("Error: Cannot write to health store - startDate is nil")
+      return
+    }
     let endDate = Date()
 
     // Create a new mindful session
-    let mindfulSession = HealthKitManager.shared.createMindfulSession(
-      startDate: startDate, endDate: endDate)
+    guard let mindfulSession = HealthKitManager.shared.createMindfulSession(
+      startDate: startDate, endDate: endDate) else {
+      print("Error: Failed to create mindful session")
+      return
+    }
 
     // Save the session to HealthKit
-    HealthKitManager.shared.saveMindfulSession(mindfulSession: mindfulSession) {
-      [self] (success, error) in
+    HealthKitManager.shared.saveMindfulSession(mindfulSession: mindfulSession) { [self] success, error in
       if success {
-        print("Mindful session of \(secondsElapsed) seconds saved successfully: \(mindfulSession)")
+        print("Mindful session of \(self.secondsElapsed) seconds saved successfully: \(mindfulSession)")
       } else {
         print("Failed to save mindful session: ", error?.localizedDescription ?? "Unknown error")
       }

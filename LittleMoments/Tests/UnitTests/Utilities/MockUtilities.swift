@@ -29,8 +29,10 @@ class MockHealthKitManager {
     // No need to call super.init() since we're not inheriting
   }
 
-  func createMindfulSession(startDate: Date, endDate: Date) -> HKCategorySample {
-    let mindfulType = HKObjectType.categoryType(forIdentifier: .mindfulSession)!
+  func createMindfulSession(startDate: Date, endDate: Date) -> HKCategorySample? {
+    guard let mindfulType = HKObjectType.categoryType(forIdentifier: .mindfulSession) else {
+      return nil
+    }
     return HKCategorySample(type: mindfulType, value: 0, start: startDate, end: endDate)
   }
 

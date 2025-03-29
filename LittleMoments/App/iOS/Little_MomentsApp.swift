@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Little_MomentsApp: App {
+struct LittleMomentsApp: App {
   init() {
     SoundManager.initialize()
   }

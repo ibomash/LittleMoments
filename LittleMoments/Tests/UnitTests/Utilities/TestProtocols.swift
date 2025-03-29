@@ -8,7 +8,7 @@ protocol AudioPlayable {
 }
 
 /// Protocol for playback delegation
-protocol PlaybackDelegate {
+protocol PlaybackDelegate: AnyObject {
   func play() -> Bool
   func stop()
 }

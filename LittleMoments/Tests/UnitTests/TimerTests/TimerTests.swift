@@ -8,7 +8,7 @@ import XCTest
 /// These tests verify both the view model logic and basic view creation
 final class TimerTests: XCTestCase {
   /// The view model instance used across all tests
-  var timerViewModel: TimerViewModel!
+  var timerViewModel: TimerViewModel?
 
   /// Helper method to set showSeconds setting
   private func setShowSeconds(_ value: Bool) {
@@ -27,7 +27,7 @@ final class TimerTests: XCTestCase {
   /// Tear down method runs after each test
   /// Ensures proper cleanup of timer and resources
   override func tearDown() {
-    timerViewModel.reset()
+    timerViewModel?.reset()
     timerViewModel = nil
     super.tearDown()
   }
@@ -37,33 +37,33 @@ final class TimerTests: XCTestCase {
   func testTimerViewModelInitialState() {
     // Test with showSeconds = true
     setShowSeconds(true)
-    XCTAssertEqual(timerViewModel.timeElapsedFormatted, "0:00")
-    XCTAssertFalse(timerViewModel.hasEndTarget)
-    XCTAssertFalse(timerViewModel.isDone)
-    XCTAssertEqual(timerViewModel.progress, 0.0)
+    XCTAssertEqual(timerViewModel?.timeElapsedFormatted, "0:00")
+    XCTAssertFalse(timerViewModel?.hasEndTarget ?? true)
+    XCTAssertFalse(timerViewModel?.isDone ?? true)
+    XCTAssertEqual(timerViewModel?.progress, 0.0)
 
     // Test with showSeconds = false
     setShowSeconds(false)
-    XCTAssertEqual(timerViewModel.timeElapsedFormatted, "0")
-    XCTAssertFalse(timerViewModel.hasEndTarget)
-    XCTAssertFalse(timerViewModel.isDone)
-    XCTAssertEqual(timerViewModel.progress, 0.0)
+    XCTAssertEqual(timerViewModel?.timeElapsedFormatted, "0")
+    XCTAssertFalse(timerViewModel?.hasEndTarget ?? true)
+    XCTAssertFalse(timerViewModel?.isDone ?? true)
+    XCTAssertEqual(timerViewModel?.progress, 0.0)
   }
 
   /// Tests that time formatting respects showSeconds setting after time has elapsed
   func testTimeFormattingWithSettings() {
-    timerViewModel.start()
+    timerViewModel?.start()
 
     // Wait for 1 second to elapse
     let expectation = XCTestExpectation(description: "Timer running")
     DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {  // Wait just over 1 second
       // Test with showSeconds = true
       self.setShowSeconds(true)
-      XCTAssertEqual(self.timerViewModel.timeElapsedFormatted, "0:01")
+      XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:01")
 
       // Test with showSeconds = false
       self.setShowSeconds(false)
-      XCTAssertEqual(self.timerViewModel.timeElapsedFormatted, "0")
+      XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0")
       expectation.fulfill()
     }
 
@@ -75,37 +75,37 @@ final class TimerTests: XCTestCase {
   /// for both simulator and device environments
   func testTimerViewModelScheduledAlert() {
     // Select the first timer option
-    let firstAlert = timerViewModel.scheduledAlertOptions[0]
-    timerViewModel.scheduledAlert = firstAlert
+    let firstAlert = timerViewModel?.scheduledAlertOptions[0]
+    timerViewModel?.scheduledAlert = firstAlert
 
-    XCTAssertNotNil(timerViewModel.scheduledAlert)
-    XCTAssertTrue(timerViewModel.hasEndTarget)
+    XCTAssertNotNil(timerViewModel?.scheduledAlert)
+    XCTAssertTrue(timerViewModel?.hasEndTarget ?? false)
 
     #if targetEnvironment(simulator)
       // In simulator, first alert should be 5 seconds
       // This shorter duration makes testing faster in the simulator
-      XCTAssertEqual(timerViewModel.scheduledAlert?.targetTimeInSec, 5)
+      XCTAssertEqual(timerViewModel?.scheduledAlert?.targetTimeInSec, 5)
     #else
       // On device, first alert should be 3 minutes (180 seconds)
       // This is the actual production value used in the app
-      XCTAssertEqual(timerViewModel.scheduledAlert?.targetTimeInSec, 180)
+      XCTAssertEqual(timerViewModel?.scheduledAlert?.targetTimeInSec, 180)
     #endif
   }
 
   /// Tests that the timer properly tracks progress
   /// Uses an async expectation to verify timer behavior over time
   func testTimerProgress() {
-    let fiveMinAlert = timerViewModel.scheduledAlertOptions[1]  // 5-minute timer
-    timerViewModel.scheduledAlert = fiveMinAlert
+    let fiveMinAlert = timerViewModel?.scheduledAlertOptions[1]  // 5-minute timer
+    timerViewModel?.scheduledAlert = fiveMinAlert
 
-    timerViewModel.start()
+    timerViewModel?.start()
 
     // Wait for 1 second to ensure timer has started
     let expectation = XCTestExpectation(description: "Timer running")
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
       // Verify that time has elapsed and progress is being tracked
-      XCTAssertTrue(self.timerViewModel.secondsElapsed > 0)
-      XCTAssertTrue(self.timerViewModel.progress > 0)
+      XCTAssertTrue(self.timerViewModel?.secondsElapsed ?? 0 > 0)
+      XCTAssertTrue(self.timerViewModel?.progress ?? 0 > 0)
       expectation.fulfill()
     }
 
@@ -118,15 +118,15 @@ final class TimerTests: XCTestCase {
     // Ensure showSeconds is true for consistent formatting
     setShowSeconds(true)
 
-    timerViewModel.start()
+    timerViewModel?.start()
 
     // Wait briefly then reset
     let expectation = XCTestExpectation(description: "Timer reset")
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-      self.timerViewModel.reset()
+      self.timerViewModel?.reset()
       // Verify that all values are reset to their initial state
-      XCTAssertEqual(self.timerViewModel.timeElapsedFormatted, "0:00")
-      XCTAssertEqual(self.timerViewModel.progress, 0.0)
+      XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:00")
+      XCTAssertEqual(self.timerViewModel?.progress, 0.0)
       expectation.fulfill()
     }
 
@@ -151,7 +151,7 @@ final class TimerTests: XCTestCase {
     settings.writeToHealth = true
 
     // Start timer
-    timerViewModel.start()
+    timerViewModel?.start()
 
     // Wait briefly then write to health
     let expectation = XCTestExpectation(description: "Health write")
@@ -160,7 +160,7 @@ final class TimerTests: XCTestCase {
       mockHealthManager.saveMindfulSession(
         startDate: Date().addingTimeInterval(-10),
         endDate: Date()
-      ) { success, error in
+      ) { success, _ in
         XCTAssertTrue(success)
         XCTAssertTrue(mockHealthManager.saveWasCalled)
         expectation.fulfill()

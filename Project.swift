@@ -5,7 +5,7 @@ let buildVersion = "51"
 
 let baseSettings: [String: SettingValue] = [
   "MARKETING_VERSION": .string(marketingVersion),
-  "CURRENT_PROJECT_VERSION": .string(buildVersion),
+  "CURRENT_PROJECT_VERSION": .string(buildVersion)
 ]
 
 let project = Project(
@@ -46,7 +46,7 @@ let project = Project(
       dependencies: [
         .target(name: "LittleMoments")
       ]
-    ),
+    )
   ],
   schemes: [
     .scheme(

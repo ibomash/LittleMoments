@@ -127,22 +127,25 @@ struct BellControlsGrid: View {
             if index < timerViewModel.scheduledAlertOptions.count {
               let scheduledAlertOption: OneTimeScheduledBellAlert =
                 timerViewModel.scheduledAlertOptions[index]
-              Button(action: {
-                handleAlertSelection(scheduledAlertOption)
-              }) {
-                Text(scheduledAlertOption.name)
-                  .frame(maxWidth: .infinity)
-                  .padding()
-                  .background(
-                    timerViewModel.scheduledAlert == scheduledAlertOption
-                      ? Color.blue : Color(UIColor.systemBackground)
-                  )
-                  .foregroundColor(
-                    timerViewModel.scheduledAlert == scheduledAlertOption
-                      ? Color.white : Color.blue
-                  )
-                  .cornerRadius(8)
-              }
+              Button(
+                action: {
+                  handleAlertSelection(scheduledAlertOption)
+                },
+                label: {
+                  Text(scheduledAlertOption.name)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                      timerViewModel.scheduledAlert == scheduledAlertOption
+                        ? Color.blue : Color(UIColor.systemBackground)
+                    )
+                    .foregroundColor(
+                      timerViewModel.scheduledAlert == scheduledAlertOption
+                        ? Color.white : Color.blue
+                    )
+                    .cornerRadius(8)
+                }
+              )
             } else {
               Spacer()
             }
@@ -160,8 +163,8 @@ struct BellControlsGrid: View {
       timerViewModel.scheduledAlert = scheduledAlertOption
 
       UNUserNotificationCenter.current().requestAuthorization(options: [
-        .alert, .sound,
-      ]) { granted, error in
+        .alert, .sound
+      ]) { granted, _ in
         if granted {
           let content = UNMutableNotificationContent()
           content.title = "Timer Complete"
@@ -198,7 +201,8 @@ struct TimerControlButtons: View {
   var body: some View {
     HStack {
       ImageButton(
-        imageName: "xmark.circle.fill", buttonText: "Cancel",
+        imageName: "xmark.circle.fill", 
+        buttonText: "Cancel",
         action: {
           timerViewModel.reset()
           presentationMode.wrappedValue.dismiss()
@@ -207,7 +211,8 @@ struct TimerControlButtons: View {
       .padding()
 
       ImageButton(
-        imageName: "checkmark.circle.fill", buttonText: "Complete",
+        imageName: "checkmark.circle.fill", 
+        buttonText: "Complete",
         action: {
           presentationMode.wrappedValue.dismiss()
         }

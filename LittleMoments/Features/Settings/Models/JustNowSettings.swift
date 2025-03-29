@@ -15,8 +15,7 @@ class JustNowSettings: ObservableObject {
 
   private let userDefaults = UserDefaults.standard
 
-  var writeToHealth: Bool
-  {
+  var writeToHealth: Bool {
     get {
       return userDefaults.bool(forKey: "writeToHealth")
     }

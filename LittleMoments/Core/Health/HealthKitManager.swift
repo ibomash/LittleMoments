@@ -23,9 +23,13 @@ class HealthKitManager {
   // Request Authorization
   func requestAuthorization(completion: @escaping (Bool, Error?) -> Swift.Void) {
     // Define the data types that the app needs access to
-    let healthKitTypesToWrite: Set<HKSampleType> = [
-      HKObjectType.categoryType(forIdentifier: .mindfulSession)!
-    ]
+    guard let mindfulType = HKObjectType.categoryType(forIdentifier: .mindfulSession) else {
+      print("Error: Failed to create mindful session category type for authorization")
+      completion(false, nil)
+      return
+    }
+    
+    let healthKitTypesToWrite: Set<HKSampleType> = [mindfulType]
 
     // Request authorization
     healthStore?.requestAuthorization(
@@ -33,9 +37,12 @@ class HealthKitManager {
   }
 
   // Create a Mindful Session with start and end date
-  func createMindfulSession(startDate: Date, endDate: Date) -> HKCategorySample {
+  func createMindfulSession(startDate: Date, endDate: Date) -> HKCategorySample? {
     // Define the mindful session type
-    let mindfulSessionType = HKObjectType.categoryType(forIdentifier: .mindfulSession)!
+    guard let mindfulSessionType = HKObjectType.categoryType(forIdentifier: .mindfulSession) else {
+      print("Error: Failed to create mindful session category type")
+      return nil
+    }
 
     // Create a mindful session instance
     let mindfulSessionInstance = HKCategorySample(

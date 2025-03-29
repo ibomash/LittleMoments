@@ -14,11 +14,20 @@ final class HealthKitManagerTests: XCTestCase {
     // Create session
     let session = HealthKitManager.shared.createMindfulSession(
       startDate: startDate, endDate: endDate)
+    
+    // Verify session exists
+    XCTAssertNotNil(session, "Mindful session should not be nil")
+    
+    // Safely unwrap the optional
+    guard let unwrappedSession = session else {
+      XCTFail("Failed to create mindful session")
+      return
+    }
 
     // Verify session properties
-    XCTAssertEqual(session.startDate, startDate)
-    XCTAssertEqual(session.endDate, endDate)
-    XCTAssertEqual(session.value, 0)
+    XCTAssertEqual(unwrappedSession.startDate, startDate)
+    XCTAssertEqual(unwrappedSession.endDate, endDate)
+    XCTAssertEqual(unwrappedSession.value, 0)
   }
 
   /// Tests HealthKit authorization request with mock
