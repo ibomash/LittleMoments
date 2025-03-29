@@ -1,3 +1,4 @@
+import AVFoundation
 import Foundation
 
 protocol ScheduledAlert: Equatable {
@@ -85,7 +86,7 @@ class RecurringScheduledBellAlert: ScheduledAlert {
   func getProgress(secondsElapsed: CGFloat) -> CGFloat {
     let timeUntilNextTrigger = (targetTimeInSec - secondsElapsed).truncatingRemainder(
       dividingBy: intervalInSec)
-    return CGFloat(timeUntilNextTrigger) / CGFloat(intervalInSec)
+    return timeUntilNextTrigger / intervalInSec
   }
 
   func checkTrigger(secondsElapsed: CGFloat) {

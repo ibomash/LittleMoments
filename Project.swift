@@ -4,8 +4,8 @@ let marketingVersion = "0.2.0"
 let buildVersion = "51"
 
 let baseSettings: [String: SettingValue] = [
-    "MARKETING_VERSION": .string(marketingVersion),
-    "CURRENT_PROJECT_VERSION": .string(buildVersion)
+  "MARKETING_VERSION": .string(marketingVersion),
+  "CURRENT_PROJECT_VERSION": .string(buildVersion),
 ]
 
 let project = Project(
