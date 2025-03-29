@@ -151,6 +151,10 @@ class TimerViewModel: ObservableObject {
   
   func updateLiveActivity() {
     guard JustNowSettings.shared.enableLiveActivities else { return }
+    
+    // Don't update if the timer has been reset
+    guard timer != nil else { return }
+    
     LiveActivityManager.shared.updateActivity(secondsElapsed: secondsElapsed)
   }
   

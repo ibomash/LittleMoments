@@ -13,6 +13,7 @@ struct TimerRunningView: View {
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
+  @State private var liveActivityUpdateTimer: Timer?
 
   var body: some View {
     GeometryReader { geometry in
@@ -76,11 +77,24 @@ struct TimerRunningView: View {
       }
       
       // Update timer for Live Activity
-      Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-        timerViewModel.updateLiveActivity()
+      liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak timerViewModel] _ in
+        guard let timerViewModel = timerViewModel else { return }
+        
+        // Only update if the timer is active (not nil)
+        if timerViewModel.timer != nil {
+          timerViewModel.updateLiveActivity()
+        } else {
+          // If timer is no longer running, invalidate this update timer
+          self.liveActivityUpdateTimer?.invalidate()
+          self.liveActivityUpdateTimer = nil
+        }
       }
     }
     .onDisappear {
+      // Invalidate the live activity update timer
+      liveActivityUpdateTimer?.invalidate()
+      liveActivityUpdateTimer = nil
+      
       UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
       timerViewModel.writeToHealthStore()
       timerViewModel.endLiveActivity()

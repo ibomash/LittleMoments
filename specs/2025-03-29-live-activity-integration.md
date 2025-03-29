@@ -160,7 +160,7 @@ LittleMoments/
 #### Issues to Fix with Phase 3
 - [x] Live activity does not update to include progress bar if a timer duration is specified later
   - Fixed by updating the LiveActivityManager to accept a targetTimeInSeconds parameter in the updateActivity method and adding a didSet observer to the scheduledAlert property in TimerViewModel to update the Live Activity when the timer duration changes
-- [ ] After the activity is finished, we still have a task running every second outputting: `Updating live activity with seconds elapsed: 0.0, isCompleted: false`
+- [x] After the activity is finished, we still have a task running every second outputting: `Updating live activity with seconds elapsed: 0.0, isCompleted: false`
 - [ ] The Live Activity only has an "end session" button that does not do anything. It should have both a "finish" and a "cancel" session button, which are hooked up and take the proper actions
 - [ ] When the app is configured to not show seconds, the Live Activity still shows seconds, but always ':00'
 
