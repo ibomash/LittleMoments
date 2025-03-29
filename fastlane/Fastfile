@@ -1,6 +1,8 @@
 default_platform(:ios)
 
 # Use `fastlane ...` directly rather than `bundle exec fastlane ...`
+# and instead of calling `tuist generate` directly, call `fastlane generate`
+# so that the agent can run fastlane commands without having to approve every command.
 
 platform :ios do
   desc "Run SwiftLint"

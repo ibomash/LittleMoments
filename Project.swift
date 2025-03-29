@@ -5,7 +5,7 @@ let buildVersion = "51"
 
 let baseSettings: [String: SettingValue] = [
   "MARKETING_VERSION": .string(marketingVersion),
-  "CURRENT_PROJECT_VERSION": .string(buildVersion)
+  "CURRENT_PROJECT_VERSION": .string(buildVersion),
 ]
 
 let project = Project(
@@ -20,22 +20,55 @@ let project = Project(
       sources: ["LittleMoments/Core/**", "LittleMoments/Features/**", "LittleMoments/App/iOS/**"],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
-      dependencies: [],
+      dependencies: [
+        .target(name: "LittleMomentsWidgetExtension")
+      ],
       settings: .settings(
         base: baseSettings,
         configurations: [
-          .debug(name: "Debug", settings: [
-            "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
-            "SUPPORTS_MACCATALYST": "NO",
-            "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG"
-          ]),
-          .release(name: "Release", settings: [
-            "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
-            "SUPPORTS_MACCATALYST": "NO"
-          ])
+          .debug(
+            name: "Debug",
+            settings: [
+              "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+              "SUPPORTS_MACCATALYST": "NO",
+              "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
+            ]),
+          .release(
+            name: "Release",
+            settings: [
+              "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+              "SUPPORTS_MACCATALYST": "NO",
+            ]),
         ]
       ),
       additionalFiles: []
+    ),
+    // Widget Extension Target for Live Activities
+    .target(
+      name: "LittleMomentsWidgetExtension",
+      destinations: .iOS,
+      product: .appExtension,
+      productName: "LittleMomentsWidgetExtension",
+      bundleId: "net.bomash.illya.LittleMoments.WidgetExtension",
+      infoPlist: .extendingDefault(with: [
+        "CFBundleDisplayName": "LittleMoments Widgets",
+        "NSExtension": [
+          "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
+        ],
+      ]),
+      sources: [
+        "LittleMoments/Features/LiveActivity/Views/**",
+        "LittleMoments/Features/LiveActivity/Models/**",
+      ],
+      resources: ["LittleMoments/Resources/**"],
+      dependencies: [
+        .sdk(name: "SwiftUI", type: .framework),
+        .sdk(name: "WidgetKit", type: .framework),
+        .sdk(name: "ActivityKit", type: .framework),
+      ],
+      settings: .settings(
+        base: baseSettings
+      )
     ),
     .target(
       name: "LittleMomentsTests",
@@ -58,7 +91,7 @@ let project = Project(
       dependencies: [
         .target(name: "LittleMoments")
       ]
-    )
+    ),
   ],
   schemes: [
     .scheme(
@@ -74,6 +107,15 @@ let project = Project(
       archiveAction: .archiveAction(configuration: .release),
       profileAction: .profileAction(configuration: .release),
       analyzeAction: .analyzeAction(configuration: .debug)
-    )
+    ),
+    .scheme(
+      name: "LittleMomentsWidgetExtension",
+      shared: true,
+      buildAction: .buildAction(targets: ["LittleMomentsWidgetExtension"]),
+      runAction: .runAction(configuration: .debug),
+      archiveAction: .archiveAction(configuration: .release),
+      profileAction: .profileAction(configuration: .release),
+      analyzeAction: .analyzeAction(configuration: .debug)
+    ),
   ]
 )

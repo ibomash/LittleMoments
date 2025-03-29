@@ -103,16 +103,20 @@ class TimerViewModel: ObservableObject {
     let endDate = Date()
 
     // Create a new mindful session
-    guard let mindfulSession = HealthKitManager.shared.createMindfulSession(
-      startDate: startDate, endDate: endDate) else {
+    guard
+      let mindfulSession = HealthKitManager.shared.createMindfulSession(
+        startDate: startDate, endDate: endDate)
+    else {
       print("Error: Failed to create mindful session")
       return
     }
 
     // Save the session to HealthKit
-    HealthKitManager.shared.saveMindfulSession(mindfulSession: mindfulSession) { [self] success, error in
+    HealthKitManager.shared.saveMindfulSession(mindfulSession: mindfulSession) {
+      [self] success, error in
       if success {
-        print("Mindful session of \(self.secondsElapsed) seconds saved successfully: \(mindfulSession)")
+        print(
+          "Mindful session of \(self.secondsElapsed) seconds saved successfully: \(mindfulSession)")
       } else {
         print("Failed to save mindful session: ", error?.localizedDescription ?? "Unknown error")
       }

@@ -144,11 +144,11 @@ LittleMoments/
 - [x] Unit tests for LiveActivityManager
 
 ### Phase 2: Live Activity UI Implementation
-- [ ] Create MeditationLiveActivityView for Lock Screen view
-- [ ] Create compact Dynamic Island view
-- [ ] Create expanded Dynamic Island view
-- [ ] Create LiveActivityWidgetBundle
-- [ ] UI tests for Live Activity views
+- [x] Create MeditationLiveActivityView for Lock Screen view
+- [x] Create compact Dynamic Island view
+- [x] Create expanded Dynamic Island view
+- [x] Create LiveActivityWidgetBundle
+- [x] UI tests for Live Activity views
 
 ### Phase 3: Integration with Timer
 - [ ] Update TimerViewModel to start/stop Live Activities

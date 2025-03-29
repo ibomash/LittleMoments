@@ -163,7 +163,7 @@ struct BellControlsGrid: View {
       timerViewModel.scheduledAlert = scheduledAlertOption
 
       UNUserNotificationCenter.current().requestAuthorization(options: [
-        .alert, .sound
+        .alert, .sound,
       ]) { granted, _ in
         if granted {
           let content = UNMutableNotificationContent()
@@ -201,7 +201,7 @@ struct TimerControlButtons: View {
   var body: some View {
     HStack {
       ImageButton(
-        imageName: "xmark.circle.fill", 
+        imageName: "xmark.circle.fill",
         buttonText: "Cancel",
         action: {
           timerViewModel.reset()
@@ -211,7 +211,7 @@ struct TimerControlButtons: View {
       .padding()
 
       ImageButton(
-        imageName: "checkmark.circle.fill", 
+        imageName: "checkmark.circle.fill",
         buttonText: "Complete",
         action: {
           presentationMode.wrappedValue.dismiss()

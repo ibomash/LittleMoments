@@ -35,16 +35,19 @@ struct TimerStartView: View {
           .frame(minWidth: 80, minHeight: 80, maxHeight: 80)
           .padding()
 
-          ImageButton(imageName: "play.fill", buttonText: "Start session", action: {
-            let intent = MeditationSessionIntent()
-            // Print the intent I'm donating
-            let donationManager = IntentDonationManager.shared
-            // Donate the intent and print confirmation for debugging purposes depending on success or failure
-            let donationID = donationManager.donate(intent: intent)
-            // Print the intent and result within my log message
-            print("Donated: \(intent) with result: \(donationID)")
-            appState.showTimerRunningView = true
-          })
+          ImageButton(
+            imageName: "play.fill", buttonText: "Start session",
+            action: {
+              let intent = MeditationSessionIntent()
+              // Print the intent I'm donating
+              let donationManager = IntentDonationManager.shared
+              // Donate the intent and print confirmation for debugging purposes depending on success or failure
+              let donationID = donationManager.donate(intent: intent)
+              // Print the intent and result within my log message
+              print("Donated: \(intent) with result: \(donationID)")
+              appState.showTimerRunningView = true
+            }
+          )
           .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
           .foregroundColor(.white)
           .background(Color.blue)

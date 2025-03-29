@@ -5,80 +5,81 @@ import Foundation
 /// This provides a centralized way to start, update, and end Live Activities that display
 /// meditation session information on the Lock Screen and in Dynamic Island.
 class LiveActivityManager {
-    /// Shared singleton instance for app-wide access
-    static let shared = LiveActivityManager()
-    
-    /// Current active Live Activity, if one exists
-    private var activity: Activity<MeditationLiveActivityAttributes>?
-    
-    /// Private initializer to enforce singleton pattern
-    private init() {}
-    
-    /// Starts a new Live Activity for a meditation session
-    /// - Parameters:
-    ///   - sessionName: Name or title of the meditation session
-    ///   - targetTimeInSeconds: Optional target duration in seconds (nil for untimed sessions)
-    func startActivity(sessionName: String, targetTimeInSeconds: Double?) {
-        // Check if Live Activities are available and enabled on this device
-        guard ActivityAuthorizationInfo().areActivitiesEnabled else {
-            print("Live Activities not available")
-            return
-        }
-        
-        // Configure initial state for the Live Activity
-        let initialState = MeditationLiveActivityAttributes.ContentState(
+  /// Shared singleton instance for app-wide access
+  static let shared = LiveActivityManager()
+
+  /// Current active Live Activity, if one exists
+  private var activity: Activity<MeditationLiveActivityAttributes>?
+
+  /// Private initializer to enforce singleton pattern
+  private init() {}
+
+  /// Starts a new Live Activity for a meditation session
+  /// - Parameters:
+  ///   - sessionName: Name or title of the meditation session
+  ///   - targetTimeInSeconds: Optional target duration in seconds (nil for untimed sessions)
+  func startActivity(sessionName: String, targetTimeInSeconds: Double?) {
+    // Check if Live Activities are available and enabled on this device
+    guard ActivityAuthorizationInfo().areActivitiesEnabled else {
+      print("Live Activities not available")
+      return
+    }
+
+    // Configure initial state for the Live Activity
+    let initialState = MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: 0,
+      targetTimeInSeconds: targetTimeInSeconds,
+      isCompleted: false
+    )
+
+    // Create attributes object with session name
+    let attributes = MeditationLiveActivityAttributes(sessionName: sessionName)
+
+    do {
+      // Request new Live Activity from the system
+      activity = try Activity.request(
+        attributes: attributes,
+        contentState: initialState,
+        pushType: nil
+      )
+    } catch {
+      print("Error starting live activity: \(error)")
+    }
+  }
+
+  /// Updates an existing Live Activity with current session progress
+  /// - Parameters:
+  ///   - secondsElapsed: Current elapsed time of the session in seconds
+  ///   - isCompleted: Whether the session has been completed
+  func updateActivity(secondsElapsed: Double, isCompleted: Bool = false) {
+    Task {
+      // Create updated state with new time and completion status
+      let updatedState = MeditationLiveActivityAttributes.ContentState(
+        secondsElapsed: secondsElapsed,
+        targetTimeInSeconds: activity?.contentState.targetTimeInSeconds,
+        isCompleted: isCompleted
+      )
+
+      // Update the Live Activity asynchronously
+      await activity?.update(using: updatedState)
+    }
+  }
+
+  /// Ends the current Live Activity and removes it from display
+  func endActivity() {
+    Task {
+      // End the Live Activity with its final state
+      await activity?.end(
+        using: activity?.contentState
+          ?? MeditationLiveActivityAttributes.ContentState(
             secondsElapsed: 0,
-            targetTimeInSeconds: targetTimeInSeconds,
-            isCompleted: false
-        )
-        
-        // Create attributes object with session name
-        let attributes = MeditationLiveActivityAttributes(sessionName: sessionName)
-        
-        do {
-            // Request new Live Activity from the system
-            activity = try Activity.request(
-                attributes: attributes,
-                contentState: initialState,
-                pushType: nil
-            )
-        } catch {
-            print("Error starting live activity: \(error)")
-        }
+            targetTimeInSeconds: nil,
+            isCompleted: true
+          ),
+        dismissalPolicy: .immediate
+      )
+      // Clear the activity reference
+      activity = nil
     }
-    
-    /// Updates an existing Live Activity with current session progress
-    /// - Parameters:
-    ///   - secondsElapsed: Current elapsed time of the session in seconds
-    ///   - isCompleted: Whether the session has been completed
-    func updateActivity(secondsElapsed: Double, isCompleted: Bool = false) {
-        Task {
-            // Create updated state with new time and completion status
-            let updatedState = MeditationLiveActivityAttributes.ContentState(
-                secondsElapsed: secondsElapsed,
-                targetTimeInSeconds: activity?.contentState.targetTimeInSeconds,
-                isCompleted: isCompleted
-            )
-            
-            // Update the Live Activity asynchronously
-            await activity?.update(using: updatedState)
-        }
-    }
-    
-    /// Ends the current Live Activity and removes it from display
-    func endActivity() {
-        Task {
-            // End the Live Activity with its final state
-            await activity?.end(
-                using: activity?.contentState ?? MeditationLiveActivityAttributes.ContentState(
-                    secondsElapsed: 0,
-                    targetTimeInSeconds: nil,
-                    isCompleted: true
-                ),
-                dismissalPolicy: .immediate
-            )
-            // Clear the activity reference
-            activity = nil
-        }
-    }
-} 
+  }
+}
