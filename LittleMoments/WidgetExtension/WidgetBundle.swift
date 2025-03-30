@@ -84,4 +84,112 @@ struct MeditationLiveActivityWidget: Widget {
       return String(format: "%d", minutes)
     }
   }
-} 
+}
+
+#if DEBUG
+// MARK: - Live Activity Previews
+extension MeditationLiveActivityAttributes {
+  static var preview: MeditationLiveActivityAttributes {
+    MeditationLiveActivityAttributes(sessionName: "Morning Meditation")
+  }
+  
+  static var previewState: MeditationLiveActivityAttributes.ContentState {
+    MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: 180,  // 3 minutes
+      targetTimeInSeconds: 600,  // 10 minutes
+      isCompleted: false,
+      showSeconds: true
+    )
+  }
+  
+  static var previewStateCompleted: MeditationLiveActivityAttributes.ContentState {
+    MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: 600,  // 10 minutes (completed)
+      targetTimeInSeconds: 600,  // 10 minutes
+      isCompleted: true,
+      showSeconds: true
+    )
+  }
+}
+
+// Create a mock preview for Live Activities since we can't directly instantiate ActivityViewContext
+struct LiveActivityPreviewView: View {
+  let isCompleted: Bool
+  
+  var body: some View {
+    VStack {
+      Text("Meditation in progress")
+        .font(.headline)
+
+      HStack(spacing: 16) {
+        // Timer display
+        VStack {
+          Text(isCompleted ? "10:00" : "3:00")
+            .font(.system(size: 28, weight: .bold, design: .rounded))
+            .monospacedDigit()
+            .minimumScaleFactor(0.5)
+        }
+
+        // Progress bar (for timed sessions)
+        ProgressView(value: isCompleted ? 1.0 : 0.3)
+          .progressViewStyle(.circular)
+          .frame(width: 40, height: 40)
+      }
+      .padding(.vertical, 4)
+
+      // Deep linking buttons
+      HStack(spacing: 12) {
+        Link(destination: URL(string: "littlemoments://finishSession")!) {
+          Text("Finish")
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background(Color.green.opacity(0.2))
+            .cornerRadius(8)
+            .foregroundColor(.green)
+        }
+        
+        Link(destination: URL(string: "littlemoments://cancelSession")!) {
+          Text("Cancel")
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background(Color.red.opacity(0.2))
+            .cornerRadius(8)
+            .foregroundColor(.red)
+        }
+      }
+    }
+    .padding()
+  }
+}
+
+// Standard preview provider that doesn't require ActivityViewContext
+struct LiveActivityPreviews: PreviewProvider {
+  static var previews: some View {
+    Group {
+      // Preview in-progress with system background
+      LiveActivityPreviewView(isCompleted: false)
+        .containerBackground(for: .widget) {
+          Color(.systemBackground)
+        }
+        .previewDisplayName("Light Mode")
+        .previewContext(WidgetPreviewContext(family: .systemMedium))
+      
+      // Preview with dark background
+      LiveActivityPreviewView(isCompleted: false)
+        .containerBackground(for: .widget) {
+          Color.black
+        }
+        .previewDisplayName("Dark Mode")
+        .previewContext(WidgetPreviewContext(family: .systemMedium))
+      
+      // Preview completed
+      LiveActivityPreviewView(isCompleted: true)
+        .containerBackground(for: .widget) {
+          Color(.systemBackground)
+        }
+        .previewDisplayName("Completed")
+        .previewContext(WidgetPreviewContext(family: .systemMedium))
+    }
+  }
+}
+#endif 
