@@ -69,6 +69,7 @@ struct TimerRunningView: View {
       }
     }
     .onAppear {
+      print("📱 TimerRunningView appeared - starting timer and Live Activity")
       timerViewModel.start()
       timerViewModel.startLiveActivity()
       UIApplication.shared.isIdleTimerDisabled = true
@@ -91,14 +92,29 @@ struct TimerRunningView: View {
       }
     }
     .onDisappear {
+      print("📱 TimerRunningView disappeared - cleaning up timer resources")
       // Invalidate the live activity update timer
       liveActivityUpdateTimer?.invalidate()
       liveActivityUpdateTimer = nil
       
+      // Remove any pending notifications
       UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-      timerViewModel.writeToHealthStore()
-      timerViewModel.endLiveActivity()
-      timerViewModel.reset()
+      
+      // Log the session save status for debugging
+      print("📱 TimerRunningView - shouldSaveSession status: \(timerViewModel.shouldSaveSession)")
+      
+      // Write to HealthKit only if this is a completed session
+      if timerViewModel.shouldSaveSession {
+        print("📱 TimerRunningView - Writing to health store before resetting timer")
+        timerViewModel.writeToHealthStore()
+      } else {
+        print("📱 TimerRunningView - Session was cancelled, skipping health store write")
+      }
+      
+      // Reset the timer state and explicitly reset the save flag now that we've used it
+      timerViewModel.reset(resetSaveFlag: true)
+      
+      // Re-enable screen timeout
       UIApplication.shared.isIdleTimerDisabled = false
     }
   }
@@ -225,8 +241,11 @@ struct TimerControlButtons: View {
         imageName: "xmark.circle.fill",
         buttonText: "Cancel",
         action: {
+          print("🔘 Cancel button tapped - ending Live Activity and resetting timer")
+          // Ensure we don't save to HealthKit
+          timerViewModel.shouldSaveSession = false
           timerViewModel.endLiveActivity(completed: false)
-          timerViewModel.reset()
+          timerViewModel.reset(resetSaveFlag: true)
           presentationMode.wrappedValue.dismiss()
         }
       )
@@ -236,7 +255,20 @@ struct TimerControlButtons: View {
         imageName: "checkmark.circle.fill",
         buttonText: "Complete",
         action: {
+          print("🔘 Complete button tapped - storing startDate for health integration")
+          // Store start date before any other operations
+          timerViewModel.prepareSessionForFinish()
+          
+          // Explicitly ensure shouldSaveSession is set to true
+          timerViewModel.shouldSaveSession = true
+          print("🔘 Set shouldSaveSession to true for health integration")
+          
+          print("🔘 Ending Live Activity with completed status")
+          // End live activity with completed status
           timerViewModel.endLiveActivity(completed: true)
+          
+          print("🔘 Dismissing timer view (will trigger onDisappear and health write)")
+          // Dismiss the view which will trigger onDisappear
           presentationMode.wrappedValue.dismiss()
         }
       )

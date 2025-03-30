@@ -27,7 +27,11 @@ let project = Project(
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: [
-        .target(name: "LittleMomentsWidgetExtension")
+        .target(name: "LittleMomentsWidgetExtension"),
+        .sdk(name: "SwiftUI", type: .framework),
+        .sdk(name: "WidgetKit", type: .framework),
+        .sdk(name: "ActivityKit", type: .framework),
+        .sdk(name: "UIKit", type: .framework),
       ],
       settings: .settings(
         base: baseSettings,
