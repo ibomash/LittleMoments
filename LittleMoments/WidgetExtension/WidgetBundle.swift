@@ -38,20 +38,26 @@ struct MeditationLiveActivityWidget: Widget {
         }
 
         DynamicIslandExpandedRegion(.bottom) {
-          HStack(spacing: 16) {
-            Button("Finish") {
-              // Will be handled via deep link
+          HStack(spacing: 12) {
+            // Complete session link
+            Link(destination: URL(string: "littlemoments://finishSession")!) {
+              Label("Complete", systemImage: "checkmark.circle.fill")
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+                .background(Color.green.opacity(0.2))
+                .cornerRadius(8)
+                .foregroundColor(.green)
             }
-            .buttonStyle(.bordered)
-            .tint(.green)
-            .widgetURL(URL(string: "littlemoments://finishSession"))
             
-            Button("Cancel") {
-              // Will be handled via deep link
+            // Cancel session link
+            Link(destination: URL(string: "littlemoments://cancel/session")!) {
+              Label("Cancel", systemImage: "xmark.circle.fill")
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+                .background(Color.red.opacity(0.2))
+                .cornerRadius(8)
+                .foregroundColor(.red)
             }
-            .buttonStyle(.bordered)
-            .tint(.red)
-            .widgetURL(URL(string: "littlemoments://cancelSession"))
           }
           .padding(.horizontal)
         }

@@ -161,7 +161,7 @@ LittleMoments/
 - [x] Live activity does not update to include progress bar if a timer duration is specified later
   - Fixed by updating the LiveActivityManager to accept a targetTimeInSeconds parameter in the updateActivity method and adding a didSet observer to the scheduledAlert property in TimerViewModel to update the Live Activity when the timer duration changes
 - [x] After the activity is finished, we still have a task running every second outputting: `Updating live activity with seconds elapsed: 0.0, isCompleted: false`
-- [ ] The Live Activity only has an "end session" button that does not do anything. It should have both a "finish" and a "cancel" session button, which are hooked up and take the proper actions
+- [x] The Live Activity only has an "end session" button that does not do anything. It should have both a "finish" and a "cancel" session button, which are hooked up and take the proper actions
 - [ ] When the app is configured to not show seconds, the Live Activity still shows seconds, but always ':00'
 
 ### Phase 4: Haptic Feedback and Refinements
@@ -659,26 +659,20 @@ The meditation app supports finishing or canceling sessions from two entry point
 1. Main app UI (TimerRunningView buttons)
 2. Live Activity widget (via deep links)
 
-Each path must properly handle session state, HealthKit integration, and view cleanup. The following documents the exact control flow for each scenario.
+Each path must properly handle session state, HealthKit integration, and view cleanup.
 
 ### Session Completion Flow
 
 #### From TimerRunningView UI (Complete Button)
 1. User taps "Complete" button in TimerRunningView
 2. `prepareSessionForFinish()` is called to preserve session start time
-   - Sets `shouldSaveSession = true`
    - Stores `startDate` in `sessionStartDateForFinish` for HealthKit
-3. `endLiveActivity(completed: true)` is called
-   - Sets `shouldSaveSession = true` (redundant safety measure)
-   - Updates Live Activity with completed status
-   - Ends the Live Activity
-4. View is dismissed via `presentationMode.wrappedValue.dismiss()`
-5. `onDisappear` lifecycle method is triggered
-   - Checks `shouldSaveSession` flag (should be true)
-   - Calls `writeToHealthStore()` which:
-     - Uses `sessionStartDateForFinish` or falls back to `startDate`
-     - Creates and saves a mindful session to HealthKit
-   - Calls `reset(resetSaveFlag: true)` to clean up timer resources
+3. `writeToHealthStore()` is called directly to save the session
+4. `endLiveActivity(completed: true)` is called to update and end the Live Activity
+5. View is dismissed via `presentationMode.wrappedValue.dismiss()`
+6. `onDisappear` lifecycle method is triggered
+   - Handles resource cleanup (timers, screen lock, etc.)
+   - No HealthKit operations in this phase
 
 #### From Live Activity Widget (Finish Button)
 1. User taps "Finish" button in Live Activity
@@ -686,119 +680,63 @@ Each path must properly handle session state, HealthKit integration, and view cl
 3. App's `handleDeepLink` method is called
 4. If timer is active, app attempts to find TimerRunningView and:
    - Calls `prepareSessionForFinish()` to store session data
+   - Calls `writeToHealthStore()` directly to save the session
    - Posts `finishSession` notification
 5. Notification observer in TimerViewModel:
-   - Calls `prepareSessionForFinish()` to store start time
-   - Sets `shouldSaveSession = true`
-   - Calls `endLiveActivity(completed: true)`
-   - Calls `reset()` (without resetting save flag)
+   - First checks if `wasCancelled` flag is true
+   - If cancelled, skips processing the notification
+   - Otherwise, proceeds with normal completion flow:
+     - Calls `prepareSessionForFinish()`
+     - Calls `writeToHealthStore()` directly
+     - Ends the Live Activity
+     - Resets the timer
 6. App dismisses TimerRunningView via `appState.showTimerRunningView = false`
-7. `onDisappear` lifecycle method is triggered
-   - Checks `shouldSaveSession` flag (should be true)
-   - Calls `writeToHealthStore()` to save to HealthKit
-   - Calls `reset(resetSaveFlag: true)` to clean up timer resources
+7. `onDisappear` lifecycle method handles resource cleanup
 
 ### Session Cancellation Flow
 
 #### From TimerRunningView UI (Cancel Button)
 1. User taps "Cancel" button in TimerRunningView
-2. `shouldSaveSession` is explicitly set to `false`
-3. `endLiveActivity(completed: false)` is called
-   - Sets `shouldSaveSession = false` (redundant safety)
-   - Ends the Live Activity
-4. `reset(resetSaveFlag: true)` is called to clean up timer state
-5. View is dismissed via `presentationMode.wrappedValue.dismiss()`
-6. `onDisappear` lifecycle method is triggered
-   - Checks `shouldSaveSession` flag (should be false)
-   - Skips calling `writeToHealthStore()`
-   - Calls `reset(resetSaveFlag: true)` to ensure timer cleanup
+2. `endLiveActivity(completed: false)` is called to end the Live Activity
+3. `reset()` is called to clean up timer state
+4. View is dismissed via `presentationMode.wrappedValue.dismiss()`
+5. `onDisappear` lifecycle method handles resource cleanup
+   - No HealthKit operations performed
 
 #### From Live Activity Widget (Cancel Button)
 1. User taps "Cancel" button in Live Activity
 2. Deep link with scheme `littlemoments://cancelSession` is triggered
 3. App's `handleDeepLink` method is called
-4. If timer is active, app attempts to find TimerRunningView and:
-   - Sets `shouldSaveSession = false` if TimerRunningView is found
-   - Posts `cancelSession` notification
+4. If timer is active, app posts `cancelSession` notification
 5. Notification observer in TimerViewModel:
-   - Sets `shouldSaveSession = false`
+   - Sets `wasCancelled` flag to true
    - Calls `endLiveActivity(completed: false)`
-   - Calls `reset(resetSaveFlag: true)` to clean up timer state
+   - Calls `reset()` to clean up timer state
 6. App dismisses TimerRunningView via `appState.showTimerRunningView = false`
-7. `onDisappear` lifecycle method is triggered
-   - Checks `shouldSaveSession` flag (should be false)
-   - Skips calling `writeToHealthStore()`
-   - Calls `reset(resetSaveFlag: true)` to ensure timer cleanup
+7. If a `finishSession` notification arrives later, it will be ignored due to the `wasCancelled` flag
+8. `onDisappear` lifecycle method handles resource cleanup
+   - No HealthKit operations performed
+
+### Notification Handling Safeguards
+
+The app includes safeguards to prevent accidental HealthKit writes during cancellation:
+
+1. The `wasCancelled` flag:
+   - Set to `true` when `cancelSession` notification is received
+   - Checked at the beginning of the `finishSession` notification handler
+   - Prevents `finishSession` from processing if a cancellation occurred first
+   - Reset to `false` in the `reset()` method for clean state in future sessions
+
+2. Notification Priority:
+   - Cancellation takes precedence over completion
+   - The app will not write to HealthKit if a cancellation occurred, even if completion notifications arrive later
 
 ### Key Considerations
-1. The `shouldSaveSession` flag is the single source of truth for whether a session should be saved to HealthKit.
-2. Each entry point (app UI or Live Activity) sets this flag appropriately.
-3. Both completion paths preserve session data:
-   - Store start time in `sessionStartDateForFinish`
-   - Set `shouldSaveSession = true`
-4. Both cancellation paths prevent HealthKit writing:
-   - Set `shouldSaveSession = false`
-   - Skip `writeToHealthStore()` in `onDisappear`
-5. View cleanup happens the same way regardless of entry point:
-   - `onDisappear` handles final state management
-   - Timer resources are released
-   - Screen timeout is re-enabled
+1. HealthKit writes happen at well-defined points in the flow:
+   - Directly after `prepareSessionForFinish()` in completion paths
+   - Never called in cancellation paths
+2. Each entry point (app UI or Live Activity) performs HealthKit operations at the same logical point
+3. View lifecycle method `onDisappear` is solely responsible for resource cleanup
+4. The `wasCancelled` flag prevents race conditions between cancel and finish notifications
 
-This robust design ensures consistent behavior regardless of how the user chooses to end their meditation session.
-
-## Alternative Design Considerations
-
-### Direct HealthKit Writes vs. Deferred Writes
-
-The current implementation uses a `shouldSaveSession` flag to determine whether to write to HealthKit in the `onDisappear` lifecycle method. Let's evaluate an alternative approach that would perform immediate HealthKit writes:
-
-#### Direct HealthKit Write Approach
-
-Instead of using the `shouldSaveSession` flag and deferring HealthKit writes to `onDisappear`, we could:
-
-1. Directly call `writeToHealthStore()` in completion paths:
-   - When "Complete" button is tapped
-   - When processing "finishSession" deep links
-   - In notification observer for "finishSession"
-
-2. Skip HealthKit writes entirely in cancellation paths:
-   - When "Cancel" button is tapped
-   - When processing "cancelSession" deep links
-   - In notification observer for "cancelSession"
-
-3. Remove the HealthKit write logic from `onDisappear` entirely
-
-#### Pros of Direct Write Approach
-
-1. **Simpler Logic**: Eliminates the need for a state flag and makes the intent clearer at each action point
-2. **More Predictable**: The HealthKit write happens at a specific, well-defined moment
-3. **Less Interdependence**: Reduces coupling between component lifecycles and data operations
-4. **Fewer Edge Cases**: Reduces chances of race conditions or state inconsistencies
-
-#### Cons of Direct Write Approach
-
-1. **Code Duplication**: Would need to call `writeToHealthStore()` in multiple places
-2. **Timing Issues**: May need to ensure sufficient time has passed for the session to be meaningful
-3. **View Lifecycle Separation**: Breaks the pattern of handling cleanup in `onDisappear` 
-4. **Possible Lost Data**: If the app crashes after session completion but before direct write
-
-#### Recommended Approach
-
-For this specific use case, a direct HealthKit write approach would likely be more appropriate:
-
-1. In completion flows:
-   - Call `prepareSessionForFinish()` to store start time
-   - Call `writeToHealthStore()` directly
-   - Call `endLiveActivity(completed: true)`
-   - Dismiss view or close timer
-
-2. In cancellation flows:
-   - Skip `prepareSessionForFinish()` and `writeToHealthStore()`
-   - Call `endLiveActivity(completed: false)`
-   - Dismiss view or close timer
-
-3. In `onDisappear`:
-   - Focus only on resource cleanup (timer, screen timeout, etc.)
-   - No conditional HealthKit writes
-
-This approach would make the control flow more direct and easier to reason about, with clearer responsibility boundaries between components.
+This simplified design provides a more direct and predictable control flow, with clearer separation of responsibilities and robust handling of notification sequences.

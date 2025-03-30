@@ -100,19 +100,8 @@ struct TimerRunningView: View {
       // Remove any pending notifications
       UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
       
-      // Log the session save status for debugging
-      print("📱 TimerRunningView - shouldSaveSession status: \(timerViewModel.shouldSaveSession)")
-      
-      // Write to HealthKit only if this is a completed session
-      if timerViewModel.shouldSaveSession {
-        print("📱 TimerRunningView - Writing to health store before resetting timer")
-        timerViewModel.writeToHealthStore()
-      } else {
-        print("📱 TimerRunningView - Session was cancelled, skipping health store write")
-      }
-      
-      // Reset the timer state and explicitly reset the save flag now that we've used it
-      timerViewModel.reset(resetSaveFlag: true)
+      // Reset the timer state (no HealthKit operations here)
+      timerViewModel.reset()
       
       // Re-enable screen timeout
       UIApplication.shared.isIdleTimerDisabled = false
@@ -242,10 +231,9 @@ struct TimerControlButtons: View {
         buttonText: "Cancel",
         action: {
           print("🔘 Cancel button tapped - ending Live Activity and resetting timer")
-          // Ensure we don't save to HealthKit
-          timerViewModel.shouldSaveSession = false
+          // For cancel, just end the Live Activity and reset - no HealthKit write
           timerViewModel.endLiveActivity(completed: false)
-          timerViewModel.reset(resetSaveFlag: true)
+          timerViewModel.reset()
           presentationMode.wrappedValue.dismiss()
         }
       )
@@ -256,19 +244,19 @@ struct TimerControlButtons: View {
         buttonText: "Complete",
         action: {
           print("🔘 Complete button tapped - storing startDate for health integration")
-          // Store start date before any other operations
+          // First store start date for HealthKit
           timerViewModel.prepareSessionForFinish()
           
-          // Explicitly ensure shouldSaveSession is set to true
-          timerViewModel.shouldSaveSession = true
-          print("🔘 Set shouldSaveSession to true for health integration")
+          print("🔘 Writing to HealthKit directly")
+          // Write to HealthKit directly
+          timerViewModel.writeToHealthStore()
           
           print("🔘 Ending Live Activity with completed status")
           // End live activity with completed status
           timerViewModel.endLiveActivity(completed: true)
           
-          print("🔘 Dismissing timer view (will trigger onDisappear and health write)")
-          // Dismiss the view which will trigger onDisappear
+          print("🔘 Dismissing timer view")
+          // Dismiss the view
           presentationMode.wrappedValue.dismiss()
         }
       )

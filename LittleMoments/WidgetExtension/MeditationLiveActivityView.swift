@@ -33,22 +33,35 @@ struct MeditationLiveActivityView: View {
         }
         .padding(.vertical, 4)
 
-        // Replace single button with two buttons
+        // Use Links in a horizontal layout like before
         HStack(spacing: 12) {
-          Button("Finish") {
-            // This will be handled by deeplink
+          // Complete button
+          Link(destination: URL(string: "littlemoments://finishSession")!) {
+            HStack {
+              Image(systemName: "checkmark.circle.fill")
+              Text("Complete")
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background(Color.green.opacity(0.2))
+            .cornerRadius(8)
+            .foregroundColor(.green)
           }
-          .buttonStyle(.bordered)
-          .tint(.green)
-          .widgetURL(URL(string: "littlemoments://finishSession"))
           
-          Button("Cancel") {
-            // This will be handled by deeplink
+          // Cancel button
+          Link(destination: URL(string: "littlemoments://cancel/session")!) {
+            HStack {
+              Image(systemName: "xmark.circle.fill")
+              Text("Cancel")
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background(Color.red.opacity(0.2))
+            .cornerRadius(8)
+            .foregroundColor(.red)
           }
-          .buttonStyle(.bordered)
-          .tint(.red)
-          .widgetURL(URL(string: "littlemoments://cancelSession"))
         }
+        .padding(.horizontal)
       }
       .padding()
     }

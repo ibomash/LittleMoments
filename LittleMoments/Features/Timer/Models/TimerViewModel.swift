@@ -19,9 +19,11 @@ class TimerViewModel: ObservableObject {
 
   @ObservedObject var settings: JustNowSettings = JustNowSettings.shared
 
-  // Flag to indicate if session should be saved to HealthKit when it ends
-  @Published var shouldSaveSession: Bool = false
-  
+  // Flag to track if session was cancelled via notification
+  private var wasCancelled = false
+  // Timestamp of the last cancelSession notification
+  private var lastCancelTime: Date?
+
   // Running timer
   private var startDate: Date?
   var timer: Timer?
@@ -107,6 +109,15 @@ class TimerViewModel: ObservableObject {
       return
     }
 
+    // Check if session was cancelled
+    if wasCancelled {
+      print("❌❌❌ BLOCKED HEALTH WRITE - Session was cancelled")
+      if let lastCancelTime = lastCancelTime {
+        print("❌❌❌ Last cancellation was at \(lastCancelTime)")
+      }
+      return
+    }
+    
     // First try using the stored session start date (used when finishing from Live Activity)
     let sessionStartDate = sessionStartDateForFinish ?? startDate
     
@@ -116,7 +127,7 @@ class TimerViewModel: ObservableObject {
     }
     let endDate = Date()
     
-    print("Writing to HealthKit - session from \(sessionStartDate) to \(endDate) (\(secondsElapsed) seconds)")
+    print("Writing to HealthKit - session from \(sessionStartDate) to \(endDate) (duration: \(endDate.timeIntervalSince(sessionStartDate)) seconds)")
 
     // Create a new mindful session
     guard
@@ -133,7 +144,8 @@ class TimerViewModel: ObservableObject {
       guard let self = self else { return }
       
       if success {
-        print("✅ Health integration - Mindful session of \(self.secondsElapsed) seconds saved successfully")
+        let sessionDuration = endDate.timeIntervalSince(sessionStartDate)
+        print("✅ Health integration - Mindful session of \(Int(sessionDuration)) seconds saved successfully")
       } else {
         print("❌ Health integration - Failed to save mindful session: \(error?.localizedDescription ?? "Unknown error")")
       }
@@ -146,9 +158,6 @@ class TimerViewModel: ObservableObject {
   // Add a function to safely store the start date before finishing
   func prepareSessionForFinish() {
     print("Preparing session for finish - storing startDate for health store")
-    // Always mark that this session should be saved
-    shouldSaveSession = true
-    print("📱 TimerViewModel.prepareSessionForFinish - Setting shouldSaveSession to true")
     
     // Store the current startDate for Health integration
     if sessionStartDateForFinish == nil {
@@ -186,18 +195,10 @@ class TimerViewModel: ObservableObject {
     guard JustNowSettings.shared.enableLiveActivities else { return }
     
     if completed {
-      // Mark that we should save this session to HealthKit
-      print("📱 TimerViewModel.endLiveActivity - Setting shouldSaveSession to true for completed session")
-      shouldSaveSession = true
-      
       LiveActivityManager.shared.updateActivity(
         secondsElapsed: secondsElapsed,
         isCompleted: true
       )
-    } else {
-      // If cancelling, make sure we don't save to HealthKit
-      print("📱 TimerViewModel.endLiveActivity - Setting shouldSaveSession to false for cancelled session")
-      shouldSaveSession = false
     }
     
     LiveActivityManager.shared.endActivity()
@@ -240,6 +241,8 @@ class TimerViewModel: ObservableObject {
   }
   
   private func setupNotificationObservers() {
+    print("📱 Setting up notification observers")
+    
     // Listen for finish notification
     finishObserver = NotificationCenter.default.addObserver(
       forName: Notification.Name("com.littlemoments.finishSession"),
@@ -248,19 +251,38 @@ class TimerViewModel: ObservableObject {
     ) { [weak self] _ in
       guard let self = self else { return }
       
+      let now = Date()
+      
+      // Skip if this session was already cancelled
+      if self.wasCancelled {
+        print("📱 BLOCKED FINISH - Ignoring finishSession notification - session was already cancelled")
+        return
+      }
+      
+      // Check if a cancellation happened within the last 2 seconds (race condition protection)
+      if let lastCancel = self.lastCancelTime, now.timeIntervalSince(lastCancel) < 5.0 {
+        print("📱 BLOCKED FINISH - Ignoring finishSession notification - cancelSession was received within the last 5 seconds")
+        print("📱 Time since cancel: \(String(format: "%.2f", now.timeIntervalSince(lastCancel))) seconds")
+        return
+      }
+      
       print("📱 Received finishSession notification from Live Activity")
+      print("📱 Current wasCancelled state: \(self.wasCancelled)")
+      if let lastCancelTime = self.lastCancelTime {
+        print("📱 Last cancel time: \(lastCancelTime), time since: \(String(format: "%.2f", now.timeIntervalSince(lastCancelTime))) seconds")
+      }
+      
       // Store the start date for later use
       self.prepareSessionForFinish()
       
-      // Explicitly ensure shouldSaveSession is set to true
-      self.shouldSaveSession = true
-      print("📱 Set shouldSaveSession to true from finishSession notification")
+      // Write to HealthKit directly
+      print("📱 Writing to HealthKit from finishSession notification")
+      self.writeToHealthStore()
       
       // End the Live Activity
       self.endLiveActivity(completed: true)
       
-      // Since onDisappear will handle writing to health store, we don't do it here
-      // Just reset the timer
+      // Reset the timer
       self.reset()
     }
     
@@ -272,24 +294,28 @@ class TimerViewModel: ObservableObject {
     ) { [weak self] _ in
       guard let self = self else { return }
       print("📱 Received cancelSession notification from Live Activity")
-      // Ensure session won't be saved to HealthKit
-      self.shouldSaveSession = false
+      
+      // Mark session as cancelled and record the time
+      self.wasCancelled = true
+      self.lastCancelTime = Date()
+      print("📱 CANCEL TRIGGERED - Setting wasCancelled to true to block any finishSession notifications")
+      print("📱 Marked session as cancelled at \(self.lastCancelTime!) to prevent health write")
+      
+      // For cancel, just end Live Activity and reset - no HealthKit write
       self.endLiveActivity(completed: false)
-      self.reset(resetSaveFlag: true)
+      self.reset()
     }
   }
 
-  func reset(resetSaveFlag: Bool = false) {
+  func reset() {
     print("Timer reset - clearing timer state and canceling timer")
     timer?.invalidate()
     timer = nil
     startDate = nil
     
-    // Only reset the save state if explicitly requested
-    if resetSaveFlag {
-      print("📱 TimerViewModel.reset - Resetting shouldSaveSession flag")
-      shouldSaveSession = false
-    }
+    // Reset the cancelled flag and timestamp for future sessions
+    wasCancelled = false
+    lastCancelTime = nil
     
     if backgroundTask != .invalid {
       UIApplication.shared.endBackgroundTask(backgroundTask)

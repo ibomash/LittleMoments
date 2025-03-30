@@ -11,6 +11,9 @@ import ActivityKit
 
 // Keep track of the active timer view model for deep link handling
 private var activeTimerViewModel: Any? = nil
+// Global flag to track if a session was recently canceled, to prevent race conditions
+private var sessionWasRecentlyCanceled = false
+private var lastCancelationTime: Date?
 
 @main
 struct LittleMomentsApp: App {
@@ -35,6 +38,8 @@ struct LittleMomentsApp: App {
   
   func handleDeepLink(url: URL) {
     print("📲 Received deep link: \(url)")
+    print("📲 URL scheme: \(url.scheme ?? "nil"), host: \(url.host ?? "nil"), path: \(url.path)")
+    
     guard url.scheme == "littlemoments" else { 
       print("❌ Deep link ignored - wrong scheme: \(url.scheme ?? "nil")")
       return 
@@ -42,6 +47,26 @@ struct LittleMomentsApp: App {
     
     if url.host == "finishSession" {
       print("📲 Processing finishSession deep link")
+      
+      // Check if we've recently received a cancel notification
+      if sessionWasRecentlyCanceled {
+        print("⛔️ BLOCKED finishSession - session was recently canceled")
+        
+        // Extra protection: Check timestamp if available
+        if let lastCancel = lastCancelationTime {
+          let timeGap = Date().timeIntervalSince(lastCancel)
+          print("⛔️ Cancel happened \(String(format: "%.2f", timeGap)) seconds ago")
+        }
+        
+        // Still close the view if needed
+        if appState.showTimerRunningView {
+          print("📲 Closing timer view (but NOT saving to HealthKit)")
+          appState.showTimerRunningView = false
+        }
+        
+        return
+      }
+      
       // Complete the current session if there is one active
       if appState.showTimerRunningView {
         print("📲 Timer is active - preparing to finish session via deep link")
@@ -51,7 +76,12 @@ struct LittleMomentsApp: App {
            let timerRunningView = findTimerRunningView(in: activeTimerVC) {
           // Access the timer view model directly
           timerRunningView.timerViewModel.prepareSessionForFinish()
-          print("📲 Found active timer view model - preserving session data")
+          
+          // Write to HealthKit directly
+          print("📲 Writing to HealthKit from deep link")
+          timerRunningView.timerViewModel.writeToHealthStore()
+          
+          print("📲 Found active timer view model - session data saved")
         } else {
           print("⚠️ Could not access timer view model directly - will try via notification")
         }
@@ -70,20 +100,16 @@ struct LittleMomentsApp: App {
       } else {
         print("⚠️ Received finishSession deep link, but no active timer session found")
       }
-    } else if url.host == "cancelSession" {
-      print("📲 Processing cancelSession deep link")
+    } else if url.host == "cancelSession" || url.host == "cancel" || url.path == "/cancel" {
+      print("📲 Processing cancel request from Live Activity")
       // Cancel the current session if there is one active
       if appState.showTimerRunningView {
-        // First try to get an active timer view model to mark session as cancelled
-        if let activeTimerVC = getActiveTimerViewController(),
-           let timerRunningView = findTimerRunningView(in: activeTimerVC) {
-          // Access the timer view model directly and mark as not to be saved
-          timerRunningView.timerViewModel.shouldSaveSession = false
-          print("📲 Found active timer view model - marked session to not save to health")
-        }
+        // Set the global cancellation flag
+        sessionWasRecentlyCanceled = true
+        lastCancelationTime = Date()
         
-        // Post a notification to cancel the session
-        // Other components will observe this notification
+        // For cancellation, we want to make sure we don't accidentally save to HealthKit
+        // Post a notification that will be observed by the timer view model
         print("📲 Posting cancelSession notification")
         NotificationCenter.default.post(
           name: Notification.Name("com.littlemoments.cancelSession"),
@@ -91,10 +117,15 @@ struct LittleMomentsApp: App {
         )
         
         // Close the timer view
-        print("📲 Closing timer view")
+        print("📲 Closing timer view (session will NOT be saved to HealthKit)")
         appState.showTimerRunningView = false
+        
+        // Reset the cancel flag after a delay (as a safety measure)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+          sessionWasRecentlyCanceled = false
+        }
       } else {
-        print("⚠️ Received cancelSession deep link, but no active timer session found")
+        print("⚠️ Received cancel request, but no active timer session found")
       }
     } else {
       print("❌ Unknown deep link host: \(url.host ?? "nil")")
