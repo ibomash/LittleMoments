@@ -19,7 +19,7 @@ struct MeditationLiveActivityWidget: Widget {
         // Expanded UI
         DynamicIslandExpandedRegion(.leading) {
           Label {
-            Text(timerDisplayFromSeconds(context.state.secondsElapsed))
+            Text(timerDisplayFromSeconds(seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds))
               .monospacedDigit()
               .font(.title2)
           } icon: {
@@ -50,7 +50,7 @@ struct MeditationLiveActivityWidget: Widget {
             }
             
             // Cancel session link
-            Link(destination: URL(string: "littlemoments://cancel/session")!) {
+            Link(destination: URL(string: "littlemoments://cancelSession")!) {
               Label("Cancel", systemImage: "xmark.circle.fill")
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
@@ -64,7 +64,7 @@ struct MeditationLiveActivityWidget: Widget {
       } compactLeading: {
         Image(systemName: "timer")
       } compactTrailing: {
-        Text(timerDisplayFromSeconds(context.state.secondsElapsed))
+        Text(timerDisplayFromSeconds(seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds))
           .monospacedDigit()
           .font(.caption2)
       } minimal: {
@@ -73,11 +73,15 @@ struct MeditationLiveActivityWidget: Widget {
     }
   }
 
-  private func timerDisplayFromSeconds(_ seconds: Double) -> String {
+  private func timerDisplayFromSeconds(seconds: Double, showSeconds: Bool) -> String {
     let totalSeconds = Int(seconds)
     let minutes = totalSeconds / 60
     let secs = totalSeconds % 60
 
-    return String(format: "%d:%02d", minutes, secs)
+    if showSeconds {
+      return String(format: "%d:%02d", minutes, secs)
+    } else {
+      return String(format: "%d", minutes)
+    }
   }
 } 

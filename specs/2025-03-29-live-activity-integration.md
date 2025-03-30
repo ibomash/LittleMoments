@@ -162,7 +162,7 @@ LittleMoments/
   - Fixed by updating the LiveActivityManager to accept a targetTimeInSeconds parameter in the updateActivity method and adding a didSet observer to the scheduledAlert property in TimerViewModel to update the Live Activity when the timer duration changes
 - [x] After the activity is finished, we still have a task running every second outputting: `Updating live activity with seconds elapsed: 0.0, isCompleted: false`
 - [x] The Live Activity only has an "end session" button that does not do anything. It should have both a "finish" and a "cancel" session button, which are hooked up and take the proper actions
-- [ ] When the app is configured to not show seconds, the Live Activity still shows seconds, but always ':00'
+- [x] When the app is configured to not show seconds, the Live Activity still shows seconds
 
 ### Phase 4: Haptic Feedback and Refinements
 - [ ] Add haptic feedback for session completion

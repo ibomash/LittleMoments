@@ -33,35 +33,26 @@ struct MeditationLiveActivityView: View {
         }
         .padding(.vertical, 4)
 
-        // Use Links in a horizontal layout like before
+        // Use links instead of buttons for deep linking
         HStack(spacing: 12) {
-          // Complete button
           Link(destination: URL(string: "littlemoments://finishSession")!) {
-            HStack {
-              Image(systemName: "checkmark.circle.fill")
-              Text("Complete")
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 6)
-            .background(Color.green.opacity(0.2))
-            .cornerRadius(8)
-            .foregroundColor(.green)
+            Text("Finish")
+              .frame(maxWidth: .infinity)
+              .padding(.vertical, 6)
+              .background(Color.green.opacity(0.2))
+              .cornerRadius(8)
+              .foregroundColor(.green)
           }
           
-          // Cancel button
-          Link(destination: URL(string: "littlemoments://cancel/session")!) {
-            HStack {
-              Image(systemName: "xmark.circle.fill")
-              Text("Cancel")
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 6)
-            .background(Color.red.opacity(0.2))
-            .cornerRadius(8)
-            .foregroundColor(.red)
+          Link(destination: URL(string: "littlemoments://cancelSession")!) {
+            Text("Cancel")
+              .frame(maxWidth: .infinity)
+              .padding(.vertical, 6)
+              .background(Color.red.opacity(0.2))
+              .cornerRadius(8)
+              .foregroundColor(.red)
           }
         }
-        .padding(.horizontal)
       }
       .padding()
     }
@@ -72,6 +63,10 @@ struct MeditationLiveActivityView: View {
     let minutes = totalSeconds / 60
     let seconds = totalSeconds % 60
 
-    return String(format: "%d:%02d", minutes, seconds)
+    if context.state.showSeconds {
+      return String(format: "%d:%02d", minutes, seconds)
+    } else {
+      return String(format: "%d", minutes)
+    }
   }
 } 

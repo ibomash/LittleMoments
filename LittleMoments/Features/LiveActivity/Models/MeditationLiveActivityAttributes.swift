@@ -6,13 +6,15 @@ public struct MeditationLiveActivityAttributes: ActivityAttributes {
     public var secondsElapsed: Double
     public var targetTimeInSeconds: Double?
     public var isCompleted: Bool
+    public var showSeconds: Bool
 
     public init(
-      secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false
+      secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false, showSeconds: Bool = true
     ) {
       self.secondsElapsed = secondsElapsed
       self.targetTimeInSeconds = targetTimeInSeconds
       self.isCompleted = isCompleted
+      self.showSeconds = showSeconds
     }
   }
 

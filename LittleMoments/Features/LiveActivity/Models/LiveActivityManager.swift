@@ -25,13 +25,17 @@ class LiveActivityManager {
       return
     }
 
-    print("🔄 Starting Live Activity - Session: \(sessionName), Target time: \(targetTimeInSeconds ?? 0) seconds")
+    // Get the showSeconds setting
+    let showSeconds = JustNowSettings.shared.showSeconds
+    
+    print("🔄 Starting Live Activity - Session: \(sessionName), Target time: \(targetTimeInSeconds ?? 0) seconds, Show seconds: \(showSeconds)")
     
     // Configure initial state for the Live Activity
     let initialState = MeditationLiveActivityAttributes.ContentState(
       secondsElapsed: 0,
       targetTimeInSeconds: targetTimeInSeconds,
-      isCompleted: false
+      isCompleted: false,
+      showSeconds: showSeconds
     )
 
     // Create attributes object with session name
@@ -66,9 +70,12 @@ class LiveActivityManager {
       return
     }
     
+    // Get the current showSeconds setting which might have changed
+    let showSeconds = JustNowSettings.shared.showSeconds
+    
     // Only log updates periodically to avoid spamming the console
     if Int(secondsElapsed) % 10 == 0 || isCompleted {
-      print("🔄 Updating Live Activity - Time: \(Int(secondsElapsed))s, Target: \(targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds ?? 0)s, Completed: \(isCompleted)")
+      print("🔄 Updating Live Activity - Time: \(Int(secondsElapsed))s, Target: \(targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds ?? 0)s, Completed: \(isCompleted), Show seconds: \(showSeconds)")
     }
     
     Task {
@@ -76,7 +83,8 @@ class LiveActivityManager {
       let updatedState = MeditationLiveActivityAttributes.ContentState(
         secondsElapsed: secondsElapsed,
         targetTimeInSeconds: targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds,
-        isCompleted: isCompleted
+        isCompleted: isCompleted,
+        showSeconds: showSeconds
       )
 
       // Update the Live Activity asynchronously
