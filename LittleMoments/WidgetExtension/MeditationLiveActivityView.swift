@@ -59,14 +59,6 @@ struct MeditationLiveActivityView: View {
   }
 
   private var timerDisplay: String {
-    let totalSeconds = Int(context.state.secondsElapsed)
-    let minutes = totalSeconds / 60
-    let seconds = totalSeconds % 60
-
-    if context.state.showSeconds {
-      return String(format: "%d:%02d", minutes, seconds)
-    } else {
-      return String(format: "%d", minutes)
-    }
+    return timerDisplayFromSeconds(seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
   }
 } 
