@@ -107,7 +107,8 @@ let project = Project(
       sources: ["LittleMoments/Tests/UnitTests/**"],
       dependencies: [
         .target(name: "LittleMoments")
-      ]
+      ],
+      settings: .settings(base: baseSettings)
     ),
     .target(
       name: "LittleMomentsUITests",
@@ -118,7 +119,8 @@ let project = Project(
       sources: ["LittleMoments/Tests/UITests/**"],
       dependencies: [
         .target(name: "LittleMoments")
-      ]
+      ],
+      settings: .settings(base: baseSettings)
     ),
   ],
   schemes: [
