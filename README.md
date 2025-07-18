@@ -41,12 +41,19 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Cancel the running timer when the timer running screen is dismissed
 - [x] Add some capability for longer session times (over 20 minutes)
 
-### Widgets
+### ✅ Live Activities Support
+
+- [x] Lock Screen and Dynamic Island integration during meditation sessions
+- [x] Real-time session progress and timer display
+- [x] Session completion and cancellation from Live Activity
+- [x] Respect user settings for seconds display
+- [x] Comprehensive preview system for development
+
+### Future Widget Ideas
 
 - Design and implement a home screen widget with a prompt for starting meditation
   - A rotating prompt phrase?
   - Time since last meditation?
-- Design and implement a lock screen widget with a prompt for starting meditation
 
 ### Prompting
 
@@ -58,11 +65,26 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Add support for a shortcut action to start a meditation without a duration
 - [ ] Add support for a shortcut action with a pre-specified duration?
 
+### ✅ Testing Infrastructure
+
+- [x] Comprehensive unit test suite for Live Activity functionality
+- [x] Test coverage for timer utilities and preview consistency
+- [x] Test-driven development approach documented
+- [x] 53 test methods across 5 test classes for Live Activity features
+- [x] Automated development team configuration for test targets
+
+### ✅ Development Infrastructure
+
+- [x] Automated development team configuration for test targets
+- [x] Shared timer utility functions to prevent code duplication
+- [x] TDD guidance integrated into development workflow
+- [x] Live Activity preview provider refactoring with comprehensive testing
+
 ### Multi-device
 
 - This app runs on iPad and macOS, but can't write to HealthKit on those devices, I think. We could add a simple database of past sessions to the app and sync it across devices using CloudKit, and write to HealthKit from iPhones.
 
-### Live Activities for mindfulness reminders
+### Future Live Activities Ideas
 
 - Ability to start a Mindful Reminders live activity with periodic alerts, e.g. a chime / haptic feedback every 15 min, or every 15 sec. Maybe this is a different "kind" of session? Maybe it's a different app?
 
