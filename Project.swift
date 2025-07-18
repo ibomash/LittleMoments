@@ -6,6 +6,7 @@ let buildVersion = "51"
 let baseSettings: [String: SettingValue] = [
   "MARKETING_VERSION": .string(marketingVersion),
   "CURRENT_PROJECT_VERSION": .string(buildVersion),
+  "DEVELOPMENT_TEAM": .string("Z5NU48NAF9"),
 ]
 
 let project = Project(
@@ -42,12 +43,16 @@ let project = Project(
               "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
               "SUPPORTS_MACCATALYST": "NO",
               "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
+              "CODE_SIGN_ENTITLEMENTS": "Little Moments.entitlements",
+              "CODE_SIGN_STYLE": "Automatic",
             ]),
           .release(
             name: "Release",
             settings: [
               "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
               "SUPPORTS_MACCATALYST": "NO",
+              "CODE_SIGN_ENTITLEMENTS": "Little Moments.entitlements",
+              "CODE_SIGN_STYLE": "Automatic",
             ]),
         ]
       ),
@@ -70,7 +75,27 @@ let project = Project(
         .sdk(name: "ActivityKit", type: .framework),
       ],
       settings: .settings(
-        base: baseSettings
+        base: baseSettings,
+        configurations: [
+          .debug(
+            name: "Debug",
+            settings: [
+              "CODE_SIGN_ENTITLEMENTS": "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
+              "CODE_SIGN_STYLE": "Automatic",
+              "PROVISIONING_PROFILE_SPECIFIER": "",
+              "CODE_SIGN_IDENTITY": "Apple Development"
+            ]
+          ),
+          .release(
+            name: "Release",
+            settings: [
+              "CODE_SIGN_ENTITLEMENTS": "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
+              "CODE_SIGN_STYLE": "Automatic",
+              "PROVISIONING_PROFILE_SPECIFIER": "",
+              "CODE_SIGN_IDENTITY": "Apple Development"
+            ]
+          )
+        ]
       )
     ),
     .target(
