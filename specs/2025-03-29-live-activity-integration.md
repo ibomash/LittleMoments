@@ -165,11 +165,34 @@ LittleMoments/
 - [x] When the app is configured to not show seconds, the Live Activity still shows seconds
 
 ### Phase 4: Haptic Feedback and Refinements
-- [ ] Add haptic feedback for session completion
-- [ ] Visual refinements for different screen sizes
-- [ ] Add accessibility support
-- [ ] Final UI tests
-- [ ] Comprehensive integration testing
+- [ ] **Add haptic feedback for session completion**
+    - Integrate CoreHaptics or UINotificationFeedbackGenerator in `LiveActivityManager` and timer completion logic.
+    - Ensure haptic feedback triggers only on successful session completion (not cancellation).
+    - Test on physical devices to confirm feedback is delivered and fallback to visual cues if unsupported.
+
+- [ ] **Visual refinements for different screen sizes**
+    - Audit `MeditationLiveActivityView` and Dynamic Island layouts for scaling and spacing issues.
+    - Use SwiftUI preview and simulator to validate appearance on all supported iPhone models (including Dynamic Island and non-Dynamic Island).
+    - Adjust font sizes, padding, and progress bar scaling for compact/expanded states.
+    - Ensure UI elements do not overlap or truncate on small screens.
+
+- [ ] **Add accessibility support**
+    - Add accessibility labels, hints, and traits to all Live Activity UI elements (timer, progress bar, buttons).
+    - Ensure VoiceOver reads elapsed time, session status, and button actions clearly.
+    - Test with Dynamic Type and VoiceOver enabled for usability.
+    - Confirm color contrast and touch targets meet accessibility guidelines.
+
+- [ ] **Final UI tests**
+    - Expand `LiveActivityUITests` to cover all visual states (in-progress, completed, cancelled) and device types.
+    - Validate correct appearance and interaction for Lock Screen and Dynamic Island (compact/expanded).
+    - Automate tests for session completion, cancellation, and deep link actions.
+    - Include accessibility checks in UI test suite.
+
+- [ ] **Comprehensive integration testing**
+    - Perform end-to-end tests covering session lifecycle: start, update, complete, cancel, and app termination/restart.
+    - Test interaction between Live Activity, app state, HealthKit writes, and notification permissions.
+    - Validate settings toggle for enabling/disabling Live Activities.
+    - Document manual test protocol for edge cases (low battery, device reboot, permission changes).
 
 ### Phase 5: Preview Provider Refactoring (Completed)
 - [x] Eliminate code duplication in Live Activity preview providers
