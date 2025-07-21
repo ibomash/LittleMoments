@@ -16,6 +16,10 @@ I envision a very simple and open-source iOS app with some basic widget and Shor
 
 The app's current state is beta. There are basic capabilities to start a session, set a bell, and log the results to Apple Health. It's usable as a basic meditation timer.
 
+## Development
+
+Run `fastlane repomix` to generate a comprehensive repository overview and analysis.
+
 ## Looking into the future
 
 There are many possible directions to take this work. Below are some ideas, with an attempt to mark with check boxes goals for a 1.0 release.
@@ -79,6 +83,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Shared timer utility functions to prevent code duplication
 - [x] TDD guidance integrated into development workflow
 - [x] Live Activity preview provider refactoring with comprehensive testing
+- [x] Repomix integration for repository analysis and documentation
 
 ### Multi-device
 

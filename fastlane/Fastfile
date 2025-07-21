@@ -52,4 +52,9 @@ platform :ios do
     test
     build
   end
+
+  desc "Generate repository overview with Repomix"
+  lane :repomix do
+    sh "cd .. && repomix"
+  end
 end 
