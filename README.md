@@ -24,7 +24,7 @@ There are many possible directions to take this work. Below are some ideas, with
 
 ### Project infrastructure
 
-- [x] Pick an open source license and set up a Github repo
+- [x] Pick an open source license and set up a GitHub repo
 - [x] Set up an Apple Developer account to release the app
 - [x] Make a simple "About" screen / update it for the source code location
 - [x] Share via TestFlight
