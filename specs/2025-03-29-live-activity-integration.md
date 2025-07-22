@@ -165,7 +165,7 @@ LittleMoments/
 - [x] When the app is configured to not show seconds, the Live Activity still shows seconds
 
 ### Phase 4: Haptic Feedback and Refinements
-- [ ] **Add haptic feedback for session completion**
+- [x] **Add haptic feedback for session completion**
     - Integrate CoreHaptics or UINotificationFeedbackGenerator in `LiveActivityManager` and timer completion logic.
     - Ensure haptic feedback triggers only on successful session completion (not cancellation).
     - Test on physical devices to confirm feedback is delivered and fallback to visual cues if unsupported.

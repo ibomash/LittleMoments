@@ -118,4 +118,17 @@ class LiveActivityManager {
       activity = nil
     }
   }
+  
+  /// Provides haptic feedback for session completion
+  /// This method delegates to HapticFeedbackManager for tactile feedback
+  func provideSessionCompletionFeedback() {
+    HapticFeedbackManager.shared.provideCompletionFeedback()
+  }
+  
+  /// Completes a session with haptic feedback
+  /// This method combines session completion with appropriate tactile feedback
+  func completeSessionWithFeedback() {
+    // Provide haptic feedback for successful completion
+    provideSessionCompletionFeedback()
+  }
 }

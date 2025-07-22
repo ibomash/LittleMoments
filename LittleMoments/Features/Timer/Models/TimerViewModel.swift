@@ -279,6 +279,10 @@ class TimerViewModel: ObservableObject {
       print("📱 Writing to HealthKit from finishSession notification")
       self.writeToHealthStore()
       
+      // Provide haptic feedback for successful session completion
+      print("📱 Providing haptic feedback for session completion")
+      LiveActivityManager.shared.provideSessionCompletionFeedback()
+      
       // End the Live Activity
       self.endLiveActivity(completed: true)
       

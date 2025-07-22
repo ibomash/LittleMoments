@@ -251,6 +251,10 @@ struct TimerControlButtons: View {
           // Write to HealthKit directly
           timerViewModel.writeToHealthStore()
           
+          print("🔘 Providing haptic feedback for session completion")
+          // Provide haptic feedback for successful session completion
+          LiveActivityManager.shared.provideSessionCompletionFeedback()
+          
           print("🔘 Ending Live Activity with completed status")
           // End live activity with completed status
           timerViewModel.endLiveActivity(completed: true)

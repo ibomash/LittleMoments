@@ -81,6 +81,10 @@ struct LittleMomentsApp: App {
           print("📲 Writing to HealthKit from deep link")
           timerRunningView.timerViewModel.writeToHealthStore()
           
+          // Provide haptic feedback for successful session completion
+          print("📲 Providing haptic feedback for session completion")
+          LiveActivityManager.shared.provideSessionCompletionFeedback()
+          
           print("📲 Found active timer view model - session data saved")
         } else {
           print("⚠️ Could not access timer view model directly - will try via notification")
