@@ -20,8 +20,8 @@ final class TimerTests: XCTestCase {
   /// Creates a fresh TimerViewModel instance to ensure tests start with a clean state
   override func setUp() {
     super.setUp()
-    timerViewModel = TimerViewModel()
     UserDefaultsReset.resetDefaults()
+    timerViewModel = TimerViewModel()
   }
 
   /// Tear down method runs after each test
