@@ -1,5 +1,9 @@
 default_platform(:ios)
 
+# Use `fastlane ...` directly rather than `bundle exec fastlane ...`
+# and instead of calling `tuist generate` directly, call `fastlane generate`
+# so that the agent can run fastlane commands without having to approve every command.
+
 platform :ios do
   desc "Run SwiftLint"
   lane :lint do
@@ -47,5 +51,10 @@ platform :ios do
     lint
     test
     build
+  end
+
+  desc "Generate repository overview with Repomix"
+  lane :repomix do
+    sh "cd .. && repomix"
   end
 end 

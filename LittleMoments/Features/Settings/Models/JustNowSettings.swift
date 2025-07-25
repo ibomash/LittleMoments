@@ -5,8 +5,7 @@
 //  Created during migration
 //
 
-// import Foundation
-// Add import for HealthKitManager which is in Core/Health
+import Foundation
 import HealthKit
 import SwiftUI
 
@@ -57,6 +56,20 @@ class JustNowSettings: ObservableObject {
     }
     set {
       userDefaults.set(newValue, forKey: "showSeconds")
+      userDefaults.synchronize()
+    }
+  }
+
+  var enableLiveActivities: Bool {
+    get {
+      if let value = userDefaults.object(forKey: "enableLiveActivities") as? Bool {
+        return value
+      } else {
+        return true  // Default value
+      }
+    }
+    set {
+      userDefaults.set(newValue, forKey: "enableLiveActivities")
       userDefaults.synchronize()
     }
   }

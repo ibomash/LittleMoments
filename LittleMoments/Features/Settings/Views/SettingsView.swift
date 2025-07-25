@@ -5,11 +5,10 @@
 //  Created by Illya Bomash on 5/29/23.
 //
 
-// Add import for JustNowSettings
-// import Foundation
 import SwiftUI
 
 // Import JustNowSettings from Models folder
+import LittleMoments
 
 struct SettingsView: View {
   @Environment(\.presentationMode)
@@ -30,6 +29,7 @@ struct SettingsView: View {
 
         Section(header: Text("Display")) {
           Toggle(isOn: $settings.showSeconds, label: { Text("Show seconds") })
+          Toggle(isOn: $settings.enableLiveActivities, label: { Text("Enable Live Activities") })
         }
 
         Section(header: Text("About")) {

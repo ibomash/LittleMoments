@@ -79,6 +79,14 @@ Build app with Tuist
 
 Format, lint, test, and build
 
+### ios repomix
+
+```sh
+[bundle exec] fastlane ios repomix
+```
+
+Generate repository overview with Repomix
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

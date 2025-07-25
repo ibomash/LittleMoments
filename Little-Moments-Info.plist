@@ -18,6 +18,19 @@
     <string>$(MARKETING_VERSION)</string>
     <key>CFBundleVersion</key>
     <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>littlemoments</string>
+            </array>
+        </dict>
+    </array>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>UIApplicationSceneManifest</key>
@@ -51,5 +64,15 @@
     <string>Little Moments needs access to your health data to record meditation sessions.</string>
     <key>NSHealthUpdateUsageDescription</key>
     <string>Little Moments needs access to your health data to record meditation sessions.</string>
+    <key>NSSupportsLiveActivities</key>
+    <true/>
+    <key>NSSupportsLiveActivitiesFrequentUpdates</key>
+    <true/>
+    <key>NSWidgetWantsLocation</key>
+    <false/>
+    <key>NSWidgetsRequireInternetConnectivity</key>
+    <false/>
+    <key>WidgetKitExtensionPointVersion-2</key>
+    <true/>
 </dict>
 </plist> 

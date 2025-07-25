@@ -1,0 +1,12 @@
+---
+description: Running project builds and tests, generating Xcode project
+globs: 
+alwaysApply: false
+---
+
+# Running builds and tests
+
+- To generate the Xcode project, use `fastlane generate` (don't call `tuist` directly)
+- To build, use `fastlane build` (don't use `bundle exec`)
+- To just run unit tests, run `fastlane test_unit`
+- To run UI tests, run `fastlane test_ui` or `fastlane test` to run both

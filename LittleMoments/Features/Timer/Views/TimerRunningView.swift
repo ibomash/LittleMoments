@@ -13,6 +13,7 @@ struct TimerRunningView: View {
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
+  @State private var liveActivityUpdateTimer: Timer?
 
   var body: some View {
     GeometryReader { geometry in
@@ -68,16 +69,41 @@ struct TimerRunningView: View {
       }
     }
     .onAppear {
+      print("📱 TimerRunningView appeared - starting timer and Live Activity")
       timerViewModel.start()
+      timerViewModel.startLiveActivity()
       UIApplication.shared.isIdleTimerDisabled = true
       if JustNowSettings.shared.ringBellAtStart {
         SoundManager.playSound()
       }
+      
+      // Update timer for Live Activity
+      liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak timerViewModel] _ in
+        guard let timerViewModel = timerViewModel else { return }
+        
+        // Only update if the timer is active (not nil)
+        if timerViewModel.timer != nil {
+          timerViewModel.updateLiveActivity()
+        } else {
+          // If timer is no longer running, invalidate this update timer
+          self.liveActivityUpdateTimer?.invalidate()
+          self.liveActivityUpdateTimer = nil
+        }
+      }
     }
     .onDisappear {
+      print("📱 TimerRunningView disappeared - cleaning up timer resources")
+      // Invalidate the live activity update timer
+      liveActivityUpdateTimer?.invalidate()
+      liveActivityUpdateTimer = nil
+      
+      // Remove any pending notifications
       UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-      timerViewModel.writeToHealthStore()
+      
+      // Reset the timer state (no HealthKit operations here)
       timerViewModel.reset()
+      
+      // Re-enable screen timeout
       UIApplication.shared.isIdleTimerDisabled = false
     }
   }
@@ -163,7 +189,7 @@ struct BellControlsGrid: View {
       timerViewModel.scheduledAlert = scheduledAlertOption
 
       UNUserNotificationCenter.current().requestAuthorization(options: [
-        .alert, .sound
+        .alert, .sound,
       ]) { granted, _ in
         if granted {
           let content = UNMutableNotificationContent()
@@ -201,9 +227,12 @@ struct TimerControlButtons: View {
   var body: some View {
     HStack {
       ImageButton(
-        imageName: "xmark.circle.fill", 
+        imageName: "xmark.circle.fill",
         buttonText: "Cancel",
         action: {
+          print("🔘 Cancel button tapped - ending Live Activity and resetting timer")
+          // For cancel, just end the Live Activity and reset - no HealthKit write
+          timerViewModel.endLiveActivity(completed: false)
           timerViewModel.reset()
           presentationMode.wrappedValue.dismiss()
         }
@@ -211,9 +240,27 @@ struct TimerControlButtons: View {
       .padding()
 
       ImageButton(
-        imageName: "checkmark.circle.fill", 
+        imageName: "checkmark.circle.fill",
         buttonText: "Complete",
         action: {
+          print("🔘 Complete button tapped - storing startDate for health integration")
+          // First store start date for HealthKit
+          timerViewModel.prepareSessionForFinish()
+          
+          print("🔘 Writing to HealthKit directly")
+          // Write to HealthKit directly
+          timerViewModel.writeToHealthStore()
+          
+          print("🔘 Providing haptic feedback for session completion")
+          // Provide haptic feedback for successful session completion
+          LiveActivityManager.shared.provideSessionCompletionFeedback()
+          
+          print("🔘 Ending Live Activity with completed status")
+          // End live activity with completed status
+          timerViewModel.endLiveActivity(completed: true)
+          
+          print("🔘 Dismissing timer view")
+          // Dismiss the view
           presentationMode.wrappedValue.dismiss()
         }
       )

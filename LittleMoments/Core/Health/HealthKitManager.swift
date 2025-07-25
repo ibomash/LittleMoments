@@ -28,7 +28,7 @@ class HealthKitManager {
       completion(false, nil)
       return
     }
-    
+
     let healthKitTypesToWrite: Set<HKSampleType> = [mindfulType]
 
     // Request authorization
