@@ -1,3 +1,5 @@
+// Compile this Control Center widget only when the SDK provides ControlCenter
+#if canImport(ControlCenter)
 import AppIntents
 import SwiftUI
 import WidgetKit
@@ -14,3 +16,5 @@ struct MeditationControl: ControlWidget {
   }
 }
 
+// Fallback for environments without the ControlCenter SDK
+#endif

@@ -1,4 +1,5 @@
 import ProjectDescription
+import Foundation
 
 let marketingVersion = "0.2.0"
 let buildVersion = "51"
@@ -8,6 +9,8 @@ let baseSettings: [String: SettingValue] = [
   "CURRENT_PROJECT_VERSION": .string(buildVersion),
   "DEVELOPMENT_TEAM": .string("Z5NU48NAF9"),
 ]
+
+let enableControlCenterSDK = ProcessInfo.processInfo.environment["ENABLE_CONTROLCENTER_SDK"] == "1"
 
 let project = Project(
   name: "LittleMoments",
@@ -69,11 +72,17 @@ let project = Project(
       sources: ["LittleMoments/WidgetExtension/**"],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements"),
-      dependencies: [
-        .sdk(name: "SwiftUI", type: .framework),
-        .sdk(name: "WidgetKit", type: .framework),
-        .sdk(name: "ActivityKit", type: .framework),
-      ],
+      dependencies: {
+        var deps: [TargetDependency] = [
+          .sdk(name: "SwiftUI", type: .framework),
+          .sdk(name: "WidgetKit", type: .framework),
+          .sdk(name: "ActivityKit", type: .framework),
+        ]
+        if enableControlCenterSDK {
+          deps.append(.sdk(name: "ControlCenter", type: .framework, status: .optional))
+        }
+        return deps
+      }(),
       settings: .settings(
         base: baseSettings,
         configurations: [
