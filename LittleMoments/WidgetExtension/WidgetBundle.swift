@@ -7,6 +7,9 @@ struct MeditationWidgets: WidgetBundle {
   @WidgetBundleBuilder
   var body: some Widget {
     MeditationLiveActivityWidget()
+    if #available(iOS 18.0, *) {
+      MeditationControl()
+    }
   }
 }
 
