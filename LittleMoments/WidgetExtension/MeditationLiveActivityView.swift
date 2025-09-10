@@ -6,8 +6,9 @@ struct MeditationLiveActivityView: View {
   let context: ActivityViewContext<MeditationLiveActivityAttributes>
   @Environment(\.showsWidgetContainerBackground) var showsWidgetBackground
 
+  @ViewBuilder
   var body: some View {
-    ZStack {
+    let content = ZStack {
       ContainerRelativeShape()
         .fill(showsWidgetBackground ? .clear : .black.opacity(0.1))
 
@@ -55,6 +56,13 @@ struct MeditationLiveActivityView: View {
         }
       }
       .padding()
+    }
+
+    if #available(iOS 17.0, *) {
+      content
+        .containerBackground(for: .widget) { Color.clear }
+    } else {
+      content
     }
   }
 

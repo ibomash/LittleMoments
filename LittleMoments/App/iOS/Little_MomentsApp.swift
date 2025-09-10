@@ -131,6 +131,10 @@ struct LittleMomentsApp: App {
       } else {
         print("⚠️ Received cancel request, but no active timer session found")
       }
+    } else if url.host == "startSession" || url.host == "start" || url.path == "/start" {
+      print("📲 Processing startSession deep link")
+      // Present the running timer view immediately
+      appState.showTimerRunningView = true
     } else {
       print("❌ Unknown deep link host: \(url.host ?? "nil")")
     }
