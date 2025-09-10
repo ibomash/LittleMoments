@@ -91,7 +91,8 @@ struct LittleMomentsApp: App {
         // First try to get an active timer view model to prepare the session
         // This ensures we capture the startDate before we close the view
         if let activeTimerVC = getActiveTimerViewController(),
-          let timerRunningView = findTimerRunningView(in: activeTimerVC) {
+          let timerRunningView = findTimerRunningView(in: activeTimerVC)
+        {
           // Access the timer view model directly
           timerRunningView.timerViewModel.prepareSessionForFinish()
 
@@ -151,6 +152,18 @@ struct LittleMomentsApp: App {
       }
     } else if url.host == "startSession" || url.host == "start" || url.path == "/start" {
       print("📲 Processing startSession deep link")
+      // Parse optional duration query item (seconds). Accept forms like "60", "60s", "1m".
+      if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false),
+        let items = comps.queryItems
+      {
+        if let durationString = items.first(where: { $0.name.lowercased() == "duration" })?.value {
+          let seconds = Self.parseDurationToSeconds(durationString)
+          if let seconds {
+            print("📲 Will start with preset duration: \(seconds) sec")
+            AppState.shared.pendingStartDurationSeconds = seconds
+          }
+        }
+      }
       // Present the running timer view immediately
       appState.showTimerRunningView = true
     } else {
@@ -158,6 +171,19 @@ struct LittleMomentsApp: App {
     }
   }
   // swiftlint:enable function_body_length
+
+  // MARK: - Helpers
+  static func parseDurationToSeconds(_ raw: String) -> Int? {
+    let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    if trimmed.hasSuffix("m"), let minutes = Int(trimmed.dropLast()) {
+      return minutes * 60
+    }
+    if trimmed.hasSuffix("s"), let sec = Int(trimmed.dropLast()) {
+      return sec
+    }
+    if let sec = Int(trimmed) { return sec }
+    return nil
+  }
 
   // Helper method to find the active timer view controller
   func getActiveTimerViewController() -> UIViewController? {

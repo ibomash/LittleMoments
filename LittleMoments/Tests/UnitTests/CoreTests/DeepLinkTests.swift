@@ -13,15 +13,30 @@ final class DeepLinkTests: XCTestCase {
   func testStartSessionDeepLinkOpensTimer() {
     XCTAssertFalse(AppState.shared.showTimerRunningView)
     let app = LittleMomentsApp()
-    let url = URL(string: "littlemoments://startSession")!
+    guard let url = URL(string: "littlemoments://startSession") else {
+      return XCTFail("URL should be valid")
+    }
     app.handleDeepLink(url: url)
     XCTAssertTrue(AppState.shared.showTimerRunningView)
+  }
+
+  func testStartSessionDeepLinkWithDurationSetsPreset() {
+    AppState.shared.resetState()
+    let app = LittleMomentsApp()
+    guard let url = URL(string: "littlemoments://startSession?duration=60") else {
+      return XCTFail("URL should be valid")
+    }
+    app.handleDeepLink(url: url)
+    XCTAssertTrue(AppState.shared.showTimerRunningView)
+    XCTAssertEqual(AppState.shared.pendingStartDurationSeconds, 60)
   }
 
   func testWrongSchemeIsIgnored() {
     XCTAssertFalse(AppState.shared.showTimerRunningView)
     let app = LittleMomentsApp()
-    let url = URL(string: "otherapp://startSession")!
+    guard let url = URL(string: "otherapp://startSession") else {
+      return XCTFail("URL should be valid")
+    }
     app.handleDeepLink(url: url)
     XCTAssertFalse(AppState.shared.showTimerRunningView)
   }
@@ -36,5 +51,13 @@ final class DeepLinkTests: XCTestCase {
     }
     wait(for: [exp], timeout: 2.0)
     XCTAssertTrue(AppState.shared.showTimerRunningView)
+  }
+
+  func testParseDurationHelper() throws {
+    XCTAssertEqual(LittleMomentsApp.parseDurationToSeconds("60"), 60)
+    XCTAssertEqual(LittleMomentsApp.parseDurationToSeconds("60s"), 60)
+    XCTAssertEqual(LittleMomentsApp.parseDurationToSeconds("1m"), 60)
+    XCTAssertEqual(LittleMomentsApp.parseDurationToSeconds("3m"), 180)
+    XCTAssertNil(LittleMomentsApp.parseDurationToSeconds("whoops"))
   }
 }

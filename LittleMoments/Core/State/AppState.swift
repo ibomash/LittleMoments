@@ -13,8 +13,11 @@ final class AppState: ObservableObject {
   func resetState() {
     showTimerRunningView = false
     showSettingsView = false
+    pendingStartDurationSeconds = nil
   }
 
   @Published var showTimerRunningView: Bool = false
   @Published var showSettingsView: Bool = false
+  // If set, TimerRunningView will preselect a duration when it appears
+  @Published var pendingStartDurationSeconds: Int?
 }

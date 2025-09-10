@@ -77,6 +77,15 @@ struct TimerRunningView: View {
         SoundManager.playSound()
       }
 
+      // Apply any preset duration passed via deep link
+      if let preset = AppState.shared.pendingStartDurationSeconds {
+        let label: String = preset % 60 == 0 ? "\(preset / 60)" : "\(preset)s"
+        timerViewModel.scheduledAlert = OneTimeScheduledBellAlert(
+          targetTimeInSec: preset, name: label
+        )
+        AppState.shared.pendingStartDurationSeconds = nil
+      }
+
       // Update timer for Live Activity
       liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
         [weak timerViewModel] _ in
