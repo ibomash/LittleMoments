@@ -76,6 +76,7 @@ This project uses Tuist for project generation and Fastlane for build automation
 - Mock utilities for testing dependencies
 - Test-specific configurations (5-second timer option in simulator)
 - **Always plan tests for any changes and typically write those tests first (TDD approach)**
+ - Always create or update tests for any new feature or behavior change in the same PR (no feature merges without tests)
 
 ## Development Notes
 
