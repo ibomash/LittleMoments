@@ -22,7 +22,8 @@ public struct MeditationLiveActivityAttributes: ActivityAttributes {
     public var showSeconds: Bool
 
     public init(
-      secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false, showSeconds: Bool = true
+      secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false,
+      showSeconds: Bool = true
     ) {
       self.secondsElapsed = secondsElapsed
       self.targetTimeInSeconds = targetTimeInSeconds
@@ -39,28 +40,28 @@ public struct MeditationLiveActivityAttributes: ActivityAttributes {
 }
 
 #if DEBUG
-// MARK: - Live Activity Preview States
-extension MeditationLiveActivityAttributes {
-  public static var preview: MeditationLiveActivityAttributes {
-    MeditationLiveActivityAttributes(sessionName: "Morning Meditation")
+  // MARK: - Live Activity Preview States
+  extension MeditationLiveActivityAttributes {
+    public static var preview: MeditationLiveActivityAttributes {
+      MeditationLiveActivityAttributes(sessionName: "Morning Meditation")
+    }
+
+    public static var previewState: MeditationLiveActivityAttributes.ContentState {
+      MeditationLiveActivityAttributes.ContentState(
+        secondsElapsed: 180,  // 3 minutes
+        targetTimeInSeconds: 600,  // 10 minutes
+        isCompleted: false,
+        showSeconds: true
+      )
+    }
+
+    public static var previewStateCompleted: MeditationLiveActivityAttributes.ContentState {
+      MeditationLiveActivityAttributes.ContentState(
+        secondsElapsed: 600,  // 10 minutes (completed)
+        targetTimeInSeconds: 600,  // 10 minutes
+        isCompleted: true,
+        showSeconds: true
+      )
+    }
   }
-  
-  public static var previewState: MeditationLiveActivityAttributes.ContentState {
-    MeditationLiveActivityAttributes.ContentState(
-      secondsElapsed: 180,  // 3 minutes
-      targetTimeInSeconds: 600,  // 10 minutes
-      isCompleted: false,
-      showSeconds: true
-    )
-  }
-  
-  public static var previewStateCompleted: MeditationLiveActivityAttributes.ContentState {
-    MeditationLiveActivityAttributes.ContentState(
-      secondsElapsed: 600,  // 10 minutes (completed)
-      targetTimeInSeconds: 600,  // 10 minutes
-      isCompleted: true,
-      showSeconds: true
-    )
-  }
-}
 #endif

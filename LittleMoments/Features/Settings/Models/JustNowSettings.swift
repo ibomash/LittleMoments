@@ -9,7 +9,8 @@ import Foundation
 import HealthKit
 import SwiftUI
 
-class JustNowSettings: ObservableObject {
+@MainActor
+final class JustNowSettings: ObservableObject {
   static let shared = JustNowSettings()
 
   private let userDefaults = UserDefaults.standard

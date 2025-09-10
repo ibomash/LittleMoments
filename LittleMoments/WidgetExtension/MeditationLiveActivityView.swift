@@ -6,8 +6,9 @@ struct MeditationLiveActivityView: View {
   let context: ActivityViewContext<MeditationLiveActivityAttributes>
   @Environment(\.showsWidgetContainerBackground) var showsWidgetBackground
 
+  @ViewBuilder
   var body: some View {
-    ZStack {
+    let content = ZStack {
       ContainerRelativeShape()
         .fill(showsWidgetBackground ? .clear : .black.opacity(0.1))
 
@@ -43,7 +44,7 @@ struct MeditationLiveActivityView: View {
               .cornerRadius(8)
               .foregroundColor(.green)
           }
-          
+
           Link(destination: URL(string: "littlemoments://cancelSession")!) {
             Text("Cancel")
               .frame(maxWidth: .infinity)
@@ -56,9 +57,17 @@ struct MeditationLiveActivityView: View {
       }
       .padding()
     }
+
+    if #available(iOS 17.0, *) {
+      content
+        .containerBackground(for: .widget) { Color.clear }
+    } else {
+      content
+    }
   }
 
   private var timerDisplay: String {
-    return timerDisplayFromSeconds(seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
+    return timerDisplayFromSeconds(
+      seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
   }
-} 
+}

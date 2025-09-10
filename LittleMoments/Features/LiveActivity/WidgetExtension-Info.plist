@@ -37,7 +37,7 @@
     <false/>
     <key>NSWidgetsRequireInternetConnectivity</key>
     <false/>
-    <key>WidgetKitExtensionPointVersion-2</key>
+    <key>WidgetKitExtensionPointVersion-3</key>
     <true/>
 </dict>
 </plist> 

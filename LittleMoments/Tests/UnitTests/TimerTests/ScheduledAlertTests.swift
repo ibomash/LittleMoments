@@ -1,8 +1,9 @@
-import XCTest
+@preconcurrency import XCTest
 
 @testable import LittleMoments
 
 /// Test suite for ScheduledAlert classes
+@MainActor
 final class ScheduledAlertTests: XCTestCase {
 
   /// Tests the OneTimeScheduledBellAlert class

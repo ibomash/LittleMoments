@@ -21,17 +21,17 @@ platform :ios do
 
   desc "Generate Xcode project with Tuist"
   lane :generate do
-    sh "cd .. && tuist generate"
+    sh "cd .. && unset CPATH; tuist generate"
   end
 
   desc "Run unit tests"
   lane :test_unit do
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsTests"
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsTests"
   end
 
   desc "Run UI tests"
   lane :test_ui do
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsUITests"
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\""
   end
 
   desc "Run all tests"
@@ -42,7 +42,13 @@ platform :ios do
 
   desc "Build app with Tuist"
   lane :build do
-    sh "cd .. && tuist build"
+    begin
+      sh "cd .. && unset CPATH; tuist build"
+    rescue => e
+      UI.important("Tuist build failed, attempting device build via xcodebuild as fallback…")
+      # Build for a generic iOS Device to avoid simulator SDK module map issues
+      sh "cd .. && unset CPATH; xcodebuild build -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphoneos -destination \"generic/platform=iOS\""
+    end
   end
 
   desc "Format, lint, test, and build"

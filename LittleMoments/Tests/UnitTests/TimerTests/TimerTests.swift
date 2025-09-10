@@ -1,11 +1,12 @@
 import SwiftUI
-import XCTest
+@preconcurrency import XCTest
 
 /// @testable import allows access to internal members of the app module
 @testable import LittleMoments
 
 /// Test suite for TimerRunningView and its associated TimerViewModel
 /// These tests verify both the view model logic and basic view creation
+@MainActor
 final class TimerTests: XCTestCase {
   /// The view model instance used across all tests
   var timerViewModel: TimerViewModel?
@@ -18,18 +19,18 @@ final class TimerTests: XCTestCase {
 
   /// Set up method runs before each test
   /// Creates a fresh TimerViewModel instance to ensure tests start with a clean state
-  override func setUp() {
-    super.setUp()
+  @MainActor override func setUp() async throws {
+    try await super.setUp()
     UserDefaultsReset.resetDefaults()
     timerViewModel = TimerViewModel()
   }
 
   /// Tear down method runs after each test
   /// Ensures proper cleanup of timer and resources
-  override func tearDown() {
+  @MainActor override func tearDown() async throws {
     timerViewModel?.reset()
     timerViewModel = nil
-    super.tearDown()
+    try await super.tearDown()
   }
 
   /// Tests the initial state of the TimerViewModel with both showSeconds settings
@@ -56,15 +57,18 @@ final class TimerTests: XCTestCase {
 
     // Wait for 1 second to elapse
     let expectation = XCTestExpectation(description: "Timer running")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {  // Wait just over 1 second
-      // Test with showSeconds = true
-      self.setShowSeconds(true)
-      XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:01")
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [weak self] in  // Wait just over 1 second
+      Task { @MainActor in
+        guard let self else { return }
+        // Test with showSeconds = true
+        self.setShowSeconds(true)
+        XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:01")
 
-      // Test with showSeconds = false
-      self.setShowSeconds(false)
-      XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0")
-      expectation.fulfill()
+        // Test with showSeconds = false
+        self.setShowSeconds(false)
+        XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0")
+        expectation.fulfill()
+      }
     }
 
     wait(for: [expectation], timeout: 2)
@@ -102,11 +106,14 @@ final class TimerTests: XCTestCase {
 
     // Wait for 1 second to ensure timer has started
     let expectation = XCTestExpectation(description: "Timer running")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-      // Verify that time has elapsed and progress is being tracked
-      XCTAssertTrue(self.timerViewModel?.secondsElapsed ?? 0 > 0)
-      XCTAssertTrue(self.timerViewModel?.progress ?? 0 > 0)
-      expectation.fulfill()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+      Task { @MainActor in
+        guard let self else { return }
+        // Verify that time has elapsed and progress is being tracked
+        XCTAssertTrue(self.timerViewModel?.secondsElapsed ?? 0 > 0)
+        XCTAssertTrue(self.timerViewModel?.progress ?? 0 > 0)
+        expectation.fulfill()
+      }
     }
 
     wait(for: [expectation], timeout: 2)
@@ -122,12 +129,15 @@ final class TimerTests: XCTestCase {
 
     // Wait briefly then reset
     let expectation = XCTestExpectation(description: "Timer reset")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-      self.timerViewModel?.reset()
-      // Verify that all values are reset to their initial state
-      XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:00")
-      XCTAssertEqual(self.timerViewModel?.progress, 0.0)
-      expectation.fulfill()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+      Task { @MainActor in
+        guard let self else { return }
+        self.timerViewModel?.reset()
+        // Verify that all values are reset to their initial state
+        XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:00")
+        XCTAssertEqual(self.timerViewModel?.progress, 0.0)
+        expectation.fulfill()
+      }
     }
 
     wait(for: [expectation], timeout: 1)
@@ -155,15 +165,18 @@ final class TimerTests: XCTestCase {
 
     // Wait briefly then write to health
     let expectation = XCTestExpectation(description: "Health write")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-      // Use the mock directly instead of trying to replace the shared instance
-      mockHealthManager.saveMindfulSession(
-        startDate: Date().addingTimeInterval(-10),
-        endDate: Date()
-      ) { success, _ in
-        XCTAssertTrue(success)
-        XCTAssertTrue(mockHealthManager.saveWasCalled)
-        expectation.fulfill()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+      Task { @MainActor in
+        guard self != nil else { return }
+        // Use the mock directly instead of trying to replace the shared instance
+        mockHealthManager.saveMindfulSession(
+          startDate: Date().addingTimeInterval(-10),
+          endDate: Date()
+        ) { success, _ in
+          XCTAssertTrue(success)
+          XCTAssertTrue(mockHealthManager.saveWasCalled)
+          expectation.fulfill()
+        }
       }
     }
 

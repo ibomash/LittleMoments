@@ -1,9 +1,10 @@
 import HealthKit
-import XCTest
+@preconcurrency import XCTest
 
 @testable import LittleMoments
 
 /// Test suite for HealthKitManager
+@MainActor
 final class HealthKitManagerTests: XCTestCase {
 
   /// Tests creation of a mindful session

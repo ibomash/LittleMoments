@@ -41,7 +41,7 @@ struct MeditationLiveActivityView: View {
           .buttonStyle(.bordered)
           .tint(.green)
           .widgetURL(URL(string: "littlemoments://finishSession"))
-          
+
           Button("Cancel") {
             // This will be handled by deeplink
           }
@@ -55,6 +55,7 @@ struct MeditationLiveActivityView: View {
   }
 
   private var timerDisplay: String {
-    return timerDisplayFromSeconds(seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
+    return timerDisplayFromSeconds(
+      seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
   }
 }

@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class LiveActivityUITests: XCTestCase {
   func testLiveActivityAppears() {
     // Test that live activity appears when timer starts

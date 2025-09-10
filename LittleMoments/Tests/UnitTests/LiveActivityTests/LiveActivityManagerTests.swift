@@ -1,7 +1,8 @@
-import XCTest
+@preconcurrency import XCTest
 
 @testable import LittleMoments
 
+@MainActor
 final class LiveActivityManagerTests: XCTestCase {
   func testActivityInitialization() {
     // This test will check if the LiveActivityManager initializes correctly
@@ -10,19 +11,19 @@ final class LiveActivityManagerTests: XCTestCase {
     XCTAssertNotNil(manager)
   }
 
-  func testActivityUpdateWithNilActivity() {
+  func testActivityUpdateWithNilActivity() async {
     // This test will check that updateActivity doesn't crash when activity is nil
     let manager = LiveActivityManager.shared
 
     // This shouldn't throw any errors even if activity is nil
-    manager.updateActivity(secondsElapsed: 10)
+    await manager.updateActivity(secondsElapsed: 10)
   }
 
-  func testActivityEndWithNilActivity() {
+  func testActivityEndWithNilActivity() async {
     // This test will check that endActivity doesn't crash when activity is nil
     let manager = LiveActivityManager.shared
 
     // This shouldn't throw any errors even if activity is nil
-    manager.endActivity()
+    await manager.endActivity()
   }
 }
