@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 import UIKit
 import ActivityKit
 
@@ -18,6 +19,8 @@ import ActivityKit
 @main
 struct LittleMomentsApp: App {
   @StateObject private var appState = AppState.shared
+  @Environment(\.scenePhase) private var scenePhase
+  private let controlsLogger = Logger(subsystem: "net.bomash.illya.LittleMoments", category: "Controls")
   
   init() {
     SoundManager.initialize()
@@ -27,7 +30,20 @@ struct LittleMomentsApp: App {
     WindowGroup {
       TimerStartView()
         .onOpenURL { url in
+          controlsLogger.notice("onOpenURL fired with: \(url.absoluteString, privacy: .public)")
           handleDeepLink(url: url)
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+          switch newPhase {
+          case .active:
+            controlsLogger.notice("App became active (possible Control tap -> OpenAppIntent)")
+          case .background:
+            controlsLogger.debug("App moved to background")
+          case .inactive:
+            controlsLogger.debug("App became inactive")
+          @unknown default:
+            controlsLogger.debug("App scenePhase unknown state")
+          }
         }
     }
   }

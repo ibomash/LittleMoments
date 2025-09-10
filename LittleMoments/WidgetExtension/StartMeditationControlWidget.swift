@@ -3,18 +3,24 @@
 import SwiftUI
 import WidgetKit
 import AppIntents
+import OSLog
 
 #if swift(>=6.0)
 
 @available(iOS 18.0, *)
+private let controlsLogger = Logger(subsystem: "net.bomash.illya.LittleMoments", category: "Controls")
+
+@available(iOS 18.0, *)
 struct StartMeditationControlWidget: ControlWidget {
+  init() {
+    controlsLogger.debug("StartMeditationControlWidget init")
+  }
   var body: some ControlWidgetConfiguration {
     AppIntentControlConfiguration(
       kind: "net.bomash.illya.LittleMoments.controls.startMeditation",
       intent: StartMeditationControlIntent.self
     ) { _ in
-      // Use a Controls-specific button template that opens the deep link
-      ControlWidgetButton(action: OpenURLIntent(URL(string: "littlemoments://startSession")!)) {
+      ControlWidgetButton(action: StartMeditationOpenIntent()) {
         Label("Start Meditation", systemImage: "play.fill")
       }
     }
@@ -31,6 +37,9 @@ struct StartMeditationControlIntent: ControlConfigurationIntent {
 
   @MainActor
   func perform() async throws -> some IntentResult {
+    controlsLogger.notice("StartMeditationControlIntent.perform invoked - will open app (openAppWhenRun=true)")
+    // Note: The ControlWidgetButton handles deep linking via OpenURLIntent.
+    // The configuration intent opens the app when the tile is tapped anywhere.
     // Open the app; the Control button itself performs the deep link
     return .result()
   }
