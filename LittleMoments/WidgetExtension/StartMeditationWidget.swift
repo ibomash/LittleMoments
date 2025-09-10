@@ -83,7 +83,7 @@ private struct StartMeditationWidgetView: View {
       VStack(alignment: .leading, spacing: 8) {
         // Title
         VStack(alignment: .leading, spacing: 2) {
-          Text("Just Now")
+          Text("Little Moments")
             .font(.system(.caption2, design: .rounded))
             .opacity(0.9)
           Text("Breathe")
@@ -94,15 +94,15 @@ private struct StartMeditationWidgetView: View {
         Spacer(minLength: 4)
 
         // Quick actions
-        HStack(spacing: 8) {
-          durationChip(seconds: 60, label: "1m")
-          durationChip(seconds: 300, label: "5m")
+        HStack(spacing: 6) {
+          durationChip(seconds: 60)
+          durationChip(seconds: 300)
           Spacer()
           // Primary action (untimed)
           safeLink("littlemoments://startSession") {
             Image(systemName: "play.fill")
-              .font(.system(size: 14, weight: .semibold))
-              .padding(8)
+              .font(.system(size: 13, weight: .semibold))
+              .padding(7)
               .background(Color.white.opacity(0.15))
               .clipShape(Circle())
               .accessibilityLabel("Start now")
@@ -143,16 +143,29 @@ private struct StartMeditationWidgetView: View {
   }
 
   // Small helper to produce a duration chip that opens the app with a preset timer
-  private func durationChip(seconds: Int, label: String) -> some View {
-    safeLink("littlemoments://startSession?duration=\(seconds)") {
-      Text(label)
-        .font(.system(.caption2, design: .rounded))
-        .fontWeight(.semibold)
-        .padding(.vertical, 6)
-        .padding(.horizontal, 8)
-        .background(Color.white.opacity(0.15))
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .accessibilityLabel("Start \(label) session")
+  private func durationChip(seconds: Int) -> some View {
+    let minutes = seconds % 60 == 0 ? seconds / 60 : nil
+    let numberText = minutes != nil ? String(minutes!) : String(seconds)
+    let suffix = minutes != nil ? "m" : "s"
+    return safeLink("littlemoments://startSession?duration=\(seconds)") {
+      HStack(alignment: .firstTextBaseline, spacing: 1) {
+        Text(numberText)
+          .font(.system(size: 12, weight: .semibold, design: .rounded))
+          .monospacedDigit()
+          .lineLimit(1)
+          .fixedSize(horizontal: true, vertical: false)
+        Text(suffix)
+          .font(.system(size: 9, weight: .semibold, design: .rounded))
+          .lineLimit(1)
+          .fixedSize(horizontal: true, vertical: false)
+      }
+      .padding(.vertical, 5)
+      .padding(.horizontal, 8)
+      .frame(minWidth: 28, alignment: .center)
+      .background(Color.white.opacity(0.15))
+      .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+      .accessibilityLabel("Start \(numberText)\(suffix) session")
+      .layoutPriority(1)
     }
   }
 
