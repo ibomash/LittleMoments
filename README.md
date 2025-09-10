@@ -1,6 +1,6 @@
 # Little Moments app
 
-Copyright © 2023-2024 Illya Bomash, licensed under a BSD-3 license.
+Copyright © 2023-2025 Illya Bomash, licensed under a BSD-3 license.
 
 ## Why?
 
