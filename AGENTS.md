@@ -128,6 +128,13 @@ Follow conventional commit format: `type(scope): description`
 - Alternatively, write the message to a file and use `git commit -F message.txt` with real newlines in the file.
 - When scripting, a here‑doc also works: `git commit -F - <<'MSG'` … `MSG`.
 
+## Linting & Formatting Before Commits
+
+- Always run `fastlane format_code` and `fastlane lint` before committing.
+- Fix any new violations introduced by your changes. Do not commit new lint issues.
+- If you must suppress a rule, add a targeted exception with justification (narrow scope, avoid blanket disables).
+- For larger changes, prefer `fastlane quality_check` to run format, lint, tests, and build together.
+
 ## PRD Standards
 
 Product Requirement Documents must be placed in `specs/` directory with naming convention `YYYY-MM-DD-feature-name.md`. Use the template in `specs/TEMPLATE-feature-name.md`. Always run `date +%Y-%m-%d` to get current date before creating PRDs.
