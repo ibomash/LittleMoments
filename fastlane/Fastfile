@@ -5,6 +5,35 @@ default_platform(:ios)
 # so that the agent can run fastlane commands without having to approve every command.
 
 platform :ios do
+  # Fail early if the selected Xcode is older than 16 (iOS 18 SDK required)
+  private_lane :assert_xcode_16 do
+    version_output = sh("xcodebuild -version", log: false).to_s
+    match = version_output.match(/Xcode\s+(\d+)(?:\.(\d+))?/)
+    unless match
+      UI.user_error!("Unable to determine Xcode version. Output: #{version_output}")
+    end
+    major = match[1].to_i
+    if major < 16
+      UI.user_error!("Xcode 16+ required for Control Center controls. Found: #{version_output.lines.first.to_s.strip}")
+    end
+  end
+
+  # Additionally require an SDK that contains ControlCenter.framework
+  private_lane :assert_controlcenter_sdk do
+    sdk_path = sh("xcrun --sdk iphonesimulator --show-sdk-path", log: false).to_s.strip
+    if sdk_path.empty? || !File.directory?(sdk_path)
+      UI.user_error!("Unable to locate iOS Simulator SDK path via xcrun. Is Xcode selected?")
+    end
+    cc_framework = File.join(sdk_path, "System/Library/Frameworks/ControlCenter.framework")
+    unless File.directory?(cc_framework)
+      if ENV["SKIP_CC_SDK_CHECK"] == "1"
+        UI.important("ControlCenter.framework missing in SDK: #{sdk_path}. Proceeding because SKIP_CC_SDK_CHECK=1 is set.")
+      else
+        UI.user_error!("ControlCenter.framework not found in SDK: #{sdk_path}. Upgrade to an Xcode/iOS SDK that includes Control Center (e.g., Xcode with iOS 18.6 SDK), or re-enable canImport(ControlCenter) guards. Set SKIP_CC_SDK_CHECK=1 to bypass.")
+      end
+    end
+  end
+
   desc "Run SwiftLint"
   lane :lint do
     swiftlint(
@@ -21,17 +50,23 @@ platform :ios do
 
   desc "Generate Xcode project with Tuist"
   lane :generate do
+    assert_xcode_16
+    assert_controlcenter_sdk
     sh "cd .. && tuist generate"
   end
 
   desc "Run unit tests"
   lane :test_unit do
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsTests"
+    assert_xcode_16
+    assert_controlcenter_sdk
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=18.6,name=iPhone 16\" -only-testing:LittleMomentsTests"
   end
 
   desc "Run UI tests"
   lane :test_ui do
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsUITests"
+    assert_xcode_16
+    assert_controlcenter_sdk
+    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=18.6,name=iPhone 16\" -only-testing:LittleMomentsUITests"
   end
 
   desc "Run all tests"
@@ -42,7 +77,9 @@ platform :ios do
 
   desc "Build app with Tuist"
   lane :build do
-    sh "cd .. && tuist build"
+    assert_xcode_16
+    assert_controlcenter_sdk
+    sh "cd .. && xcodebuild build -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=18.6,name=iPhone 16\""
   end
 
   desc "Format, lint, test, and build"

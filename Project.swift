@@ -10,7 +10,6 @@ let baseSettings: [String: SettingValue] = [
   "DEVELOPMENT_TEAM": .string("Z5NU48NAF9"),
 ]
 
-let enableControlCenterSDK = ProcessInfo.processInfo.environment["ENABLE_CONTROLCENTER_SDK"] == "1"
 
 let project = Project(
   name: "LittleMoments",
@@ -72,17 +71,14 @@ let project = Project(
       sources: ["LittleMoments/WidgetExtension/**"],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements"),
-      dependencies: {
-        var deps: [TargetDependency] = [
-          .sdk(name: "SwiftUI", type: .framework),
-          .sdk(name: "WidgetKit", type: .framework),
-          .sdk(name: "ActivityKit", type: .framework),
-        ]
-        if enableControlCenterSDK {
-          deps.append(.sdk(name: "ControlCenter", type: .framework, status: .optional))
-        }
-        return deps
-      }(),
+      dependencies: [
+        .sdk(name: "SwiftUI", type: .framework),
+        .sdk(name: "WidgetKit", type: .framework),
+        .sdk(name: "ActivityKit", type: .framework),
+        // Control Center controls are available on iOS 18+ (Xcode 16 SDK).
+        // Link weakly so the extension remains loadable on older OS versions.
+        .sdk(name: "ControlCenter", type: .framework, status: .optional),
+      ],
       settings: .settings(
         base: baseSettings,
         configurations: [
