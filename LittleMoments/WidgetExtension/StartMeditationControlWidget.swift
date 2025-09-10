@@ -4,7 +4,7 @@ import SwiftUI
 import WidgetKit
 import AppIntents
 
-#if swift(>=6.0) && false // Temporarily disabled pending proper Controls API implementation
+#if swift(>=6.0)
 
 @available(iOS 18.0, *)
 struct StartMeditationControlWidget: ControlWidget {
@@ -13,7 +13,10 @@ struct StartMeditationControlWidget: ControlWidget {
       kind: "net.bomash.illya.LittleMoments.controls.startMeditation",
       intent: StartMeditationControlIntent.self
     ) { _ in
-      Label("Start Meditation", systemImage: "play.circle.fill")
+      // Use a Controls-specific button template that opens the deep link
+      ControlWidgetButton(action: OpenURLIntent(URL(string: "littlemoments://startSession")!)) {
+        Label("Start Meditation", systemImage: "play.fill")
+      }
     }
     .displayName("Start Meditation")
     .description("Begin a quick meditation session")
@@ -28,8 +31,7 @@ struct StartMeditationControlIntent: ControlConfigurationIntent {
 
   @MainActor
   func perform() async throws -> some IntentResult {
-    // Prefer to deep link so the app immediately shows TimerRunningView
-    // Open the app; deep link handled by openURL from Control routing when available
+    // Open the app; the Control button itself performs the deep link
     return .result()
   }
 }
