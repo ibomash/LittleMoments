@@ -10,7 +10,8 @@ import AVFoundation
 // import AudioToolbox
 // import Foundation
 
-class SoundManager {
+@MainActor
+final class SoundManager {
   static var soundURL: URL? = Bundle.main.url(
     forResource: "42095__fauxpress__bell-meditation", withExtension: "aif")
   static var audioPlayer: AVAudioPlayer?

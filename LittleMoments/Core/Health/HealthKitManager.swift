@@ -6,9 +6,10 @@
 //
 
 // import Foundation
-import HealthKit
+@preconcurrency import HealthKit
 
-class HealthKitManager {
+@MainActor
+final class HealthKitManager {
 
   static let shared = HealthKitManager()
 
@@ -21,7 +22,7 @@ class HealthKitManager {
   }
 
   // Request Authorization
-  func requestAuthorization(completion: @escaping (Bool, Error?) -> Swift.Void) {
+  func requestAuthorization(completion: @Sendable @escaping (Bool, Error?) -> Swift.Void) {
     // Define the data types that the app needs access to
     guard let mindfulType = HKObjectType.categoryType(forIdentifier: .mindfulSession) else {
       print("Error: Failed to create mindful session category type for authorization")
@@ -53,7 +54,7 @@ class HealthKitManager {
 
   // Save a Mindful Session to HealthKit
   func saveMindfulSession(
-    mindfulSession: HKCategorySample, completion: @escaping (Bool, Error?) -> Swift.Void
+    mindfulSession: HKCategorySample, completion: @Sendable @escaping (Bool, Error?) -> Swift.Void
   ) {
     healthStore?.save(mindfulSession, withCompletion: completion)
   }

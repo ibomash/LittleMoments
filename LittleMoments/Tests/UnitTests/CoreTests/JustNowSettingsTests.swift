@@ -1,8 +1,9 @@
-import XCTest
+@preconcurrency import XCTest
 
 @testable import LittleMoments
 
 /// Test suite for JustNowSettings
+@MainActor
 final class JustNowSettingsTests: XCTestCase {
 
   override func setUp() {

@@ -1,23 +1,24 @@
-import XCTest
+@preconcurrency import XCTest
 import SwiftUI
 
 @testable import LittleMoments
 
+@MainActor
 final class TimerViewModelLiveActivityTests: XCTestCase {
     var timerViewModel: TimerViewModel?
     
-    override func setUp() {
-        super.setUp()
+    @MainActor override func setUp() async throws {
+        try await super.setUp()
         timerViewModel = TimerViewModel()
         UserDefaultsReset.resetDefaults()
         // Enable Live Activities by default for tests
         JustNowSettings.shared.enableLiveActivities = true
     }
     
-    override func tearDown() {
+    @MainActor override func tearDown() async throws {
         timerViewModel?.reset()
         timerViewModel = nil
-        super.tearDown()
+        try await super.tearDown()
     }
     
     func testStartLiveActivity() {

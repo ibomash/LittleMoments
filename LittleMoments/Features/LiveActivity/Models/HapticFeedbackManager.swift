@@ -4,7 +4,8 @@ import UIKit
 /// Manager class responsible for providing haptic feedback during meditation sessions.
 /// This provides tactile feedback for session completion to enhance the user experience
 /// without being intrusive during the meditation itself.
-class HapticFeedbackManager {
+@MainActor
+final class HapticFeedbackManager {
   /// Shared singleton instance for app-wide access
   static let shared = HapticFeedbackManager()
   

@@ -79,15 +79,17 @@ struct TimerRunningView: View {
       
       // Update timer for Live Activity
       liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak timerViewModel] _ in
-        guard let timerViewModel = timerViewModel else { return }
-        
-        // Only update if the timer is active (not nil)
-        if timerViewModel.timer != nil {
-          timerViewModel.updateLiveActivity()
-        } else {
-          // If timer is no longer running, invalidate this update timer
-          self.liveActivityUpdateTimer?.invalidate()
-          self.liveActivityUpdateTimer = nil
+        Task { @MainActor in
+          guard let timerViewModel = timerViewModel else { return }
+          
+          // Only update if the timer is active (not nil)
+          if timerViewModel.timer != nil {
+            timerViewModel.updateLiveActivity()
+          } else {
+            // If timer is no longer running, invalidate this update timer
+            self.liveActivityUpdateTimer?.invalidate()
+            self.liveActivityUpdateTimer = nil
+          }
         }
       }
     }
@@ -146,9 +148,9 @@ struct BellControlsGrid: View {
     Grid {
       Text("Timer (minutes)")
         .foregroundColor(Color.gray)
-      ForEach(0..<2) { rowIndex in
+      ForEach(Array(0..<2), id: \.self) { rowIndex in
         GridRow {
-          ForEach(0..<buttonsPerRow) { columnIndex in
+          ForEach(Array(0..<buttonsPerRow), id: \.self) { columnIndex in
             let index = rowIndex * buttonsPerRow + columnIndex
             if index < timerViewModel.scheduledAlertOptions.count {
               let scheduledAlertOption: OneTimeScheduledBellAlert =

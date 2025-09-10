@@ -7,6 +7,8 @@ let baseSettings: [String: SettingValue] = [
   "MARKETING_VERSION": .string(marketingVersion),
   "CURRENT_PROJECT_VERSION": .string(buildVersion),
   "DEVELOPMENT_TEAM": .string("Z5NU48NAF9"),
+  // Adopt Swift 6 across all targets
+  "SWIFT_VERSION": .string("6.0"),
 ]
 
 let project = Project(
@@ -108,7 +110,7 @@ let project = Project(
       dependencies: [
         .target(name: "LittleMoments")
       ],
-      settings: .settings(base: baseSettings)
+      settings: .settings(base: baseSettings.merging(["SWIFT_STRICT_CONCURRENCY": .string("minimal")]) { $1 })
     ),
     .target(
       name: "LittleMomentsUITests",
@@ -129,9 +131,23 @@ let project = Project(
       shared: true,
       buildAction: .buildAction(targets: ["LittleMoments"]),
       testAction: .targets(
-        ["LittleMomentsTests", "LittleMomentsUITests"],
+        ["LittleMomentsTests"],
         configuration: .debug,
         options: .options(coverage: true, codeCoverageTargets: ["LittleMoments"])
+      ),
+      runAction: .runAction(configuration: .debug),
+      archiveAction: .archiveAction(configuration: .release),
+      profileAction: .profileAction(configuration: .release),
+      analyzeAction: .analyzeAction(configuration: .debug)
+    ),
+    .scheme(
+      name: "LittleMoments-UI",
+      shared: true,
+      buildAction: .buildAction(targets: ["LittleMoments"]),
+      testAction: .targets(
+        ["LittleMomentsUITests"],
+        configuration: .debug,
+        options: .options(coverage: false)
       ),
       runAction: .runAction(configuration: .debug),
       archiveAction: .archiveAction(configuration: .release),

@@ -1,6 +1,7 @@
-import XCTest
+@preconcurrency import XCTest
 @testable import LittleMoments
 
+@MainActor
 final class TimerUtilityTests: XCTestCase {
   
   func testTimerDisplayWithSeconds() {

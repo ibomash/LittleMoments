@@ -58,6 +58,8 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
       return
     }
     print("Triggered \(name) alert")
-    SoundManager.playSound()
+    Task { @MainActor in
+      SoundManager.playSound()
+    }
   }
 }

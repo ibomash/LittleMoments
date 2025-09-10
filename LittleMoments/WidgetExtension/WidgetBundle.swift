@@ -8,11 +8,7 @@ struct MeditationWidgets: WidgetBundle {
   var body: some Widget {
     MeditationLiveActivityWidget()
     StartMeditationWidget()
-    #if swift(>=6.0)
-    if #available(iOS 18.0, *) {
-      StartMeditationControlWidget()
-    }
-    #endif
+    // iOS 18 Control Center control temporarily disabled pending API stabilization
   }
 }
 

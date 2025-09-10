@@ -5,15 +5,16 @@
 //  Created by Illya Bomash on 5/1/23.
 //
 
-import XCTest
+@preconcurrency import XCTest
 
 @testable import LittleMoments
 
 /// Test suite for core app functionality
+@MainActor
 final class AppTests: XCTestCase {
 
-  override func setUp() {
-    super.setUp()
+  @MainActor override func setUp() async throws {
+    try await super.setUp()
     // Reset UserDefaults between tests
     UserDefaultsReset.resetDefaults()
     // Reset AppState to initial values

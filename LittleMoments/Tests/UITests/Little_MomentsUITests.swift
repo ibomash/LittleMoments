@@ -7,6 +7,7 @@
 
 import XCTest
 
+@MainActor
 final class LittleMomentsUITests: XCTestCase {
 
   let app = XCUIApplication()
@@ -17,8 +18,7 @@ final class LittleMomentsUITests: XCTestCase {
     // In UI tests it is usually best to stop immediately when a failure occurs.
     continueAfterFailure = false
 
-    // Configure the application
-    app.launchArguments = ["UITesting"]
+    // Configure the application in each test before launch
 
     // In UI tests it's important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
   }
@@ -29,6 +29,7 @@ final class LittleMomentsUITests: XCTestCase {
 
   func testExample() throws {
     // UI tests must launch the application that they test.
+    app.launchArguments = ["UITesting"]
     app.launch()
 
     // Use XCTAssert and related functions to verify your tests produce the correct results.

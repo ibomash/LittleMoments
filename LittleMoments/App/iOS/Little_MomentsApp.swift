@@ -10,10 +10,10 @@ import UIKit
 import ActivityKit
 
 // Keep track of the active timer view model for deep link handling
-private var activeTimerViewModel: Any? = nil
+@MainActor private var activeTimerViewModel: Any? = nil
 // Global flag to track if a session was recently canceled, to prevent race conditions
-private var sessionWasRecentlyCanceled = false
-private var lastCancelationTime: Date?
+@MainActor private var sessionWasRecentlyCanceled = false
+@MainActor private var lastCancelationTime: Date?
 
 @main
 struct LittleMomentsApp: App {

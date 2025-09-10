@@ -1,10 +1,11 @@
-import ActivityKit
+@preconcurrency import ActivityKit
 import Foundation
 
 /// Manager class responsible for handling Live Activity lifecycle for meditation sessions.
 /// This provides a centralized way to start, update, and end Live Activities that display
 /// meditation session information on the Lock Screen and in Dynamic Island.
-class LiveActivityManager {
+@MainActor
+final class LiveActivityManager {
   /// Shared singleton instance for app-wide access
   static let shared = LiveActivityManager()
 
@@ -57,7 +58,7 @@ class LiveActivityManager {
   ///   - secondsElapsed: Current elapsed time of the session in seconds
   ///   - targetTimeInSeconds: Optional target duration in seconds (nil for untimed sessions)
   ///   - isCompleted: Whether the session has been completed
-  func updateActivity(secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false) {
+  func updateActivity(secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false) async {
     guard activity != nil else {
       // Only log this once in a while to avoid spamming
       if Int(secondsElapsed) % 30 == 0 {
@@ -71,26 +72,24 @@ class LiveActivityManager {
       print("🔄 Widget: Updating Live Activity - Time: \(Int(secondsElapsed))s, Target: \(targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds ?? 0)s, Completed: \(isCompleted)")
     }
     
-    Task {
-      // Create updated state with new time and completion status
-      let updatedState = MeditationLiveActivityAttributes.ContentState(
-        secondsElapsed: secondsElapsed,
-        targetTimeInSeconds: targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds,
-        isCompleted: isCompleted
-      )
+    // Create updated state with new time and completion status
+    let updatedState = MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: secondsElapsed,
+      targetTimeInSeconds: targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds,
+      isCompleted: isCompleted
+    )
 
-      // Update the Live Activity asynchronously
-      let updatedContent = ActivityContent(state: updatedState, staleDate: nil)
-      await activity?.update(updatedContent)
-      
-      if isCompleted {
-        print("✅ Widget: Live Activity marked as completed")
-      }
+    // Update the Live Activity asynchronously
+    let updatedContent = ActivityContent(state: updatedState, staleDate: nil)
+    await activity?.update(updatedContent)
+    
+    if isCompleted {
+      print("✅ Widget: Live Activity marked as completed")
     }
   }
 
   /// Ends the current Live Activity and removes it from display
-  func endActivity() {
+  func endActivity() async {
     guard activity != nil else {
       print("⚠️ Widget: Cannot end Live Activity - no active Live Activity found")
       return
@@ -98,16 +97,14 @@ class LiveActivityManager {
     
     print("🔄 Widget: Ending Live Activity")
     
-    Task {
-      // End the Live Activity with immediate dismissal
-      if let activity = activity {
-        let finalContent = ActivityContent(state: activity.content.state, staleDate: nil)
-        await activity.end(finalContent, dismissalPolicy: .immediate)
-        print("✅ Widget: Live Activity ended successfully")
-      }
-      
-      // Clear the activity reference
-      activity = nil
+    // End the Live Activity with immediate dismissal
+    if let activity = activity {
+      let finalContent = ActivityContent(state: activity.content.state, staleDate: nil)
+      await activity.end(finalContent, dismissalPolicy: .immediate)
+      print("✅ Widget: Live Activity ended successfully")
     }
+    
+    // Clear the activity reference
+    activity = nil
   }
 } 

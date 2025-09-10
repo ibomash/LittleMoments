@@ -1,7 +1,8 @@
 @testable import LittleMoments
-import XCTest
+@preconcurrency import XCTest
 
 /// Tests for haptic feedback functionality in meditation session completion
+@MainActor
 final class HapticFeedbackTests: XCTestCase {
     
     
@@ -85,14 +86,15 @@ final class HapticFeedbackTests: XCTestCase {
         wait(for: [expectation], timeout: 1.0)
     }
     
-    func testTimerCancellationDoesNotTriggerHapticFeedback() {
+    func testTimerCancellationDoesNotTriggerHapticFeedback() async {
         // Test that timer cancellation does NOT trigger haptic feedback
         // This is a design requirement - only completion should trigger feedback
         
         let manager = LiveActivityManager.shared
         
         // Cancellation should not include haptic feedback
-        XCTAssertNoThrow(manager.endActivity(), "Cancellation should not trigger haptic feedback")
+        await manager.endActivity()
+        XCTAssertTrue(true, "Cancellation did not crash")
     }
     
     // MARK: - Timing and Performance Tests

@@ -1,7 +1,8 @@
-import XCTest
+@preconcurrency import XCTest
 import SwiftUI
 @testable import LittleMoments
 
+@MainActor
 final class LiveActivityPreviewViewTests: XCTestCase {
   
   func testPreviewUsesSharedTimerLogic() {
