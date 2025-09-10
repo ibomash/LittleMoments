@@ -121,6 +121,13 @@ Follow conventional commit format: `type(scope): description`
 - `chore: Cleaning up project structure`
 - `config: Set up my developer account for the build`
 
+### Commit message line breaks (agent tip)
+- Avoid using literal "\n" in commit messages; many shells and tools will treat this as two characters rather than a newline.
+- Prefer multiple `-m` flags with `git commit` — each `-m` starts a new paragraph (line breaks render correctly):
+  - Example: `git commit -m "title" -m "first paragraph" -m "second paragraph"`
+- Alternatively, write the message to a file and use `git commit -F message.txt` with real newlines in the file.
+- When scripting, a here‑doc also works: `git commit -F - <<'MSG'` … `MSG`.
+
 ## PRD Standards
 
 Product Requirement Documents must be placed in `specs/` directory with naming convention `YYYY-MM-DD-feature-name.md`. Use the template in `specs/TEMPLATE-feature-name.md`. Always run `date +%Y-%m-%d` to get current date before creating PRDs.
