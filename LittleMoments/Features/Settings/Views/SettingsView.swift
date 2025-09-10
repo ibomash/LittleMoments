@@ -32,7 +32,7 @@ struct SettingsView: View {
         }
 
         Section(header: Text("About")) {
-          Text("Coded by Illya Bomash in 2023.")
+          Text("Coded by Illya Bomash, 2023–2025.")
           if let url = URL(string: "https://github.com/ibomash/LittleMoments") {
             Link(destination: url) {
               Text("Code available on GitHub.")
