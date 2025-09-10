@@ -21,11 +21,11 @@ let project = Project(
       bundleId: "net.bomash.illya.LittleMoments",
       infoPlist: .file(path: "Little-Moments-Info.plist"),
       sources: [
-        "LittleMoments/Core/**", 
+        "LittleMoments/Core/**",
         "LittleMoments/Features/**",
         "LittleMoments/App/iOS/**",
         // Exclude files that are part of the widget extension
-        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift"
+        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift",
       ],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
@@ -70,7 +70,8 @@ let project = Project(
       infoPlist: .file(path: "LittleMoments/WidgetExtension/WidgetExtension-Info.plist"),
       sources: ["LittleMoments/WidgetExtension/**"],
       resources: ["LittleMoments/Resources/**"],
-      entitlements: .file(path: "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements"),
+      entitlements: .file(
+        path: "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements"),
       dependencies: [
         .sdk(name: "SwiftUI", type: .framework),
         .sdk(name: "WidgetKit", type: .framework),
@@ -82,21 +83,23 @@ let project = Project(
           .debug(
             name: "Debug",
             settings: [
-              "CODE_SIGN_ENTITLEMENTS": "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
+              "CODE_SIGN_ENTITLEMENTS":
+                "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
               "CODE_SIGN_STYLE": "Automatic",
               "PROVISIONING_PROFILE_SPECIFIER": "",
-              "CODE_SIGN_IDENTITY": "Apple Development"
+              "CODE_SIGN_IDENTITY": "Apple Development",
             ]
           ),
           .release(
             name: "Release",
             settings: [
-              "CODE_SIGN_ENTITLEMENTS": "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
+              "CODE_SIGN_ENTITLEMENTS":
+                "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
               "CODE_SIGN_STYLE": "Automatic",
               "PROVISIONING_PROFILE_SPECIFIER": "",
-              "CODE_SIGN_IDENTITY": "Apple Development"
+              "CODE_SIGN_IDENTITY": "Apple Development",
             ]
-          )
+          ),
         ]
       )
     ),
@@ -110,7 +113,8 @@ let project = Project(
       dependencies: [
         .target(name: "LittleMoments")
       ],
-      settings: .settings(base: baseSettings.merging(["SWIFT_STRICT_CONCURRENCY": .string("minimal")]) { $1 })
+      settings: .settings(
+        base: baseSettings.merging(["SWIFT_STRICT_CONCURRENCY": .string("minimal")]) { $1 })
     ),
     .target(
       name: "LittleMomentsUITests",

@@ -53,6 +53,20 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Respect user settings for seconds display
 - [x] Comprehensive preview system for development
 
+## ✅ Control Center (iOS 18+)
+
+- Start Meditation control available in Control Center.
+- Opens the app and immediately starts a session (no URL scheme).
+- Implementation uses an App Intent with `openAppWhenRun = true` so the system foregrounds the app to drive UI.
+- Requirements: iOS 18+, WidgetKit extension enabled (ExtensionPointVersion 4).
+- Enable: Settings → Control Center → customize and add the Little Moments control.
+
+Developer notes:
+- Control entry point: `LittleMoments/WidgetExtension/StartMeditationControlWidget.swift`
+- Open intent (app): `LittleMoments/Features/Meditation/Models/StartMeditationOpenIntent.swift`
+- Open intent (extension shim): `LittleMoments/WidgetExtension/StartMeditationOpenIntent.swift`
+- The intent is `@MainActor` in the app target and toggles `AppState.shared.showTimerRunningView`.
+
 ### Future Widget Ideas
 
 - Design and implement a home screen widget with a prompt for starting meditation

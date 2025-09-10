@@ -26,8 +26,10 @@ final class LiveActivityManager {
       return
     }
 
-    print("🔄 Widget: Starting Live Activity - Session: \(sessionName), Target time: \(targetTimeInSeconds ?? 0) seconds")
-    
+    print(
+      "🔄 Widget: Starting Live Activity - Session: \(sessionName), Target time: \(targetTimeInSeconds ?? 0) seconds"
+    )
+
     // Configure initial state for the Live Activity
     let initialState = MeditationLiveActivityAttributes.ContentState(
       secondsElapsed: 0,
@@ -43,7 +45,7 @@ final class LiveActivityManager {
       // Request new Live Activity from the system
       let activityContent = ActivityContent(state: initialState, staleDate: nil)
       activity = try Activity.request(
-        attributes: attributes, 
+        attributes: attributes,
         content: activityContent,
         pushType: nil
       )
@@ -58,7 +60,9 @@ final class LiveActivityManager {
   ///   - secondsElapsed: Current elapsed time of the session in seconds
   ///   - targetTimeInSeconds: Optional target duration in seconds (nil for untimed sessions)
   ///   - isCompleted: Whether the session has been completed
-  func updateActivity(secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false) async {
+  func updateActivity(
+    secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false
+  ) async {
     guard activity != nil else {
       // Only log this once in a while to avoid spamming
       if Int(secondsElapsed) % 30 == 0 {
@@ -66,12 +70,14 @@ final class LiveActivityManager {
       }
       return
     }
-    
+
     // Only log updates periodically to avoid spamming the console
     if Int(secondsElapsed) % 10 == 0 || isCompleted {
-      print("🔄 Widget: Updating Live Activity - Time: \(Int(secondsElapsed))s, Target: \(targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds ?? 0)s, Completed: \(isCompleted)")
+      print(
+        "🔄 Widget: Updating Live Activity - Time: \(Int(secondsElapsed))s, Target: \(targetTimeInSeconds ?? activity?.content.state.targetTimeInSeconds ?? 0)s, Completed: \(isCompleted)"
+      )
     }
-    
+
     // Create updated state with new time and completion status
     let updatedState = MeditationLiveActivityAttributes.ContentState(
       secondsElapsed: secondsElapsed,
@@ -82,7 +88,7 @@ final class LiveActivityManager {
     // Update the Live Activity asynchronously
     let updatedContent = ActivityContent(state: updatedState, staleDate: nil)
     await activity?.update(updatedContent)
-    
+
     if isCompleted {
       print("✅ Widget: Live Activity marked as completed")
     }
@@ -94,17 +100,17 @@ final class LiveActivityManager {
       print("⚠️ Widget: Cannot end Live Activity - no active Live Activity found")
       return
     }
-    
+
     print("🔄 Widget: Ending Live Activity")
-    
+
     // End the Live Activity with immediate dismissal
     if let activity = activity {
       let finalContent = ActivityContent(state: activity.content.state, staleDate: nil)
       await activity.end(finalContent, dismissalPolicy: .immediate)
       print("✅ Widget: Live Activity ended successfully")
     }
-    
+
     // Clear the activity reference
     activity = nil
   }
-} 
+}

@@ -5,7 +5,9 @@ import WidgetKit
 // This serves as a fallback for devices/OSes without Control Center Controls
 struct StartMeditationWidget: Widget {
   var body: some WidgetConfiguration {
-    StaticConfiguration(kind: "net.bomash.illya.LittleMoments.widget.startMeditation", provider: Provider()) { _ in
+    StaticConfiguration(
+      kind: "net.bomash.illya.LittleMoments.widget.startMeditation", provider: Provider()
+    ) { _ in
       StartMeditationWidgetView()
     }
     .configurationDisplayName("Start Meditation")
@@ -53,15 +55,15 @@ private struct StartMeditationWidgetView: View {
 }
 
 #if DEBUG
-struct StartMeditationWidget_Previews: PreviewProvider {
-  static var previews: some View {
-    StartMeditationWidgetView()
-      .previewContext(WidgetPreviewContext(family: .accessoryCircular))
-      .previewDisplayName("Accessory Circular")
+  struct StartMeditationWidget_Previews: PreviewProvider {
+    static var previews: some View {
+      StartMeditationWidgetView()
+        .previewContext(WidgetPreviewContext(family: .accessoryCircular))
+        .previewDisplayName("Accessory Circular")
 
-    StartMeditationWidgetView()
-      .previewContext(WidgetPreviewContext(family: .systemSmall))
-      .previewDisplayName("Small")
+      StartMeditationWidgetView()
+        .previewContext(WidgetPreviewContext(family: .systemSmall))
+        .previewDisplayName("Small")
+    }
   }
-}
 #endif

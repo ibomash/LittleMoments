@@ -5,10 +5,9 @@
 //  Created by Illya Bomash on 5/29/23.
 //
 
-import SwiftUI
-
 // Import JustNowSettings from Models folder
 import LittleMoments
+import SwiftUI
 
 struct SettingsView: View {
   @Environment(\.presentationMode)

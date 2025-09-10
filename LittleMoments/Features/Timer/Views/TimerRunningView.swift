@@ -76,12 +76,13 @@ struct TimerRunningView: View {
       if JustNowSettings.shared.ringBellAtStart {
         SoundManager.playSound()
       }
-      
+
       // Update timer for Live Activity
-      liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak timerViewModel] _ in
+      liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
+        [weak timerViewModel] _ in
         Task { @MainActor in
           guard let timerViewModel = timerViewModel else { return }
-          
+
           // Only update if the timer is active (not nil)
           if timerViewModel.timer != nil {
             timerViewModel.updateLiveActivity()
@@ -98,13 +99,13 @@ struct TimerRunningView: View {
       // Invalidate the live activity update timer
       liveActivityUpdateTimer?.invalidate()
       liveActivityUpdateTimer = nil
-      
+
       // Remove any pending notifications
       UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-      
+
       // Reset the timer state (no HealthKit operations here)
       timerViewModel.reset()
-      
+
       // Re-enable screen timeout
       UIApplication.shared.isIdleTimerDisabled = false
     }
@@ -248,19 +249,19 @@ struct TimerControlButtons: View {
           print("🔘 Complete button tapped - storing startDate for health integration")
           // First store start date for HealthKit
           timerViewModel.prepareSessionForFinish()
-          
+
           print("🔘 Writing to HealthKit directly")
           // Write to HealthKit directly
           timerViewModel.writeToHealthStore()
-          
+
           print("🔘 Providing haptic feedback for session completion")
           // Provide haptic feedback for successful session completion
           LiveActivityManager.shared.provideSessionCompletionFeedback()
-          
+
           print("🔘 Ending Live Activity with completed status")
           // End live activity with completed status
           timerViewModel.endLiveActivity(completed: true)
-          
+
           print("🔘 Dismissing timer view")
           // Dismiss the view
           presentationMode.wrappedValue.dismiss()

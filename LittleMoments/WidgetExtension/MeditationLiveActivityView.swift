@@ -44,7 +44,7 @@ struct MeditationLiveActivityView: View {
               .cornerRadius(8)
               .foregroundColor(.green)
           }
-          
+
           Link(destination: URL(string: "littlemoments://cancelSession")!) {
             Text("Cancel")
               .frame(maxWidth: .infinity)
@@ -67,6 +67,7 @@ struct MeditationLiveActivityView: View {
   }
 
   private var timerDisplay: String {
-    return timerDisplayFromSeconds(seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
+    return timerDisplayFromSeconds(
+      seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
   }
-} 
+}

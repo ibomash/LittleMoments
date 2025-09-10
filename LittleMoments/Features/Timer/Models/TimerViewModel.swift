@@ -5,10 +5,10 @@
 //  Created by Illya Bomash on 5/1/23.
 //
 
+import ActivityKit
 import Foundation
 import SwiftUI
 import UIKit
-import ActivityKit
 
 @MainActor
 class TimerViewModel: ObservableObject {
@@ -44,13 +44,16 @@ class TimerViewModel: ObservableObject {
     didSet {
       // Update Live Activity when timer duration changes
       if JustNowSettings.shared.enableLiveActivities {
-        let targetSeconds = scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
+        let targetSeconds =
+          scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
         print("Updating live activity with new target seconds: \(targetSeconds ?? 0)")
         // We need to update the Live Activity with the new target time
-        Task { await LiveActivityManager.shared.updateActivity(
-          secondsElapsed: secondsElapsed,
-          targetTimeInSeconds: targetSeconds
-        )}
+        Task {
+          await LiveActivityManager.shared.updateActivity(
+            secondsElapsed: secondsElapsed,
+            targetTimeInSeconds: targetSeconds
+          )
+        }
       }
     }
   }
@@ -119,17 +122,19 @@ class TimerViewModel: ObservableObject {
       }
       return
     }
-    
+
     // First try using the stored session start date (used when finishing from Live Activity)
     let sessionStartDate = sessionStartDateForFinish ?? startDate
-    
+
     guard let sessionStartDate else {
       print("Error: Cannot write to health store - startDate is nil")
       return
     }
     let endDate = Date()
-    
-    print("Writing to HealthKit - session from \(sessionStartDate) to \(endDate) (duration: \(endDate.timeIntervalSince(sessionStartDate)) seconds)")
+
+    print(
+      "Writing to HealthKit - session from \(sessionStartDate) to \(endDate) (duration: \(endDate.timeIntervalSince(sessionStartDate)) seconds)"
+    )
 
     // Create a new mindful session
     guard
@@ -145,14 +150,18 @@ class TimerViewModel: ObservableObject {
       [weak self] success, error in
       Task { @MainActor in
         guard let self = self else { return }
-        
+
         if success {
           let sessionDuration = endDate.timeIntervalSince(sessionStartDate)
-          print("✅ Health integration - Mindful session of \(Int(sessionDuration)) seconds saved successfully")
+          print(
+            "✅ Health integration - Mindful session of \(Int(sessionDuration)) seconds saved successfully"
+          )
         } else {
-          print("❌ Health integration - Failed to save mindful session: \(error?.localizedDescription ?? "Unknown error")")
+          print(
+            "❌ Health integration - Failed to save mindful session: \(error?.localizedDescription ?? "Unknown error")"
+          )
         }
-        
+
         // Clear the stored session start date after saving
         self.sessionStartDateForFinish = nil
       }
@@ -162,7 +171,7 @@ class TimerViewModel: ObservableObject {
   // Add a function to safely store the start date before finishing
   func prepareSessionForFinish() {
     print("Preparing session for finish - storing startDate for health store")
-    
+
     // Store the current startDate for Health integration
     if sessionStartDateForFinish == nil {
       sessionStartDateForFinish = startDate
@@ -177,34 +186,37 @@ class TimerViewModel: ObservableObject {
   // Live Activity functions
   func startLiveActivity() {
     guard JustNowSettings.shared.enableLiveActivities else { return }
-    
-    let targetSeconds = scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
+
+    let targetSeconds =
+      scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
     print("Starting live activity with target seconds: \(targetSeconds ?? 0)")
     LiveActivityManager.shared.startActivity(
       sessionName: "Meditation",
       targetTimeInSeconds: targetSeconds
     )
   }
-  
+
   func updateLiveActivity() {
     guard JustNowSettings.shared.enableLiveActivities else { return }
-    
+
     // Don't update if the timer has been reset
     guard timer != nil else { return }
-    
+
     Task { await LiveActivityManager.shared.updateActivity(secondsElapsed: secondsElapsed) }
   }
-  
+
   func endLiveActivity(completed: Bool = true) {
     guard JustNowSettings.shared.enableLiveActivities else { return }
-    
+
     if completed {
-      Task { await LiveActivityManager.shared.updateActivity(
-        secondsElapsed: secondsElapsed,
-        isCompleted: true
-      )}
+      Task {
+        await LiveActivityManager.shared.updateActivity(
+          secondsElapsed: secondsElapsed,
+          isCompleted: true
+        )
+      }
     }
-    
+
     Task { await LiveActivityManager.shared.endActivity() }
   }
 
@@ -224,21 +236,21 @@ class TimerViewModel: ObservableObject {
       OneTimeScheduledBellAlert(targetTimeInMin: 45),
       OneTimeScheduledBellAlert(targetTimeInMin: 60),
     ]
-    
+
     #if targetEnvironment(simulator)
       // Add a short 5-second option for testing in simulator
       scheduledAlertOptions[0] = OneTimeScheduledBellAlert(targetTimeInSec: 5, name: "5 sec")
     #endif
-    
+
     // Register for notifications from Live Activity
     setupNotificationObservers()
   }
-  
+
   // Note: Block-based observers are added with [weak self] and will be cleaned up with the object lifecycle.
-  
+
   private func setupNotificationObservers() {
     print("📱 Setting up notification observers")
-    
+
     // Listen for finish notification
     finishObserver = NotificationCenter.default.addObserver(
       forName: Notification.Name("com.littlemoments.finishSession"),
@@ -247,47 +259,55 @@ class TimerViewModel: ObservableObject {
     ) { [weak self] _ in
       Task { @MainActor in
         guard let self = self else { return }
-        
+
         let now = Date()
-        
+
         // Skip if this session was already cancelled
         if self.wasCancelled {
-          print("📱 BLOCKED FINISH - Ignoring finishSession notification - session was already cancelled")
+          print(
+            "📱 BLOCKED FINISH - Ignoring finishSession notification - session was already cancelled"
+          )
           return
         }
-        
+
         // Check if a cancellation happened within the last 2 seconds (race condition protection)
         if let lastCancel = self.lastCancelTime, now.timeIntervalSince(lastCancel) < 5.0 {
-          print("📱 BLOCKED FINISH - Ignoring finishSession notification - cancelSession was received within the last 5 seconds")
-          print("📱 Time since cancel: \(String(format: "%.2f", now.timeIntervalSince(lastCancel))) seconds")
+          print(
+            "📱 BLOCKED FINISH - Ignoring finishSession notification - cancelSession was received within the last 5 seconds"
+          )
+          print(
+            "📱 Time since cancel: \(String(format: "%.2f", now.timeIntervalSince(lastCancel))) seconds"
+          )
           return
         }
-        
+
         print("📱 Received finishSession notification from Live Activity")
         print("📱 Current wasCancelled state: \(self.wasCancelled)")
         if let lastCancelTime = self.lastCancelTime {
-          print("📱 Last cancel time: \(lastCancelTime), time since: \(String(format: "%.2f", now.timeIntervalSince(lastCancelTime))) seconds")
+          print(
+            "📱 Last cancel time: \(lastCancelTime), time since: \(String(format: "%.2f", now.timeIntervalSince(lastCancelTime))) seconds"
+          )
         }
-        
+
         // Store the start date for later use
         self.prepareSessionForFinish()
-        
+
         // Write to HealthKit directly
         print("📱 Writing to HealthKit from finishSession notification")
         self.writeToHealthStore()
-        
+
         // Provide haptic feedback for successful session completion
         print("📱 Providing haptic feedback for session completion")
         LiveActivityManager.shared.provideSessionCompletionFeedback()
-        
+
         // End the Live Activity
         self.endLiveActivity(completed: true)
-        
+
         // Reset the timer
         self.reset()
       }
     }
-    
+
     // Listen for cancel notification
     cancelObserver = NotificationCenter.default.addObserver(
       forName: Notification.Name("com.littlemoments.cancelSession"),
@@ -297,13 +317,15 @@ class TimerViewModel: ObservableObject {
       Task { @MainActor in
         guard let self = self else { return }
         print("📱 Received cancelSession notification from Live Activity")
-        
+
         // Mark session as cancelled and record the time
         self.wasCancelled = true
         self.lastCancelTime = Date()
-        print("📱 CANCEL TRIGGERED - Setting wasCancelled to true to block any finishSession notifications")
+        print(
+          "📱 CANCEL TRIGGERED - Setting wasCancelled to true to block any finishSession notifications"
+        )
         print("📱 Marked session as cancelled at \(self.lastCancelTime!) to prevent health write")
-        
+
         // For cancel, just end Live Activity and reset - no HealthKit write
         self.endLiveActivity(completed: false)
         self.reset()
@@ -316,16 +338,16 @@ class TimerViewModel: ObservableObject {
     timer?.invalidate()
     timer = nil
     startDate = nil
-    
+
     // Reset the cancelled flag and timestamp for future sessions
     wasCancelled = false
     lastCancelTime = nil
-    
+
     if backgroundTask != .invalid {
       UIApplication.shared.endBackgroundTask(backgroundTask)
       backgroundTask = .invalid
     }
-    
+
     UIApplication.shared.isIdleTimerDisabled = false
   }
 }
