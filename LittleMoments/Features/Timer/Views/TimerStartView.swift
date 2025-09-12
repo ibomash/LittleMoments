@@ -38,7 +38,9 @@ struct TimerStartView: View {
           ImageButton(
             imageName: "play.fill", buttonText: "Start session",
             action: {
-              let intent = MeditationSessionIntent()
+              let intent = MeditationSessionIntent(
+                durationMinutes: appState.pendingStartDurationSeconds.map { $0 / 60 }
+              )
               // Print the intent I'm donating
               let donationManager = IntentDonationManager.shared
               // Donate the intent and print confirmation for debugging purposes depending on success or failure
