@@ -26,6 +26,10 @@ This project uses Tuist for project generation and Fastlane for build automation
 - UI tests: `LittleMomentsUITests` target
 - Test coverage is enabled for the main app target
 
+### Resources
+
+- Use the `apple_docs_sosumi` tool for Apple developer docs in readable Markdown format. It mirrors everything that would be at developer.apple.com
+
 ## Architecture
 
 ### Core Structure
