@@ -7,6 +7,8 @@ import OSLog
 struct StartMeditationOpenIntent: AppIntent {
   static var title: LocalizedStringResource { "Start Meditation" }
   static var openAppWhenRun: Bool { true }
+  // Hide this Control/Widget-focused intent from Shortcuts to avoid duplicates
+  static var isDiscoverable: Bool { false }
 
   @MainActor
   func perform() async throws -> some IntentResult {
