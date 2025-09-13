@@ -91,7 +91,8 @@ struct LittleMomentsApp: App {
         // First try to get an active timer view model to prepare the session
         // This ensures we capture the startDate before we close the view
         if let activeTimerVC = getActiveTimerViewController(),
-          let timerRunningView = findTimerRunningView(in: activeTimerVC) {
+          let timerRunningView = findTimerRunningView(in: activeTimerVC)
+        {
           // Access the timer view model directly
           timerRunningView.timerViewModel.prepareSessionForFinish()
 
@@ -153,7 +154,8 @@ struct LittleMomentsApp: App {
       print("📲 Processing startSession deep link")
       // Parse optional duration query item (seconds). Accept forms like "60", "60s", "1m".
       if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false),
-        let items = comps.queryItems {
+        let items = comps.queryItems
+      {
         if let durationString = items.first(where: { $0.name.lowercased() == "duration" })?.value {
           let seconds = Self.parseDurationToSeconds(durationString)
           if let seconds {

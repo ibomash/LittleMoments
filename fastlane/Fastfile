@@ -8,6 +8,7 @@ platform :ios do
   desc "Run SwiftLint"
   lane :lint do
     swiftlint(
+      config_file: ".swiftlint.yml",
       quiet: true,
       strict: true,
       ignore_exit_status: true
