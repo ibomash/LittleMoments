@@ -21,11 +21,15 @@ final class JustNowSettings: ObservableObject {
     }
     set {
       if newValue {
-        HealthKitManager.shared.requestAuthorization { (success, error) in
+        HealthKitManager.shared.requestAuthorization { @Sendable (success, error) in
           if !success {
             print("HealthKit permission denied: ", error?.localizedDescription ?? "Unknown error")
             return
           }
+          // If we need to update UI state based on the result, use MainActor:
+          // Task { @MainActor in
+          //   // Update UI state here
+          // }
         }
       }
       userDefaults.set(newValue, forKey: "writeToHealth")
