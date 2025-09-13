@@ -5,6 +5,7 @@ final class LiveActivityUITests: XCTestCase {
   func testLiveActivityAppears() {
     // Test that live activity appears when timer starts
     let app = XCUIApplication()
+    app.launchArguments = ["UITesting", "-DISABLE_SYSTEM_INTEGRATIONS"]
     app.launch()
 
     // Navigate to timer and start it
