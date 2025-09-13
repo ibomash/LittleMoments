@@ -1,4 +1,5 @@
 import ProjectDescription
+
 // swiftlint:disable trailing_comma
 // Explanation: Tuist manifests intentionally use trailing commas for
 // readability and cleaner diffs. We disable only this rule for this file.
@@ -11,7 +12,7 @@ let baseSettings: [String: SettingValue] = [
   "CURRENT_PROJECT_VERSION": .string(buildVersion),
   "DEVELOPMENT_TEAM": .string("Z5NU48NAF9"),
   // Adopt Swift 6 across all targets
-  "SWIFT_VERSION": .string("6.0")
+  "SWIFT_VERSION": .string("6.0"),
 ]
 
 let project = Project(
@@ -29,7 +30,7 @@ let project = Project(
         "LittleMoments/Features/**",
         "LittleMoments/App/iOS/**",
         // Exclude files that are part of the widget extension
-        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift"
+        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift",
       ],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
@@ -38,7 +39,7 @@ let project = Project(
         .sdk(name: "SwiftUI", type: .framework),
         .sdk(name: "WidgetKit", type: .framework),
         .sdk(name: "ActivityKit", type: .framework),
-        .sdk(name: "UIKit", type: .framework)
+        .sdk(name: "UIKit", type: .framework),
       ],
       settings: .settings(
         base: baseSettings,
@@ -50,7 +51,7 @@ let project = Project(
               "SUPPORTS_MACCATALYST": "NO",
               "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
               "CODE_SIGN_ENTITLEMENTS": "Little Moments.entitlements",
-              "CODE_SIGN_STYLE": "Automatic"
+              "CODE_SIGN_STYLE": "Automatic",
             ]
           ),
           .release(
@@ -59,7 +60,7 @@ let project = Project(
               "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
               "SUPPORTS_MACCATALYST": "NO",
               "CODE_SIGN_ENTITLEMENTS": "Little Moments.entitlements",
-              "CODE_SIGN_STYLE": "Automatic"
+              "CODE_SIGN_STYLE": "Automatic",
             ]
           ),
         ]
@@ -82,7 +83,7 @@ let project = Project(
       dependencies: [
         .sdk(name: "SwiftUI", type: .framework),
         .sdk(name: "WidgetKit", type: .framework),
-        .sdk(name: "ActivityKit", type: .framework)
+        .sdk(name: "ActivityKit", type: .framework),
       ],
       settings: .settings(
         base: baseSettings,
@@ -94,7 +95,7 @@ let project = Project(
                 "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
               "CODE_SIGN_STYLE": "Automatic",
               "PROVISIONING_PROFILE_SPECIFIER": "",
-              "CODE_SIGN_IDENTITY": "Apple Development"
+              "CODE_SIGN_IDENTITY": "Apple Development",
             ]
           ),
           .release(
@@ -104,7 +105,7 @@ let project = Project(
                 "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
               "CODE_SIGN_STYLE": "Automatic",
               "PROVISIONING_PROFILE_SPECIFIER": "",
-              "CODE_SIGN_IDENTITY": "Apple Development"
+              "CODE_SIGN_IDENTITY": "Apple Development",
             ]
           ),
         ]

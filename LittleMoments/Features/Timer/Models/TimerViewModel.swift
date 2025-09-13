@@ -237,7 +237,7 @@ class TimerViewModel: ObservableObject {
       OneTimeScheduledBellAlert(targetTimeInMin: 20),
       OneTimeScheduledBellAlert(targetTimeInMin: 30),
       OneTimeScheduledBellAlert(targetTimeInMin: 45),
-      OneTimeScheduledBellAlert(targetTimeInMin: 60)
+      OneTimeScheduledBellAlert(targetTimeInMin: 60),
     ]
 
     #if targetEnvironment(simulator)
