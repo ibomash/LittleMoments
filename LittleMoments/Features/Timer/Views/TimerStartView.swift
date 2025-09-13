@@ -57,11 +57,26 @@ struct TimerStartView: View {
       }
       .frame(maxHeight: .infinity)
     }
+    .onAppear {
+      // Request notification authorization the first time the main screen shows
+      // Keep this non-blocking and avoid touching SwiftUI state in callbacks
+      requestNotificationAuthorizationIfNeeded()
+    }
     .sheet(isPresented: $appState.showTimerRunningView) {
       TimerRunningView()
     }
     .sheet(isPresented: $appState.showSettingsView) {
       SettingsView()
+    }
+  }
+
+  private func requestNotificationAuthorizationIfNeeded() {
+    // Skip during stable UI tests
+    if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") { return }
+
+    // Use the async/await approach for Swift 6 compliance
+    Task {
+      await NotificationManager.shared.requestAuthorizationIfNeeded()
     }
   }
 }

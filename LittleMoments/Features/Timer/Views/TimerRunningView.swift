@@ -87,8 +87,10 @@ struct TimerRunningView: View {
       }
 
       // Update timer for Live Activity
-      liveActivityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {
-        [weak timerViewModel] _ in
+      liveActivityUpdateTimer = Timer.scheduledTimer(
+        withTimeInterval: 1.0,
+        repeats: true
+      ) { [weak timerViewModel] _ in
         Task { @MainActor in
           guard let timerViewModel = timerViewModel else { return }
 
@@ -109,8 +111,10 @@ struct TimerRunningView: View {
       liveActivityUpdateTimer?.invalidate()
       liveActivityUpdateTimer = nil
 
-      // Remove any pending notifications
-      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+      // Remove any pending timer notification without clearing unrelated ones
+      UNUserNotificationCenter.current().removePendingNotificationRequests(
+        withIdentifiers: ["timerNotification"]
+      )
 
       // Reset the timer state (no HealthKit operations here)
       timerViewModel.reset()
@@ -193,39 +197,32 @@ struct BellControlsGrid: View {
     }
   }
 
+  @MainActor
   private func handleAlertSelection(_ scheduledAlertOption: OneTimeScheduledBellAlert) {
     if timerViewModel.scheduledAlert == scheduledAlertOption {
+      // Clear selection and pending notifications on the main actor
       timerViewModel.scheduledAlert = nil
-      UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+      UNUserNotificationCenter.current().removePendingNotificationRequests(
+        withIdentifiers: ["timerNotification"]
+      )
     } else {
+      // Optimistically set selection on main actor
       timerViewModel.scheduledAlert = scheduledAlertOption
 
-      UNUserNotificationCenter.current().requestAuthorization(options: [
-        .alert, .sound,
-      ]) { granted, _ in
-        if granted {
-          let content = UNMutableNotificationContent()
-          content.title = "Timer Complete"
-          content.body =
-            "Your \(scheduledAlertOption.name) minute timer has finished"
-          content.sound = UNNotificationSound(
-            named: UNNotificationSoundName(
-              rawValue: "42095__fauxpress__bell-meditation.aif"))
-          content.interruptionLevel = .timeSensitive
+      // In tests with system integrations disabled, avoid scheduling notifications
+      if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") {
+        return
+      }
 
-          let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: TimeInterval(scheduledAlertOption.targetTimeInSec),
-            repeats: false
-          )
-
-          let request = UNNotificationRequest(
-            identifier: "timerNotification",
-            content: content,
-            trigger: trigger
-          )
-
-          UNUserNotificationCenter.current().add(request)
-        }
+      // Schedule a local notification via NotificationManager (Swift 6 safe)
+      Task {
+        try? await NotificationManager.shared.scheduleTimerNotification(
+          identifier: "timerNotification",
+          title: "Timer Complete",
+          body: "Your \(scheduledAlertOption.name) minute timer has finished",
+          soundName: "42095__fauxpress__bell-meditation.aif",
+          timeInterval: TimeInterval(scheduledAlertOption.targetTimeInSec)
+        )
       }
     }
   }
