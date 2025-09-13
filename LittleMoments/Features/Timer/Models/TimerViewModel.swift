@@ -44,8 +44,7 @@ class TimerViewModel: ObservableObject {
     didSet {
       // Update Live Activity when timer duration changes
       if JustNowSettings.shared.enableLiveActivities {
-        let targetSeconds =
-          scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
+        let targetSeconds: Double? = scheduledAlert.map { Double($0.targetTimeInSec) }
         print("Updating live activity with new target seconds: \(targetSeconds ?? 0)")
         // We need to update the Live Activity with the new target time
         Task {
@@ -146,8 +145,9 @@ class TimerViewModel: ObservableObject {
     }
 
     // Save the session to HealthKit
-    HealthKitManager.shared.saveMindfulSession(mindfulSession: mindfulSession) {
-      [weak self] success, error in
+    HealthKitManager.shared.saveMindfulSession(
+      mindfulSession: mindfulSession
+    ) { [weak self] success, error in
       Task { @MainActor in
         guard let self = self else { return }
 
@@ -185,10 +185,11 @@ class TimerViewModel: ObservableObject {
 
   // Live Activity functions
   func startLiveActivity() {
+    // Skip Live Activities when explicit test flag disables system integrations
+    if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") { return }
     guard JustNowSettings.shared.enableLiveActivities else { return }
 
-    let targetSeconds =
-      scheduledAlert?.targetTimeInSec != nil ? Double(scheduledAlert!.targetTimeInSec) : nil
+    let targetSeconds: Double? = scheduledAlert.map { Double($0.targetTimeInSec) }
     print("Starting live activity with target seconds: \(targetSeconds ?? 0)")
     LiveActivityManager.shared.startActivity(
       sessionName: "Meditation",
@@ -197,6 +198,7 @@ class TimerViewModel: ObservableObject {
   }
 
   func updateLiveActivity() {
+    if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") { return }
     guard JustNowSettings.shared.enableLiveActivities else { return }
 
     // Don't update if the timer has been reset
@@ -206,6 +208,7 @@ class TimerViewModel: ObservableObject {
   }
 
   func endLiveActivity(completed: Bool = true) {
+    if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") { return }
     guard JustNowSettings.shared.enableLiveActivities else { return }
 
     if completed {
@@ -234,7 +237,7 @@ class TimerViewModel: ObservableObject {
       OneTimeScheduledBellAlert(targetTimeInMin: 20),
       OneTimeScheduledBellAlert(targetTimeInMin: 30),
       OneTimeScheduledBellAlert(targetTimeInMin: 45),
-      OneTimeScheduledBellAlert(targetTimeInMin: 60),
+      OneTimeScheduledBellAlert(targetTimeInMin: 60)
     ]
 
     #if targetEnvironment(simulator)
@@ -248,6 +251,7 @@ class TimerViewModel: ObservableObject {
 
   // Note: Block-based observers are added with [weak self] and will be cleaned up with the object lifecycle.
 
+  // swiftlint:disable function_body_length
   private func setupNotificationObservers() {
     print("📱 Setting up notification observers")
 
@@ -324,7 +328,9 @@ class TimerViewModel: ObservableObject {
         print(
           "📱 CANCEL TRIGGERED - Setting wasCancelled to true to block any finishSession notifications"
         )
-        print("📱 Marked session as cancelled at \(self.lastCancelTime!) to prevent health write")
+        if let lastCancelTime = self.lastCancelTime {
+          print("📱 Marked session as cancelled at \(lastCancelTime) to prevent health write")
+        }
 
         // For cancel, just end Live Activity and reset - no HealthKit write
         self.endLiveActivity(completed: false)
@@ -332,6 +338,7 @@ class TimerViewModel: ObservableObject {
       }
     }
   }
+  // swiftlint:enable function_body_length
 
   func reset() {
     print("Timer reset - clearing timer state and canceling timer")
