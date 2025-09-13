@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"sosumi.ai": {
+			"url": "https://sosumi.ai/mcp",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
