@@ -48,23 +48,27 @@ struct MeditationLiveActivityWidget: Widget {
         DynamicIslandExpandedRegion(.bottom) {
           HStack(spacing: 12) {
             // Complete session link
-            Link(destination: URL(string: "littlemoments://finishSession")!) {
-              Label("Complete", systemImage: "checkmark.circle.fill")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Color.green.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.green)
+            if let url = URL(string: "littlemoments://finishSession") {
+              Link(destination: url) {
+                Label("Complete", systemImage: "checkmark.circle.fill")
+                  .frame(maxWidth: .infinity)
+                  .padding(.vertical, 6)
+                  .background(Color.green.opacity(0.2))
+                  .cornerRadius(8)
+                  .foregroundColor(.green)
+              }
             }
 
             // Cancel session link
-            Link(destination: URL(string: "littlemoments://cancelSession")!) {
-              Label("Cancel", systemImage: "xmark.circle.fill")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Color.red.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.red)
+            if let url = URL(string: "littlemoments://cancelSession") {
+              Link(destination: url) {
+                Label("Cancel", systemImage: "xmark.circle.fill")
+                  .frame(maxWidth: .infinity)
+                  .padding(.vertical, 6)
+                  .background(Color.red.opacity(0.2))
+                  .cornerRadius(8)
+                  .foregroundColor(.red)
+              }
             }
           }
           .padding(.horizontal)
@@ -126,22 +130,26 @@ struct MeditationLiveActivityWidget: Widget {
 
           // Use links instead of buttons for deep linking
           HStack(spacing: 12) {
-            Link(destination: URL(string: "littlemoments://finishSession")!) {
-              Text("Finish")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Color.green.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.green)
+            if let url = URL(string: "littlemoments://finishSession") {
+              Link(destination: url) {
+                Text("Finish")
+                  .frame(maxWidth: .infinity)
+                  .padding(.vertical, 6)
+                  .background(Color.green.opacity(0.2))
+                  .cornerRadius(8)
+                  .foregroundColor(.green)
+              }
             }
 
-            Link(destination: URL(string: "littlemoments://cancelSession")!) {
-              Text("Cancel")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Color.red.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.red)
+            if let url = URL(string: "littlemoments://cancelSession") {
+              Link(destination: url) {
+                Text("Cancel")
+                  .frame(maxWidth: .infinity)
+                  .padding(.vertical, 6)
+                  .background(Color.red.opacity(0.2))
+                  .cornerRadius(8)
+                  .foregroundColor(.red)
+              }
             }
           }
         }

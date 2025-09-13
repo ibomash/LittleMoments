@@ -145,8 +145,15 @@ private struct StartMeditationWidgetView: View {
   // Small helper to produce a duration chip that opens the app with a preset timer
   private func durationChip(seconds: Int) -> some View {
     let minutes = seconds % 60 == 0 ? seconds / 60 : nil
-    let numberText = minutes != nil ? String(minutes!) : String(seconds)
-    let suffix = minutes != nil ? "m" : "s"
+    let numberText: String
+    let suffix: String
+    if let minutesVal = minutes {
+      numberText = String(minutesVal)
+      suffix = "m"
+    } else {
+      numberText = String(seconds)
+      suffix = "s"
+    }
     return safeLink("littlemoments://startSession?duration=\(seconds)") {
       HStack(alignment: .firstTextBaseline, spacing: 1) {
         Text(numberText)
