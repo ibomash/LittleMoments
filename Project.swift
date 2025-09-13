@@ -1,4 +1,7 @@
 import ProjectDescription
+// swiftlint:disable trailing_comma
+// Explanation: Tuist manifests intentionally use trailing commas for
+// readability and cleaner diffs. We disable only this rule for this file.
 
 let marketingVersion = "0.2.0"
 let buildVersion = "51"
@@ -8,7 +11,7 @@ let baseSettings: [String: SettingValue] = [
   "CURRENT_PROJECT_VERSION": .string(buildVersion),
   "DEVELOPMENT_TEAM": .string("Z5NU48NAF9"),
   // Adopt Swift 6 across all targets
-  "SWIFT_VERSION": .string("6.0"),
+  "SWIFT_VERSION": .string("6.0")
 ]
 
 let project = Project(
@@ -19,13 +22,14 @@ let project = Project(
       destinations: .iOS,
       product: .app,
       bundleId: "net.bomash.illya.LittleMoments",
+      deploymentTargets: .iOS("17.0"),
       infoPlist: .file(path: "Little-Moments-Info.plist"),
       sources: [
         "LittleMoments/Core/**",
         "LittleMoments/Features/**",
         "LittleMoments/App/iOS/**",
         // Exclude files that are part of the widget extension
-        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift",
+        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift"
       ],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
@@ -34,7 +38,7 @@ let project = Project(
         .sdk(name: "SwiftUI", type: .framework),
         .sdk(name: "WidgetKit", type: .framework),
         .sdk(name: "ActivityKit", type: .framework),
-        .sdk(name: "UIKit", type: .framework),
+        .sdk(name: "UIKit", type: .framework)
       ],
       settings: .settings(
         base: baseSettings,
@@ -46,16 +50,18 @@ let project = Project(
               "SUPPORTS_MACCATALYST": "NO",
               "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
               "CODE_SIGN_ENTITLEMENTS": "Little Moments.entitlements",
-              "CODE_SIGN_STYLE": "Automatic",
-            ]),
+              "CODE_SIGN_STYLE": "Automatic"
+            ]
+          ),
           .release(
             name: "Release",
             settings: [
               "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
               "SUPPORTS_MACCATALYST": "NO",
               "CODE_SIGN_ENTITLEMENTS": "Little Moments.entitlements",
-              "CODE_SIGN_STYLE": "Automatic",
-            ]),
+              "CODE_SIGN_STYLE": "Automatic"
+            ]
+          ),
         ]
       ),
       additionalFiles: []
@@ -67,6 +73,7 @@ let project = Project(
       product: .appExtension,
       productName: "LittleMomentsWidgetExtension",
       bundleId: "net.bomash.illya.LittleMoments.WidgetExtension",
+      deploymentTargets: .iOS("17.0"),
       infoPlist: .file(path: "LittleMoments/WidgetExtension/WidgetExtension-Info.plist"),
       sources: ["LittleMoments/WidgetExtension/**"],
       resources: ["LittleMoments/Resources/**"],
@@ -75,7 +82,7 @@ let project = Project(
       dependencies: [
         .sdk(name: "SwiftUI", type: .framework),
         .sdk(name: "WidgetKit", type: .framework),
-        .sdk(name: "ActivityKit", type: .framework),
+        .sdk(name: "ActivityKit", type: .framework)
       ],
       settings: .settings(
         base: baseSettings,
@@ -87,7 +94,7 @@ let project = Project(
                 "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
               "CODE_SIGN_STYLE": "Automatic",
               "PROVISIONING_PROFILE_SPECIFIER": "",
-              "CODE_SIGN_IDENTITY": "Apple Development",
+              "CODE_SIGN_IDENTITY": "Apple Development"
             ]
           ),
           .release(
@@ -97,7 +104,7 @@ let project = Project(
                 "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements",
               "CODE_SIGN_STYLE": "Automatic",
               "PROVISIONING_PROFILE_SPECIFIER": "",
-              "CODE_SIGN_IDENTITY": "Apple Development",
+              "CODE_SIGN_IDENTITY": "Apple Development"
             ]
           ),
         ]
@@ -108,6 +115,7 @@ let project = Project(
       destinations: .iOS,
       product: .unitTests,
       bundleId: "net.bomash.illya.LittleMomentsTests",
+      deploymentTargets: .iOS("17.0"),
       infoPlist: .default,
       sources: ["LittleMoments/Tests/UnitTests/**"],
       dependencies: [
@@ -121,6 +129,7 @@ let project = Project(
       destinations: .iOS,
       product: .uiTests,
       bundleId: "net.bomash.illya.LittleMomentsUITests",
+      deploymentTargets: .iOS("17.0"),
       infoPlist: .default,
       sources: ["LittleMoments/Tests/UITests/**"],
       dependencies: [
@@ -169,3 +178,4 @@ let project = Project(
     ),
   ]
 )
+// swiftlint:enable trailing_comma
