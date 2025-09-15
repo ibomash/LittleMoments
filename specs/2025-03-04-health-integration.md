@@ -68,7 +68,7 @@ Seamlessly record all meditation sessions to Apple Health (when enabled) without
 
 ### Edge Cases
 - If user denies HealthKit permissions, the toggle remains on but sessions aren't recorded
-- If HealthKit is unavailable on the device, the toggle is disabled
+- If HealthKit is unavailable on the device, the toggle stays enabled but any attempt to write simply fails
 - If writing to HealthKit fails, the app logs the error but doesn't notify the user
 
 ## Implementation Considerations
