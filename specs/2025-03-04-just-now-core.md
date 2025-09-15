@@ -32,7 +32,7 @@ Create a friction-free way for users to time brief meditation sessions without d
 
 ### Functional Requirements
 - Allow users to start a meditation timer with a single tap
-- Provide preset timer durations (3, 5, 10, 15, 20, 25, 30, 45 minutes)
+- Provide preset timer durations (1, 5, 10, 15, 20, 30, 45, 60 minutes)
 - Play a bell sound at the start of a session (configurable)
 - Play a bell sound at the end of a timed session
 - Record completed meditation sessions to Apple Health
@@ -99,7 +99,7 @@ Create a friction-free way for users to time brief meditation sessions without d
 2. HealthKit integration
 3. Shortcuts support
 4. Background mode support
-5. Widget and lock screen integration (future)
+5. Widget and lock screen integration (implemented)
 
 ### Open Questions
 - Should multiple interval bells be supported? (Note: RecurringScheduledBellAlert class exists in the codebase but is not yet exposed in the UI)
