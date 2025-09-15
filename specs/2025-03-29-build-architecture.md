@@ -38,22 +38,15 @@
 The Little Moments app build architecture has been successfully updated to implement the target architecture. The project has been restructured using Tuist for project generation and organized with a clear folder structure.
 
 #### Project Structure
-- **Main Project Structure**: Tuist-generated project with:
-  - `/Project.swift` - Main Tuist project definition with:
-    - Marketing version (0.2.0)
-    - Build version (51)
-    - Targets for app, unit tests, and UI tests
-    - Schemes configuration
-  - `/LittleMoments/Core/**` - Core functionality
-  - `/LittleMoments/Features/**` - Feature modules
-  - `/LittleMoments/App/iOS/**` - iOS-specific app code
-  - `/LittleMoments/Resources/**` - App resources
-  - `/LittleMoments/Tests/UnitTests/**` - Unit test files
-  - `/LittleMoments/Tests/UITests/**` - UI test files
-  - `Little-Moments-Info.plist` - App Info.plist file
-  - `Little Moments.entitlements` - App entitlements
+- `Project.swift` – Tuist project definition that manages targets, schemes, and the current marketing/build versions.
+- `LittleMoments/Core/` – Shared business logic, app state, utilities, and integrations.
+- `LittleMoments/Features/` – Feature-oriented modules for the timer, settings, live activities, and shared UI components.
+- `LittleMoments/App/iOS/` – Platform-specific entry point and scene configuration.
+- `LittleMoments/Resources/` – Assets, sounds, and bundled configuration files.
+- `LittleMoments/Tests/UnitTests/` and `LittleMoments/Tests/UITests/` – Unit and UI test suites.
+- `Little-Moments-Info.plist` and `Little Moments.entitlements` – Application configuration and entitlements.
 
-The directory structure now matches the target structure outlined in the architecture plan.
+Tuist keeps the generated Xcode project aligned with this structure; regenerate via `fastlane generate` after structural changes.
 
 #### Build Tools
 - **Fastlane**: Successfully set up with the following lanes:
@@ -65,6 +58,9 @@ The directory structure now matches the target structure outlined in the archite
   - `test`: Runs all tests (unit and UI)
   - `build`: Builds the app using Tuist
   - `quality_check`: Runs format_code, lint, test, and build lanes in sequence
+  - `repomix`: Generates a repository overview using Repomix for documentation and planning support
+
+All shell-based lanes that invoke Tuist or xcodebuild unset the `CPATH` environment variable before running commands to avoid inherited module map conflicts in non-interactive environments.
 
 - **SwiftLint**: Configured and working
 - **swift-format**: Configured and working with a JSON configuration file
@@ -118,191 +114,24 @@ The implementation has been completed in a single phase, focusing on establishin
 - **swiftgen** - Tool to auto-generate Swift code for resources (like images, sounds, and fonts).
 - **XcodeGen** - Another alternative to Tuist that generates Xcode project files from a specification file.
 
-### Suggested Folder Structure
-
-```
-LittleMoments/
-├── Project.swift                     # Defines the Tuist project
-├── .github/                          # GitHub specific files
-│   └── workflows/                    # GitHub Actions workflows
-│       ├── ci.yml                    # Continuous integration workflow
-│       └── release.yml               # App store release workflow
-├── .swiftlint.yml                    # SwiftLint configuration
-├── .swift-format.json                # SwiftFormat configuration
-├── Package.swift                     # Swift Package Manager manifest
-├── fastlane/                         # Fastlane configuration
-│   ├── Appfile                       # App identifiers
-│   ├── Fastfile                      # Fastlane lanes (build, test, deploy)
-│   ├── README.md                     # Fastlane documentation
-│   └── Pluginfile                    # Fastlane plugins
-├── Config/                           # Build configurations
-│   ├── Base.xcconfig                 # Shared build settings
-│   ├── Debug.xcconfig                # Debug-specific settings
-│   └── Release.xcconfig              # Release-specific settings
-├── LittleMoments/                    # Main app code
-│   ├── App/                          # App entry points
-│   │   ├── iOS/                      # iOS-specific app code
-│   │   │   └── Little_MomentsApp.swift # iOS app entry point
-│   │   └── macOS/                    # macOS-specific app code (future)
-│   ├── Features/                     # Feature modules
-│   │   ├── Timer/                    # Timer feature
-│   │   │   ├── Models/               # Timer-related models
-│   │   │   └── Views/                # Timer-related views
-│   │   ├── Settings/                 # Settings feature
-│   │   │   └── Views/                # Settings-related views
-│   │   ├── Meditation/               # Meditation feature
-│   │   │   └── Models/               # Meditation-related models
-│   │   └── Shared/                   # Shared UI components
-│   ├── Core/                         # Core functionality
-│   │   ├── Extensions/               # Swift extensions
-│   │   ├── Health/                   # Health integration
-│   │   ├── State/                    # App state management
-│   │   ├── Audio/                    # Audio functionality
-│   │   └── Utilities/                # Utility functions
-│   ├── Resources/                    # App resources
-│   │   ├── Assets.xcassets/          # Image assets
-│   │   ├── Sounds/                   # Sound files
-│   │   └── Localization/             # Localized strings (future)
-│   └── Tests/                        # Test files
-│       ├── UnitTests/                # Unit tests
-│       └── UITests/                  # UI tests
-├── Little Moments.entitlements       # App entitlements
-└── Little-Moments-Info.plist         # Info.plist file
-```
-
 ### Implemented Solutions
 
 #### Fastlane Implementation
-The project has implemented Fastlane with the following lanes:
+The automation catalog lives in `fastlane/Fastfile`. Key iOS lanes include:
+- `lint` – Runs SwiftLint in strict mode with the repository configuration.
+- `format_code` – Formats source files via `swift-format`.
+- `generate` – Calls Tuist to regenerate the Xcode project.
+- `test_unit` – Executes unit tests for the `LittleMoments` scheme on the iPhone 16 simulator.
+- `test_ui` – Executes UI tests with the `LittleMoments-UI` scheme on the iPhone 16 simulator.
+- `test` – Aggregates the unit and UI test lanes.
+- `build` – Performs a Tuist build and falls back to `xcodebuild` for a generic iOS device if Tuist fails.
+- `quality_check` – Runs formatting, linting, tests, and build sequentially.
+- `repomix` – Generates a repository overview to support planning and documentation.
 
-```ruby
-# Fastfile
-default_platform(:ios)
-
-platform :ios do
-  desc "Run SwiftLint"
-  lane :lint do
-    swiftlint(
-      quiet: true,
-      strict: true,
-      ignore_exit_status: true
-    )
-  end
-
-  desc "Format Swift code"
-  lane :format_code do
-    sh "cd .. && swift-format -i -r . --configuration .swift-format.json"
-  end
-
-  desc "Generate Xcode project with Tuist"
-  lane :generate do
-    sh "cd .. && tuist generate"
-  end
-
-  desc "Run unit tests"
-  lane :test_unit do
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsTests"
-  end
-
-  desc "Run UI tests"
-  lane :test_ui do
-    sh "cd .. && xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsUITests"
-  end
-
-  desc "Run all tests"
-  lane :test do
-    test_unit
-    test_ui
-  end
-
-  desc "Build app with Tuist"
-  lane :build do
-    sh "cd .. && tuist build"
-  end
-
-  desc "Format, lint, test, and build"
-  lane :quality_check do
-    format_code
-    lint
-    test
-    build
-  end
-end
-```
+Every lane that invokes Tuist or `xcodebuild` unsets the `CPATH` environment variable before execution to prevent inherited module map conflicts in non-interactive environments. Refer to `fastlane/Fastfile` for the authoritative lane definitions and options.
 
 #### Tuist Project Implementation
-The project uses Tuist for project generation and management with the following configuration:
-
-```swift
-// Project.swift
-import ProjectDescription
-
-let marketingVersion = "0.2.0"
-let buildVersion = "51"
-
-let baseSettings: [String: SettingValue] = [
-  "MARKETING_VERSION": .string(marketingVersion),
-  "CURRENT_PROJECT_VERSION": .string(buildVersion)
-]
-
-let project = Project(
-  name: "LittleMoments",
-  targets: [
-    .target(
-      name: "LittleMoments",
-      destinations: .iOS,
-      product: .app,
-      bundleId: "net.bomash.illya.LittleMoments",
-      infoPlist: .file(path: "Little-Moments-Info.plist"),
-      sources: ["LittleMoments/Core/**", "LittleMoments/Features/**", "LittleMoments/App/iOS/**"],
-      resources: ["LittleMoments/Resources/**"],
-      entitlements: .file(path: "Little Moments.entitlements"),
-      dependencies: [],
-      settings: .settings(
-        base: baseSettings
-      )
-    ),
-    .target(
-      name: "LittleMomentsTests",
-      destinations: .iOS,
-      product: .unitTests,
-      bundleId: "net.bomash.illya.LittleMomentsTests",
-      infoPlist: .default,
-      sources: ["LittleMoments/Tests/UnitTests/**"],
-      dependencies: [
-        .target(name: "LittleMoments")
-      ]
-    ),
-    .target(
-      name: "LittleMomentsUITests",
-      destinations: .iOS,
-      product: .uiTests,
-      bundleId: "net.bomash.illya.LittleMomentsUITests",
-      infoPlist: .default,
-      sources: ["LittleMoments/Tests/UITests/**"],
-      dependencies: [
-        .target(name: "LittleMoments")
-      ]
-    )
-  ],
-  schemes: [
-    .scheme(
-      name: "LittleMoments",
-      shared: true,
-      buildAction: .buildAction(targets: ["LittleMoments"]),
-      testAction: .targets(
-        ["LittleMomentsTests", "LittleMomentsUITests"],
-        configuration: .debug,
-        options: .options(coverage: true, codeCoverageTargets: ["LittleMoments"])
-      ),
-      runAction: .runAction(configuration: .debug),
-      archiveAction: .archiveAction(configuration: .release),
-      profileAction: .profileAction(configuration: .release),
-      analyzeAction: .analyzeAction(configuration: .debug)
-    )
-  ]
-)
-```
+`Project.swift` defines the Tuist configuration for Little Moments. It sets the marketing/build versions (0.2.0/51), declares the primary app target along with `LittleMomentsTests` and `LittleMomentsUITests`, enables code coverage in the shared scheme, and wires resources plus entitlements into the build. Update this file when introducing new modules or targets so the generated Xcode project remains consistent.
 
 ## Open Questions
 - What additional CI/CD workflows would be most beneficial to implement with GitHub Actions?
