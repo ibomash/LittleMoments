@@ -3,6 +3,14 @@ import SwiftUI
 
 struct MeditationSessionIntent: AppIntent {
   static var title: LocalizedStringResource { "Start Meditation Session" }
+  static var description = IntentDescription(
+    "Start a meditation session",
+    categoryName: "Meditation",
+    searchKeywords: [
+      "meditate", "meditation", "mindfulness", "breathe", "breathing",
+      "timer", "untimed", "bells", "focus"
+    ]
+  )
 
   @Parameter(title: "Duration", description: "Optional duration in minutes")
   var durationMinutes: Int?
