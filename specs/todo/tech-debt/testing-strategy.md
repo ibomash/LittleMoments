@@ -2,7 +2,7 @@
 
 ## Context and Current State
 
-The current testing approach in the Little Moments app has significantly improved with recent Live Activity work, but still has areas for expansion. While there is comprehensive testing for Live Activity functionality and `TimerViewModel`, many key components remain untested, including `HealthKitManager`, `SoundManager`, and most UI components.
+The current testing approach in the Little Moments app has significantly improved with recent Live Activity work, but still has areas for expansion. While there is comprehensive testing for Live Activity functionality, `TimerViewModel`, `HealthKitManager`, and `SoundManager`, many key components remain untested, including `NotificationManager`, `AppShortcutsProvider`, background task helpers, and most UI components.
 
 ### Recently Completed (January 2025)
 - ✅ **Comprehensive Live Activity test suite implemented**
@@ -19,11 +19,20 @@ The current testing approach in the Little Moments app has significantly improve
   - Enabled seamless development workflow across team members
 
 ### Current Issues Remaining
-- Limited test coverage for core components (HealthKitManager, SoundManager)
+- Limited test coverage for remaining core services:
+  - [NotificationManager unit tests](./notification-manager-unit-tests.md)
+  - [AppShortcutsProvider unit tests](./app-shortcuts-provider-unit-tests.md)
+  - [Timer background task lifecycle tests](./timer-background-task-tests.md)
+- Most UI flows lack automation, and UI logic is still coupled to view code ([Timer UI flow UI tests](./timer-ui-flow-ui-tests.md))
 - No tests for edge cases or error conditions in non-Live Activity code
-- Direct UI component testing mixed with logic testing
 - No automation or CI/CD integration for testing
 - Need to extend testing approach to other app components using Live Activity patterns
+
+### Detailed Test Plans
+- [NotificationManager unit tests](./notification-manager-unit-tests.md)
+- [AppShortcutsProvider unit tests](./app-shortcuts-provider-unit-tests.md)
+- [Timer background task lifecycle tests](./timer-background-task-tests.md)
+- [Timer UI flow UI tests](./timer-ui-flow-ui-tests.md)
 
 ## Motivation and Benefits
 
@@ -39,7 +48,7 @@ Improving the testing strategy will:
 ### Phase 1: Unit Testing Framework
 
 1. **Expand Unit Test Coverage**
-   - Create unit tests for all manager classes (HealthKitManager, SoundManager)
+   - Add unit tests for remaining shared services ([NotificationManager](./notification-manager-unit-tests.md), [AppShortcutsProvider](./app-shortcuts-provider-unit-tests.md), [background task helpers](./timer-background-task-tests.md))
    - Add tests for model classes and utility functions
    - Implement tests for edge cases and error conditions
    - Apply Live Activity testing patterns to other components
@@ -54,7 +63,7 @@ Improving the testing strategy will:
 
 1. **Implement UI Tests**
    - Create dedicated UI test target
-   - Implement tests for critical user flows
+   - Implement tests for critical user flows ([Timer UI flow UI tests](./timer-ui-flow-ui-tests.md))
    - Test accessibility compliance
 
 2. **Extract Testable Components**
@@ -78,17 +87,18 @@ Improving the testing strategy will:
 
 ### Achieved
 - ✅ **Live Activity functionality**: 100% test coverage achieved
-- ✅ **Shared utility functions**: Fully tested with edge cases  
+- ✅ **Shared utility functions**: Fully tested with edge cases
 - ✅ **Preview consistency**: Automated validation implemented
 - ✅ **TDD guidance**: Integrated into project documentation
 - ✅ **Code duplication elimination**: Preview providers refactored with shared logic
 - ✅ **Testing infrastructure**: 53 test methods across 5 test classes established
 - ✅ **Build configuration**: Development team setup automated
+- ✅ **Core health and audio services**: `HealthKitManager` and `SoundManager` covered by focused unit tests
 
 ### Remaining Goals
 - Achieve 80%+ code coverage across the entire codebase
 - All critical user flows covered by UI tests
-- All core business logic has unit tests (HealthKitManager, SoundManager)
+- All core business logic has unit tests (NotificationManager, AppShortcutsProvider, background task helpers)
 - All edge cases and error conditions have test coverage
 - Tests run automatically on all pull requests
 
@@ -104,7 +114,7 @@ Improving the testing strategy will:
 ## Timeline
 
 - **Week 1**: Create unit tests for core models and utilities
-- **Week 2**: Implement tests for manager classes and services
+- **Week 2**: Implement tests for remaining shared services (NotificationManager, AppShortcutsProvider, background task helpers)
 - **Week 3**: Set up UI testing framework and implement critical flow tests
 - **Week 4**: Configure CI/CD integration and reporting
 - **Ongoing**: Maintain and expand test coverage with new features
