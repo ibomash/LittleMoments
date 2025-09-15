@@ -8,7 +8,11 @@ struct MeditationSessionIntent: AppIntent {
   var durationMinutes: Int?
 
   static var parameterSummary: some ParameterSummary {
-    Summary("Start a session for \(\.$durationMinutes) minutes")
+    When(\.$durationMinutes, .hasNoValue) {
+      Summary("Start an untimed meditation")
+    } otherwise: {
+      Summary("Start a meditation for \(\.$durationMinutes) minutes")
+    }
   }
 
   @MainActor

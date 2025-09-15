@@ -35,6 +35,8 @@ import WidgetKit
   struct StartMeditationControlIntent: ControlConfigurationIntent {
     static var title: LocalizedStringResource { "Start Meditation Session" }
     static var openAppWhenRun: Bool { true }
+    // Control configuration intents should not appear in Shortcuts search
+    static var isDiscoverable: Bool { false }
 
     @MainActor
     func perform() async throws -> some IntentResult {

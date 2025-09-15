@@ -8,6 +8,8 @@ import OSLog
 struct StartMeditationOpenIntent: AppIntent {
   static var title: LocalizedStringResource { "Start Meditation" }
   static var openAppWhenRun: Bool { true }
+  // This shim exists only for the Control widget. Hide from Shortcuts.
+  static var isDiscoverable: Bool { false }
 
   func perform() async throws -> some IntentResult {
     Logger(subsystem: "net.bomash.illya.LittleMoments", category: "Controls")
