@@ -29,10 +29,12 @@ Allow users to start meditation sessions directly from Shortcuts, Siri, or autom
 ## Requirements
 
 ### Functional Requirements
-- Provide a Shortcut action to start a meditation session immediately
-- Support invocation via Siri commands
+- Provide a single Shortcut action to start a meditation session
+- Include an optional Duration (minutes) parameter
+- Support invocation via Siri commands (App Shortcuts phrases + natural language)
 - Support automation triggers (time, location, etc.) through the Shortcuts app
 - Donate relevant Shortcuts to the system for quick access
+- Add search synonyms so the action appears for queries like “meditate”, “mindfulness”, “breathing”
 - Sessions started via Shortcuts should be recorded to Health (if enabled)
 
 ### Non-functional Requirements
@@ -42,8 +44,8 @@ Allow users to start meditation sessions directly from Shortcuts, Siri, or autom
 
 ### Constraints
 - Limited by iOS Shortcuts framework capabilities
-- Must work across iOS versions that support App Intents
-- Limited customization options for the initial implementation
+- iOS 16+ (App Intents)
+- Avoid duplicate actions: widget/control intents are hidden from Shortcuts (isDiscoverable = false)
 
 ## User Experience
 
@@ -53,7 +55,7 @@ Allow users to start meditation sessions directly from Shortcuts, Siri, or autom
 1. User opens Shortcuts app
 2. User creates a new Shortcut
 3. User searches for "Just Now" actions
-4. User adds "Start Meditation Session" action
+4. User adds "Start Meditation Session" action, optionally sets Duration
 5. User saves Shortcut with a name
 
 #### Using a Shortcut
@@ -80,19 +82,29 @@ Allow users to start meditation sessions directly from Shortcuts, Siri, or autom
 
 ## Implementation Considerations
 
+### Current Implementation
+- AppIntent: `MeditationSessionIntent` with optional `durationMinutes: Int?`.
+- Parameter summary for clarity in Shortcuts:
+  - Untimed: “Start an untimed meditation”.
+  - Timed: “Start a meditation for X minutes”.
+- Discoverability and synonyms:
+  - `IntentDescription` provides `searchKeywords`: meditate, meditation, mindfulness, breathe, breathing, timer, untimed, bells, focus.
+  - `LittleMomentsShortcuts` (`AppShortcutsProvider`) supplies synonym phrases: “Start meditation in (AppName)”, “Begin meditation…”, “Meditate…”, “Start an untimed meditation…”.
+- Foregrounding: `openAppWhenRun = true` to show the running timer immediately.
+- Dupes prevention: Control/Widget intents use `isDiscoverable = false` to keep only one user‑facing action in Shortcuts.
+
 ### Dependencies
 - App Intents framework
-- Siri integration
+- Siri/Spotlight discovery through App Shortcuts
 - Background app launch capabilities
 
 ### Phasing
-1. Basic "Start Meditation Session" action (current implementation)
-2. Enhanced action with duration parameter
-3. Action for immediate session with preset bell interval
-4. Potential future: custom Siri phrases for meditation start
+1. Single action with optional duration (done)
+2. Add curated presets as App Shortcuts (e.g., 1m, 3m, 5m) [optional]
+3. Consider parameterized phrases for duration (e.g., “Start a 5‑minute meditation”) [optional]
+4. Potential future: additional parameters (e.g., silent start, bells at start)
 
 ### Open Questions
-- Should we add a Shortcut action to specify session duration?
-- Would users benefit from a Shortcut action to configure if the bell should ring at start?
+- Do we want curated preset shortcuts (1m/3m/5m) for quicker setup?
 - Should we add a "silent mode" parameter for situations where audio isn't appropriate?
-- How can we enhance Siri integration with natural language understanding? 
+- Any additional synonyms to include for non‑English locales?

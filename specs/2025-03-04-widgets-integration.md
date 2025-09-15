@@ -41,6 +41,11 @@ Reduce friction to start meditation sessions by providing one-tap access from wi
 - Widget should show time since last meditation in a compact format
 - Widget should be available in circular and rectangular formats
 
+#### Control Center (iOS 18+)
+- Provide a Control Center control titled "Start Meditation"
+- Tapping the control opens the app into the running timer
+- Control uses an App Intent that is hidden from Shortcuts to avoid duplicate actions
+
 ### Non-functional Requirements
 - Widgets must be visually consistent with app design
 - Widgets must be battery-efficient
@@ -49,6 +54,7 @@ Reduce friction to start meditation sessions by providing one-tap access from wi
 
 ### Constraints
 - iOS 16+ required for lock screen widgets
+- iOS 18+ required for Control Center controls
 - Limited interactivity based on iOS widget capabilities
 - Limited display space, especially for lock screen widgets
 
@@ -80,6 +86,11 @@ Reduce friction to start meditation sessions by providing one-tap access from wi
 2. Face ID/Touch ID authenticates user
 3. App launches directly into timer running mode
 
+#### Using Control Center Control (iOS 18+)
+1. User adds the Little Moments control to Control Center
+2. User taps the "Start Meditation" control tile
+3. App opens to the running timer (untimed by default)
+
 ### Key Screens/Interactions
 - Widget configuration screen (standard iOS interface)
 - Home screen widget in multiple sizes
@@ -95,7 +106,7 @@ Reduce friction to start meditation sessions by providing one-tap access from wi
 
 ### Dependencies
 - WidgetKit framework
-- App Intents framework for interactive widgets
+- App Intents framework for interactive widgets and Control Center controls
 - Access to meditation history data
 
 ### Phasing
@@ -103,10 +114,16 @@ Reduce friction to start meditation sessions by providing one-tap access from wi
 2. Enhanced home screen widget with time since last meditation
 3. Lock screen widget integration
 4. Addition of rotating prompts or quotes
+5. iOS 18 Control Center tile: "Start Meditation" (done)
 
 ### Open Questions
 - Should widgets allow starting sessions with preset durations?
 - What rotation frequency is appropriate for prompts/quotes?
 - Should we allow for any widget customization?
 - How can we make the lock screen widget maximally useful given size constraints?
-- Should the widget tap action be configurable (e.g., start session vs. open app)? 
+- Should the widget tap action be configurable (e.g., start session vs. open app)?
+- Do we want additional Control tiles (e.g., Start 5‑minute session)?
+
+### Implementation Notes
+- Control Center tile is implemented as `StartMeditationControlWidget` with `StartMeditationControlIntent` and a lightweight `StartMeditationOpenIntent` that sets `openAppWhenRun = true`.
+- Both control-related intents are marked `isDiscoverable = false` to avoid duplicate actions in Shortcuts (the user‑facing action remains `MeditationSessionIntent`).
