@@ -143,3 +143,8 @@ Follow conventional commit format: `type(scope): description`
 ## PRD Standards
 
 Product Requirement Documents must be placed in `specs/` directory with naming convention `YYYY-MM-DD-feature-name.md`. Use the template in `specs/TEMPLATE-feature-name.md`. Always run `date +%Y-%m-%d` to get current date before creating PRDs.
+
+## Specification Maintenance
+
+- For every feature PR, review the relevant documents in the `specs/` directory and update them when behavior or requirements change.
+- When a PR touches feature logic, explicitly mention in the PR description whether the related specification documents were updated or confirmed as still accurate.
