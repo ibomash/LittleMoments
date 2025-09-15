@@ -40,8 +40,13 @@ class TimerViewModel: ObservableObject {
 
   // Options for and actually scheduled "end time" alert
   @Published var scheduledAlertOptions: [OneTimeScheduledBellAlert]
+  private var temporaryAlertOption: OneTimeScheduledBellAlert?
+  private var removedAlertOption: OneTimeScheduledBellAlert?
   @Published var scheduledAlert: OneTimeScheduledBellAlert? {
     didSet {
+      if let temp = temporaryAlertOption, scheduledAlert != temp {
+        removeTemporaryAlertOption()
+      }
       // Update Live Activity when timer duration changes
       if JustNowSettings.shared.enableLiveActivities {
         let targetSeconds: Double? = scheduledAlert.map { Double($0.targetTimeInSec) }
@@ -85,6 +90,54 @@ class TimerViewModel: ObservableObject {
     } else {
       return String(format: "%d", minutes)
     }
+  }
+
+  func applyPresetDuration(_ seconds: Int) {
+    // Check if this duration matches an existing option (excluding any temporary option)
+    let existingOption = scheduledAlertOptions.first(where: {
+      Int($0.targetTimeInSec) == seconds && $0 != temporaryAlertOption
+    })
+
+    if existingOption != nil {
+      // Remove any existing temporary option before selecting the existing one
+      removeTemporaryAlertOption()
+      // Now find and select the existing option
+      if let match = scheduledAlertOptions.first(where: { Int($0.targetTimeInSec) == seconds }) {
+        scheduledAlert = match
+      }
+    } else {
+      // Create a temporary option for this duration
+      addTemporaryAlertOptionIfNeeded(seconds)
+      if let match = scheduledAlertOptions.first(where: { Int($0.targetTimeInSec) == seconds }) {
+        scheduledAlert = match
+      }
+    }
+  }
+
+  private func addTemporaryAlertOptionIfNeeded(_ seconds: Int) {
+    let label = seconds % 60 == 0 ? "\(seconds / 60)" : "\(seconds)s"
+
+    // Remove any existing temporary option first
+    removeTemporaryAlertOption()
+
+    // Create and add the new temporary option
+    let option = OneTimeScheduledBellAlert(targetTimeInSec: seconds, name: label)
+    scheduledAlertOptions.insert(option, at: 0)
+    if scheduledAlertOptions.count > 8 {
+      removedAlertOption = scheduledAlertOptions.removeLast()
+    }
+    temporaryAlertOption = option
+  }
+
+  private func removeTemporaryAlertOption() {
+    if let temp = temporaryAlertOption, let index = scheduledAlertOptions.firstIndex(of: temp) {
+      scheduledAlertOptions.remove(at: index)
+    }
+    if let removed = removedAlertOption {
+      scheduledAlertOptions.append(removed)
+      removedAlertOption = nil
+    }
+    temporaryAlertOption = nil
   }
 
   func start() {
@@ -345,6 +398,9 @@ class TimerViewModel: ObservableObject {
     timer?.invalidate()
     timer = nil
     startDate = nil
+
+    scheduledAlert = nil
+    removeTemporaryAlertOption()
 
     // Reset the cancelled flag and timestamp for future sessions
     wasCancelled = false

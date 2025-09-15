@@ -54,6 +54,7 @@ struct LittleMomentsApp: App {
   }
 
   // swiftlint:disable function_body_length
+  @MainActor
   func handleDeepLink(url: URL) {
     print("📲 Received deep link: \(url)")
     print("📲 URL scheme: \(url.scheme ?? "nil"), host: \(url.host ?? "nil"), path: \(url.path)")

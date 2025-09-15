@@ -70,6 +70,7 @@ struct TimerRunningView: View {
     }
     .onAppear {
       print("📱 TimerRunningView appeared - starting timer and Live Activity")
+
       timerViewModel.start()
       timerViewModel.startLiveActivity()
       UIApplication.shared.isIdleTimerDisabled = true
@@ -77,13 +78,20 @@ struct TimerRunningView: View {
         SoundManager.playSound()
       }
 
-      // Apply any preset duration passed via deep link
+      // Apply any preset duration passed via deep link with a small delay
+      // This ensures that any reset() calls from Live Activity notifications don't interfere
       if let preset = AppState.shared.pendingStartDurationSeconds {
-        let label: String = preset % 60 == 0 ? "\(preset / 60)" : "\(preset)s"
-        timerViewModel.scheduledAlert = OneTimeScheduledBellAlert(
-          targetTimeInSec: preset, name: label
-        )
+        print("📱 Will apply preset duration: \(preset) seconds after delay")
         AppState.shared.pendingStartDurationSeconds = nil
+
+        // Use a small delay to ensure Live Activity setup is complete
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          print("📱 Applying preset duration: \(preset) seconds")
+          timerViewModel.applyPresetDuration(preset)
+          print(
+            "📱 Applied preset duration, scheduledAlert: \(timerViewModel.scheduledAlert?.name ?? "nil")"
+          )
+        }
       }
 
       // Update timer for Live Activity
@@ -187,6 +195,14 @@ struct BellControlsGrid: View {
                     )
                     .cornerRadius(8)
                 }
+              )
+              .accessibilityIdentifier(
+                timerViewModel.scheduledAlert == scheduledAlertOption
+                  ? "selected_duration_\(scheduledAlertOption.name)"
+                  : "duration_\(scheduledAlertOption.name)"
+              )
+              .accessibilityAddTraits(
+                timerViewModel.scheduledAlert == scheduledAlertOption ? .isSelected : []
               )
             } else {
               Spacer()
