@@ -55,7 +55,8 @@ final class DeepLinkTests: XCTestCase {
 
   func testMeditationSessionIntentPerformWithDurationSetsPreset() {
     AppState.shared.resetState()
-    let intent = MeditationSessionIntent(durationMinutes: 2)
+    var intent = MeditationSessionIntent()
+    intent.durationMinutes = 2
     let exp = expectation(description: "intent perform")
     Task {
       _ = try? await intent.perform()
