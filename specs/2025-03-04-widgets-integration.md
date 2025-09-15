@@ -31,15 +31,19 @@ Reduce friction to start meditation sessions by providing one-tap access from wi
 ### Functional Requirements
 
 #### Home Screen Widget
-- Widget must allow starting a session with a single tap
-- Widget should display time since last meditation
-- Widget should display a rotating prompt or quote to inspire practice
-- Widget must be available in multiple sizes (small, medium, large)
+- Provide a small widget surface dedicated to starting a meditation session.
+- Tapping the primary action immediately launches the app into a running timer with the default (untimed) session.
+- Keep the widget focused on the single start action; preset durations are not yet configurable.
 
 #### Lock Screen Widget
-- Widget must provide one-tap access to start a session
-- Widget should show time since last meditation in a compact format
-- Widget should be available in circular and rectangular formats
+- Provide one-tap access to start a meditation session from the lock screen.
+- Support circular and rectangular widget families with the same start-only behavior as the home screen widget.
+
+#### Future Enhancements
+- Display the time since the last meditation session on home and lock screen widgets.
+- Surface rotating prompts or inspirational quotes alongside the start action.
+- Add medium and large home screen widget sizes with richer layouts.
+- Offer configurable preset durations during widget setup.
 
 #### Control Center (iOS 18+)
 - Provide a Control Center control titled "Start Meditation"
