@@ -20,6 +20,18 @@ The app's current state is beta. There are basic capabilities to start a session
 
 Run `fastlane repomix` to generate a comprehensive repository overview and analysis.
 
+## Backlog.md workflow
+
+This repo uses [Backlog.md](https://github.com/MrLesk/Backlog.md) for lightweight planning. The CLI stores data under `backlog/` and is preconfigured with the columns **Now → Next → Later → Done** (new tasks default to `Next`).
+
+- Create work: `backlog tasks create "Investigate Live Activity crash" --status Next`
+- Organize: `backlog board view` shows the Kanban board; `backlog tasks list --plain` prints a quick summary
+- Move items: `backlog tasks edit <id> --status Now|Next|Later|Done`
+- Draft ideas: `backlog draft create "Add mindful nudge settings"` then promote when ready
+- Archive completed: `backlog cleanup` moves long-done work out of the board
+
+See `backlog --help` or the upstream Backlog.md README for full command reference.
+
 ## Looking into the future
 
 There are many possible directions to take this work. Below are some ideas, with an attempt to mark with check boxes goals for a 1.0 release.

@@ -106,3 +106,9 @@ fastlane test_plan plan:"Default"
 
 * Use `apple_docs_sosumi` for Apple docs (Markdown mirror of developer.apple.com).
 * Agents should prefer the lanes above to external commands.
+
+## Backlog.md
+
+* Planning lives in `backlog/` managed by Backlog.md; columns are Now → Next → Later → Done (default `Next`).
+* Use `backlog tasks create …` to add work and `backlog board view` to inspect the Kanban board.
+* For full workflow details, follow the "Backlog.md workflow" section in `README.md` and the upstream Backlog.md docs.
