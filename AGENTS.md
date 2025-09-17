@@ -110,7 +110,7 @@ fastlane test_plan plan:"Default"
 ## Backlog.md
 
 * Planning lives in `backlog/` managed by Backlog.md; columns are Now → Next → Later → Done (default `Next`).
-* If it's not on the $PATH, on macOS, the backlog executable lives in `/opt/homebrew/bin/backlog`.
+* If `backlog` is not on the $PATH, check for `/opt/homebrew/bin/backlog` or `/root/.bun/bin/backlog`.
 * Use `backlog tasks create …` to add work and `backlog board view` to inspect the Kanban board.
 * Update status/AC via `backlog tasks edit …` (never hand-edit task markdown).
 * Labels to use: documentation, ui. Create others if needed and update `AGENTS.md`.
