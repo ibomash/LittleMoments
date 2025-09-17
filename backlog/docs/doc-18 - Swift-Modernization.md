@@ -1,3 +1,10 @@
+---
+id: doc-18
+title: "Swift Modernization"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/swift-modernization.md"
+---
 # Swift Modernization
 
 ## Context and Current State

@@ -1,3 +1,10 @@
+---
+id: doc-22
+title: "UI Modernization and Accessibility"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/ui-modernization.md"
+---
 # UI Modernization and Accessibility
 
 ## Context and Current State

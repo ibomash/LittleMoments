@@ -11,7 +11,7 @@ final class TimerDeepLinkUITests: XCTestCase {
    * ISSUE: XCUIApplication.open(URL(...)) relaunches the app instead of calling onOpenURL,
    * preventing proper deep link testing in the UI test environment.
    *
-   * SOLUTION REFERENCE: See specs/2025-09-15-deep-link-testing-strategy.md
+   * SOLUTION REFERENCE: See `backlog/docs/doc-8 - Deep-Link-Testing-Strategy.md`
    * - Consider alternative testing approaches (unit tests for deep link logic)
    * - Investigate XCUITest workarounds or migration to unit test coverage
    * - Core deep link functionality is already covered in DeepLinkTests.swift

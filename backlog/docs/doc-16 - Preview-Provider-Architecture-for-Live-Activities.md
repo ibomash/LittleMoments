@@ -1,3 +1,10 @@
+---
+id: doc-16
+title: "Preview Provider Architecture for Live Activities"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/preview-provider-architecture.md"
+---
 # Preview Provider Architecture for Live Activities
 
 ## Overview

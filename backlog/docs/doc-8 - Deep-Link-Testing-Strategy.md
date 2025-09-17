@@ -1,3 +1,10 @@
+---
+id: doc-8
+title: "Deep Link Testing Strategy"
+type: "spec"
+created_date: "2025-09-15 00:00"
+source_path: "2025-09-15-deep-link-testing-strategy.md"
+---
 # Deep Link Testing Strategy
 
 **Date**: 2025-09-15  

@@ -1,3 +1,10 @@
+---
+id: doc-3
+title: "Feature: Shortcuts Integration"
+type: "spec"
+created_date: "2025-03-04 00:00"
+source_path: "2025-03-04-shortcuts-integration.md"
+---
 # Feature: Shortcuts Integration
 
 ## Overview

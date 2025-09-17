@@ -1,3 +1,10 @@
+---
+id: doc-12
+title: "Architecture Refactoring"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/architecture-refactoring.md"
+---
 # Architecture Refactoring
 
 ## Context and Current State

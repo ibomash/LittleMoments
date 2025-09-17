@@ -1,3 +1,10 @@
+---
+id: doc-20
+title: "Spec: Timer Background Task Tests"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/timer-background-task-tests.md"
+---
 # Spec: Timer Background Task Tests
 
 ## Objective

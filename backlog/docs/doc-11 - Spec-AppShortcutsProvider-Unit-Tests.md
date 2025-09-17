@@ -1,3 +1,10 @@
+---
+id: doc-11
+title: "Spec: AppShortcutsProvider Unit Tests"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/app-shortcuts-provider-unit-tests.md"
+---
 # Spec: AppShortcutsProvider Unit Tests
 
 ## Objective

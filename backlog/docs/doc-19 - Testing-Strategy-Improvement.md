@@ -1,3 +1,10 @@
+---
+id: doc-19
+title: "Testing Strategy Improvement"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/testing-strategy.md"
+---
 # Testing Strategy Improvement
 
 ## Context and Current State
@@ -20,19 +27,19 @@ The current testing approach in the Little Moments app has significantly improve
 
 ### Current Issues Remaining
 - Limited test coverage for remaining core services:
-  - [NotificationManager unit tests](./notification-manager-unit-tests.md)
-  - [AppShortcutsProvider unit tests](./app-shortcuts-provider-unit-tests.md)
-  - [Timer background task lifecycle tests](./timer-background-task-tests.md)
-- Most UI flows lack automation, and UI logic is still coupled to view code ([Timer UI flow UI tests](./timer-ui-flow-ui-tests.md))
+  - [NotificationManager unit tests](<doc-15 - Spec-NotificationManager-Unit-Tests.md>)
+  - [AppShortcutsProvider unit tests](<doc-11 - Spec-AppShortcutsProvider-Unit-Tests.md>)
+  - [Timer background task lifecycle tests](<doc-20 - Spec-Timer-Background-Task-Tests.md>)
+- Most UI flows lack automation, and UI logic is still coupled to view code ([Timer UI flow UI tests](<doc-21 - Spec-Timer-UI-Flow-UI-Tests.md>))
 - No tests for edge cases or error conditions in non-Live Activity code
 - No automation or CI/CD integration for testing
 - Need to extend testing approach to other app components using Live Activity patterns
 
 ### Detailed Test Plans
-- [NotificationManager unit tests](./notification-manager-unit-tests.md)
-- [AppShortcutsProvider unit tests](./app-shortcuts-provider-unit-tests.md)
-- [Timer background task lifecycle tests](./timer-background-task-tests.md)
-- [Timer UI flow UI tests](./timer-ui-flow-ui-tests.md)
+- [NotificationManager unit tests](<doc-15 - Spec-NotificationManager-Unit-Tests.md>)
+- [AppShortcutsProvider unit tests](<doc-11 - Spec-AppShortcutsProvider-Unit-Tests.md>)
+- [Timer background task lifecycle tests](<doc-20 - Spec-Timer-Background-Task-Tests.md>)
+- [Timer UI flow UI tests](<doc-21 - Spec-Timer-UI-Flow-UI-Tests.md>)
 
 ## Motivation and Benefits
 
@@ -48,7 +55,7 @@ Improving the testing strategy will:
 ### Phase 1: Unit Testing Framework
 
 1. **Expand Unit Test Coverage**
-   - Add unit tests for remaining shared services ([NotificationManager](./notification-manager-unit-tests.md), [AppShortcutsProvider](./app-shortcuts-provider-unit-tests.md), [background task helpers](./timer-background-task-tests.md))
+   - Add unit tests for remaining shared services ([NotificationManager](<doc-15 - Spec-NotificationManager-Unit-Tests.md>), [AppShortcutsProvider](<doc-11 - Spec-AppShortcutsProvider-Unit-Tests.md>), [background task helpers](<doc-20 - Spec-Timer-Background-Task-Tests.md>))
    - Add tests for model classes and utility functions
    - Implement tests for edge cases and error conditions
    - Apply Live Activity testing patterns to other components
@@ -63,7 +70,7 @@ Improving the testing strategy will:
 
 1. **Implement UI Tests**
    - Create dedicated UI test target
-   - Implement tests for critical user flows ([Timer UI flow UI tests](./timer-ui-flow-ui-tests.md))
+   - Implement tests for critical user flows ([Timer UI flow UI tests](<doc-21 - Spec-Timer-UI-Flow-UI-Tests.md>))
    - Test accessibility compliance
 
 2. **Extract Testable Components**

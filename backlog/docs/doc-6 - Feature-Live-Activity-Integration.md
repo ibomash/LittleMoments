@@ -1,3 +1,10 @@
+---
+id: doc-6
+title: "Feature: Live Activity Integration"
+type: "spec"
+created_date: "2025-03-29 00:00"
+source_path: "2025-03-29-live-activity-integration.md"
+---
 # Feature: Live Activity Integration
 
 ## Overview

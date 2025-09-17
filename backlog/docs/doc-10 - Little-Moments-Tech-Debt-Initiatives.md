@@ -1,3 +1,10 @@
+---
+id: doc-10
+title: "Little Moments Tech Debt Initiatives"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/README.md"
+---
 # Little Moments Tech Debt Initiatives
 
 This directory contains technical specifications for addressing technical debt in the Little Moments application. Each document outlines a specific area for improvement, including context, motivation, implementation plan, and timelines.
@@ -39,13 +46,13 @@ To begin addressing these tech debt issues:
 
 ## Tech Debt Documents
 
-- [Architecture Refactoring](architecture-refactoring.md)
-- [Testing Strategy](testing-strategy.md)
-- [Error Handling](error-handling.md)
-- [UI Modernization](ui-modernization.md)
-- [Swift Modernization](swift-modernization.md)
-- [Resource Management](resource-management.md)
-- [Documentation Standards](documentation-standards.md)
+- [Architecture Refactoring](<doc-12 - Architecture-Refactoring.md>)
+- [Testing Strategy](<doc-19 - Testing-Strategy-Improvement.md>)
+- [Error Handling](<doc-14 - Error-Handling-and-Logging-Improvements.md>)
+- [UI Modernization](<doc-22 - UI-Modernization-and-Accessibility.md>)
+- [Swift Modernization](<doc-18 - Swift-Modernization.md>)
+- [Resource Management](<doc-17 - Resource-Management-and-Performance-Optimization.md>)
+- [Documentation Standards](<doc-13 - Documentation-Standards-and-Implementation.md>)
 
 ## Measuring Progress
 

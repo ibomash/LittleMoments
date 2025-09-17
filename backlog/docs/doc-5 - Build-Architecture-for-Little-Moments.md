@@ -1,3 +1,10 @@
+---
+id: doc-5
+title: "Build Architecture for Little Moments"
+type: "spec"
+created_date: "2025-03-29 00:00"
+source_path: "2025-03-29-build-architecture.md"
+---
 # Build Architecture for Little Moments
 
 ## Overview

@@ -40,7 +40,7 @@ fastlane test_plan plan:"Default"
 * `LittleMoments/Resources/` — Assets/sounds
 * `LittleMoments/WidgetExtension/` — Live Activity widget
 * `LittleMoments/Tests/` — Unit/UI tests
-* `specs/` — Product requirements (PRDs)
+* `backlog/docs/` — Product requirements (PRDs managed by Backlog.md)
 
 ## Conventions
 
@@ -85,12 +85,12 @@ fastlane test_plan plan:"Default"
 
 * [ ] `fastlane format_code` and `fastlane lint` clean (or `format/lint path:` for narrow diffs).
 * [ ] Tests pass (`fastlane test` or narrowed `test_targets`/`test_plan`), and **new/updated tests** cover changes.
-* [ ] If feature logic changed, **specs updated** under `specs/` or explicitly confirmed unchanged in PR.
+* [ ] If feature logic changed, **planning docs updated** under `backlog/docs/` (via `backlog doc create/update`) or explicitly confirmed unchanged in PR.
 * [ ] No secrets committed; signing/bundle IDs untouched.
 
 ## Specs
 
-* New PRDs: `specs/feature-name.md` (template: `specs/TEMPLATE-feature-name.md`).
+* New PRDs: run `backlog doc create "Feature: Name"` and mirror the structure used in existing specs under `backlog/docs/`.
 * Keep spec and code in sync; mention spec update status in PR body.
 
 ## Troubleshooting (agent playbook)
@@ -112,6 +112,7 @@ fastlane test_plan plan:"Default"
 * Planning lives in `backlog/` managed by Backlog.md; columns are Now → Next → Later → Done (default `Next`).
 * The backlog executable lives in `/opt/homebrew/bin/backlog`.
 * Use `backlog tasks create …` to add work and `backlog board view` to inspect the Kanban board.
+* Update status/AC via `backlog tasks edit …` (never hand-edit task markdown).
 * Labels to use: documentation, ui.
 * When planning bigger chunks of work, use an "epic" parent task with sub-tasks.
 * For full workflow details, follow the "Backlog.md workflow" section in `README.md` and the upstream Backlog.md docs.

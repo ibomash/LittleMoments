@@ -1,3 +1,10 @@
+---
+id: doc-13
+title: "Documentation Standards and Implementation"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/documentation-standards.md"
+---
 # Documentation Standards and Implementation
 
 ## Context and Current State

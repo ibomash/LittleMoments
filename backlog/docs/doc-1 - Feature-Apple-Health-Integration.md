@@ -1,3 +1,10 @@
+---
+id: doc-1
+title: "Feature: Apple Health Integration"
+type: "spec"
+created_date: "2025-03-04 00:00"
+source_path: "2025-03-04-health-integration.md"
+---
 # Feature: Apple Health Integration
 
 ## Overview

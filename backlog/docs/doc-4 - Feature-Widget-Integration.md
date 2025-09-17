@@ -1,3 +1,10 @@
+---
+id: doc-4
+title: "Feature: Widget Integration"
+type: "spec"
+created_date: "2025-03-04 00:00"
+source_path: "2025-03-04-widgets-integration.md"
+---
 # Feature: Widget Integration
 
 ## Overview

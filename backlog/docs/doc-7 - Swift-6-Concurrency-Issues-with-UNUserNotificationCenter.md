@@ -1,3 +1,10 @@
+---
+id: doc-7
+title: "Swift 6 Concurrency Issues with UNUserNotificationCenter"
+type: "spec"
+created_date: "2025-09-13 00:00"
+source_path: "2025-09-13-notification-mainactor-crash.md"
+---
 # Swift 6 Concurrency Issues with UNUserNotificationCenter
 
 Date: 2025-09-13

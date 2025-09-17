@@ -1,10 +1,10 @@
 ---
 id: task-1
 title: Migrate specs docs into backlog
-status: Now
+status: Done
 assignee: []
 created_date: '2025-09-17 01:05'
-updated_date: '2025-09-17 01:07'
+updated_date: '2025-09-17 02:05'
 labels:
   - documentation
 dependencies: []
@@ -22,8 +22,8 @@ Requirements:
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Each specs/ markdown file is recreated via backlog doc as a backlog/ doc with equivalent content and metadata.
-- [ ] #2 Cross-references in the repo point to the new backlog/ locations.
-- [ ] #3 specs/ contains no stray files after migration (aside from intentional placeholders).
-- [ ] #4 Backlog docs build/preview succeeds after the migration.
+- [x] #1 Each specs/ markdown file is recreated via backlog doc as a backlog/ doc with equivalent content and metadata.
+- [x] #2 Cross-references in the repo point to the new backlog/ locations.
+- [x] #3 specs/ contains no stray files after migration (aside from intentional placeholders).
+- [x] #4 Backlog docs build/preview succeeds after the migration.
 <!-- AC:END -->

@@ -1,3 +1,10 @@
+---
+id: doc-2
+title: "Feature: Just Now Core Application"
+type: "spec"
+created_date: "2025-03-04 00:00"
+source_path: "2025-03-04-just-now-core.md"
+---
 # Feature: Just Now Core Application
 
 ## Overview

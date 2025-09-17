@@ -1,3 +1,10 @@
+---
+id: doc-14
+title: "Error Handling and Logging Improvements"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/error-handling.md"
+---
 # Error Handling and Logging Improvements
 
 ## Context and Current State

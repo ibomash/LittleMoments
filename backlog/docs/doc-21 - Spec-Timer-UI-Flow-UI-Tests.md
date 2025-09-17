@@ -1,3 +1,10 @@
+---
+id: doc-21
+title: "Spec: Timer UI Flow UI Tests"
+type: "tech-debt"
+created_date: "2025-09-17 01:14"
+source_path: "todo/tech-debt/timer-ui-flow-ui-tests.md"
+---
 # Spec: Timer UI Flow UI Tests
 
 ## Objective
