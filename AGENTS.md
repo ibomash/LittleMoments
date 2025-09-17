@@ -110,5 +110,9 @@ fastlane test_plan plan:"Default"
 ## Backlog.md
 
 * Planning lives in `backlog/` managed by Backlog.md; columns are Now → Next → Later → Done (default `Next`).
+* The backlog executable lives in `/opt/homebrew/bin/backlog`.
 * Use `backlog tasks create …` to add work and `backlog board view` to inspect the Kanban board.
+* Labels to use: documentation, ui.
+* When planning bigger chunks of work, use an "epic" parent task with sub-tasks.
 * For full workflow details, follow the "Backlog.md workflow" section in `README.md` and the upstream Backlog.md docs.
+* When you complete a task, mark it as Done and update any relevant docs.
