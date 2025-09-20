@@ -1,21 +1,22 @@
 import AppIntents
 import SwiftUI
 
-struct MeditationSessionIntent: AppIntent {
-  static var title: LocalizedStringResource { "Start Meditation Session" }
-  static var description = IntentDescription(
+public struct MeditationSessionIntent: AppIntent {
+  public init() {}
+  public static var title: LocalizedStringResource { "Start Meditation Session" }
+  public static let description = IntentDescription(
     "Start a meditation session",
     categoryName: "Meditation",
     searchKeywords: [
       "meditate", "meditation", "mindfulness", "breathe", "breathing",
-      "timer", "untimed", "bells", "focus"
+      "timer", "untimed", "bells", "focus",
     ]
   )
 
   @Parameter(title: "Duration", description: "Optional duration in minutes")
-  var durationMinutes: Int?
+  public var durationMinutes: Int?
 
-  static var parameterSummary: some ParameterSummary {
+  public static var parameterSummary: some ParameterSummary {
     When(\.$durationMinutes, .hasNoValue) {
       Summary("Start an untimed meditation")
     } otherwise: {
@@ -24,7 +25,7 @@ struct MeditationSessionIntent: AppIntent {
   }
 
   @MainActor
-  func perform() async throws -> some IntentResult {
+  public func perform() async throws -> some IntentResult {
     if let durationMinutes {
       AppState.shared.pendingStartDurationSeconds = durationMinutes * 60
     }
@@ -32,5 +33,5 @@ struct MeditationSessionIntent: AppIntent {
     return .result()
   }
 
-  static var openAppWhenRun: Bool { true }
+  public static var openAppWhenRun: Bool { true }
 }

@@ -35,19 +35,19 @@ struct MeditationLiveActivityView: View {
 
         // Replace single button with two buttons
         HStack(spacing: 12) {
-          Button("Finish") {
-            // This will be handled by deeplink
-          }
-          .buttonStyle(.bordered)
-          .tint(.green)
-          .widgetURL(URL(string: "littlemoments://finishSession"))
-
           Button("Cancel") {
             // This will be handled by deeplink
           }
           .buttonStyle(.bordered)
           .tint(.red)
           .widgetURL(URL(string: "littlemoments://cancelSession"))
+
+          Button("Finish") {
+            // This will be handled by deeplink
+          }
+          .buttonStyle(.bordered)
+          .tint(.green)
+          .widgetURL(URL(string: "littlemoments://finishSession"))
         }
       }
       .padding()

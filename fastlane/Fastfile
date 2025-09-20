@@ -27,12 +27,12 @@ platform :ios do
 
   desc "Run unit tests"
   lane :test_unit do
-    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\" -only-testing:LittleMomentsTests"
+  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16,OS=18.6\" -only-testing:LittleMomentsTests"
   end
 
   desc "Run UI tests"
   lane :test_ui do
-    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16\""
+  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16,OS=18.6\""
   end
 
   desc "Run all tests"
