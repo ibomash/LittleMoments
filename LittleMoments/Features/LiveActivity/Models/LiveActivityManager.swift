@@ -47,7 +47,10 @@ final class LiveActivityManager {
     do {
       print("🔄 Requesting Live Activity from system")
       // Request new Live Activity from the system
-      let activityContent = ActivityContent(state: initialState, staleDate: nil)
+      let activityContent = ActivityContent(
+        state: initialState,
+        staleDate: Date().addingTimeInterval(1)
+      )
       activity = try Activity.request(
         attributes: attributes,
         content: activityContent,
@@ -94,7 +97,10 @@ final class LiveActivityManager {
     )
 
     // Update the Live Activity asynchronously
-    let updatedContent = ActivityContent(state: updatedState, staleDate: nil)
+    let updatedContent = ActivityContent(
+      state: updatedState,
+      staleDate: Date().addingTimeInterval(1)
+    )
     await activity?.update(updatedContent)
 
     if isCompleted {
