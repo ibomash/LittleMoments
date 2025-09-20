@@ -1,10 +1,10 @@
 ---
 id: task-3
 title: Configure widget quick-start durations
-status: Now
+status: Next
 assignee: []
 created_date: '2025-09-17 13:00'
-updated_date: '2025-09-17 13:36'
+updated_date: '2025-09-20 14:10'
 labels:
   - ui
 dependencies: []
