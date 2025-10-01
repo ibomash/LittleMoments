@@ -60,8 +60,29 @@ platform :ios do
     build
   end
 
+  desc "CI: build + test on Simulator"
+  lane :ci do
+    scheme = ENV["SCHEME"] || "LittleMoments"
+    ui_scheme = ENV["UI_SCHEME"] || "LittleMoments-UI"
+    device = ENV["DEVICE"] || "iPhone 16 Pro"
+
+    scan(
+      scheme: scheme,
+      clean: true,
+      device: device,
+      result_bundle_path: "build/UnitTests.xcresult"
+    )
+
+    scan(
+      scheme: ui_scheme,
+      clean: false,
+      device: device,
+      result_bundle_path: "build/UITests.xcresult"
+    )
+  end
+
   desc "Generate repository overview with Repomix"
   lane :repomix do
     sh "cd .. && repomix"
   end
-end 
+end

@@ -1,0 +1,81 @@
+name: iOS CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'LittleMoments/**'
+      - 'Tuist/**'
+      - 'fastlane/**'
+      - 'Gemfile*'
+      - 'Project.swift'
+      - '**/*.swift'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    env:
+      SCHEME: LittleMoments
+      UI_SCHEME: LittleMoments-UI
+      DEVICE: "iPhone 16 Pro"
+      DESTINATION: "platform=iOS Simulator,name=iPhone 16 Pro"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print Xcode version
+        run: xcodebuild -version
+
+      - name: Set up Ruby with Bundler cache
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install build tooling
+        run: |
+          brew update
+          brew install tuist xcbeautify
+
+      - name: Generate Xcode project with Tuist
+        run: tuist generate --no-open
+
+      - name: Fastlane version
+        run: bundle exec fastlane --version
+
+      - name: Build & test via Fastlane (scan)
+        run: |
+          set -e
+          bundle exec fastlane ci
+
+      # - name: Build & test via xcodebuild (alternative)
+      #   if: failure()
+      #   run: |
+      #     set -e
+      #     mkdir -p build
+      #     xcodebuild \
+      #       -scheme "$SCHEME" \
+      #       -destination "$DESTINATION" \
+      #       -resultBundlePath build/Result.xcresult \
+      #       clean build test | xcbeautify
+
+      - name: Upload build results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcresult-or-logs
+          path: |
+            build/UnitTests.xcresult
+            build/UITests.xcresult
+            ~/Library/Logs/scan
+          if-no-files-found: ignore
+          retention-days: 7
