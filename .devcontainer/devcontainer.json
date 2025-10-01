@@ -1,0 +1,22 @@
+{
+  "name": "LittleMoments • Swift + Backlog.md",
+  "image": "swift:6.0-jammy",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
+  "postCreateCommand": "npm i -g backlog.md && backlog --version",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "swiftlang.swift-vscode"
+      ]
+    }
+  },
+  "portsAttributes": {
+    "8080": {
+      "label": "Backlog.md browser",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}

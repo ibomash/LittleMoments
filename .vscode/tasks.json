@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Backlog: Board (TUI)",
+      "type": "shell",
+      "command": "backlog board view",
+      "problemMatcher": []
+    },
+    {
+      "label": "Backlog: Browser (port 8080)",
+      "type": "shell",
+      "command": "backlog browser --port 8080 --no-open",
+      "problemMatcher": []
+    }
+  ]
+}
