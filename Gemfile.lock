@@ -224,6 +224,7 @@ DEPENDENCIES
   abbrev
   fastlane
   logger
+  xcpretty
 
 BUNDLED WITH
    2.6.6
