@@ -31,6 +31,12 @@ backlog tasks create "Add mindful reminders" \
 
 > Labels available today: `documentation`, `ui`. Create additional labels through the CLI if needed and update this file to keep the list authoritative.
 
+## Viewing Tasks
+
+* Use `backlog task view <task-id> --plain` to inspect a task’s metadata and description in a non-interactive format.
+* Task IDs are case sensitive—match the exact casing shown in `backlog board view` or `backlog tasks list` to avoid lookup errors.
+* Combine with other CLI commands (e.g., run a board view first) when you need context before editing.
+
 ## Updating Tasks
 
 * Use `backlog tasks edit <task-id>` to adjust status, labels, description, or acceptance criteria. Avoid manual search-and-replace.
