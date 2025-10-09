@@ -48,16 +48,16 @@ fastlane test_plan plan:"Default"
 * **Linter:** `SwiftLint` strict; fix new violations before commit.
 * **Language/tooling versions:**
 
-  * Xcode: **(pin here, e.g., 16.x)**
-  * Swift: **(e.g., 6.0)**
-  * iOS minimum: **(e.g., 17.0)**
+  * Xcode: **18.x (iOS 26 SDK)**
+  * Swift: **6.0**
+  * iOS minimum: **26.0**
   * SwiftFormat: **(version)**
   * SwiftLint: **(version)**
 * **Commit style:** Conventional commits (`type(scope): description`). Keep title ≤72 chars.
 
 ## Testing
 
-* Default simulator: **iPhone 16** (set in lanes).
+* Default simulator: **iPhone 17 Pro (iOS 26)** (set in lanes).
 * Targets: `LittleMomentsTests` (unit), `LittleMomentsUITests` (UI).
 * Coverage: enabled for app target.
 * **Add/update tests for any behavior change in the same PR** (enforced by checklist).

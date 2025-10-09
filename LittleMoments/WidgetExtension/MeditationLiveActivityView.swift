@@ -1,5 +1,6 @@
 import ActivityKit
 import SwiftUI
+import UIKit
 import WidgetKit
 
 struct MeditationLiveActivityView: View {
@@ -8,9 +9,27 @@ struct MeditationLiveActivityView: View {
 
   @ViewBuilder
   var body: some View {
+    let reducesTransparency = UIAccessibility.isReduceTransparencyEnabled
+    let baseFill = LiquidGlassTokens.surfaceFill(
+      tint: LiquidGlassTokens.primaryTint,
+      reducesTransparency: reducesTransparency,
+      fallback: Color(UIColor.systemGroupedBackground),
+      opacity: 0.22
+    )
+    let baseStroke = LiquidGlassTokens.surfaceStroke(
+      reducesTransparency: reducesTransparency,
+      fallback: Color.white.opacity(0.18)
+    )
+    let fillStyle: AnyShapeStyle = showsWidgetBackground ? AnyShapeStyle(Color.clear) : baseFill
+
     let content = ZStack {
       ContainerRelativeShape()
-        .fill(showsWidgetBackground ? .clear : .black.opacity(0.1))
+        .fill(fillStyle)
+        .overlay {
+          if !showsWidgetBackground {
+            ContainerRelativeShape().stroke(baseStroke, lineWidth: 1)
+          }
+        }
 
       VStack {
         Text("Meditation in progress")
@@ -38,23 +57,13 @@ struct MeditationLiveActivityView: View {
         HStack(spacing: 12) {
           if let url = URL(string: "littlemoments://cancelSession") {
             Link(destination: url) {
-              Text("Cancel")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Color.red.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.red)
+              glassLinkLabel("Cancel", role: .destructive, reducesTransparency: reducesTransparency)
             }
           }
 
           if let url = URL(string: "littlemoments://finishSession") {
             Link(destination: url) {
-              Text("Finish")
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .background(Color.green.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.green)
+              glassLinkLabel("Finish", role: .success, reducesTransparency: reducesTransparency)
             }
           }
         }
@@ -62,16 +71,51 @@ struct MeditationLiveActivityView: View {
       .padding()
     }
 
-    if #available(iOS 17.0, *) {
-      content
-        .containerBackground(for: .widget) { Color.clear }
-    } else {
-      content
-    }
+    content
+      .containerBackground(for: .widget) { Color.clear }
   }
 
   private var timerDisplay: String {
     return timerDisplayFromSeconds(
       seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
+  }
+}
+
+extension MeditationLiveActivityView {
+  fileprivate func glassLinkLabel(
+    _ title: String,
+    role: LiquidGlassButtonStyle.Role,
+    reducesTransparency: Bool
+  ) -> some View {
+    ZStack {
+      RoundedRectangle(cornerRadius: 14, style: .continuous)
+        .fill(
+          LiquidGlassTokens.surfaceFill(
+            tint: role.tint(for: .prominent),
+            reducesTransparency: reducesTransparency,
+            fallback: role.fallbackTint(for: .prominent),
+            opacity: 0.26
+          )
+        )
+        .overlay(
+          RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .stroke(
+              LiquidGlassTokens.surfaceStroke(
+                reducesTransparency: reducesTransparency,
+                fallback: role.fallbackStroke(for: .prominent),
+                tint: LiquidGlassTokens.prominentForeground,
+                opacity: 0.32
+              ),
+              lineWidth: 1
+            )
+        )
+
+      Text(title)
+        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+        .foregroundStyle(role.foregroundColor(for: .prominent))
+        .padding(.horizontal, 6)
+        .padding(.vertical, 8)
+    }
+    .frame(maxWidth: .infinity, minHeight: 38)
   }
 }

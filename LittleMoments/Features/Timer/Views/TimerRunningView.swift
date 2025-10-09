@@ -14,59 +14,35 @@ struct TimerRunningView: View {
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
   @State private var liveActivityUpdateTimer: Timer?
+  @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
+  private let containerCornerRadius: CGFloat = 32
 
   var body: some View {
     GeometryReader { geometry in
       let isLandscape = geometry.size.width > geometry.size.height
+      ZStack {
+        backgroundSurface
 
-      Group {
         if isLandscape {
-          // Landscape layout
-          HStack {
-            // Timer view
-            VStack {
-              Spacer()
-              TimerCircleView(timerViewModel: timerViewModel)
-                .frame(width: min(geometry.size.height * 0.7, geometry.size.width * 0.4))
-                .padding()
-              Spacer()
-            }
+          HStack(spacing: 32) {
+            timerColumn(for: geometry.size)
 
-            // Bell controls and buttons
-            VStack {
-              Spacer()
-              // Bell controls
-              BellControlsGrid(timerViewModel: timerViewModel)
-                .padding()
-
-              // Timer controls at the bottom
-              TimerControlButtons(
-                timerViewModel: timerViewModel, presentationMode: presentationMode
-              )
-              .padding(.bottom)
-            }
+            controlsContainer
+              .frame(maxWidth: geometry.size.width * 0.45)
           }
+          .padding(.horizontal, 40)
+          .padding(.vertical, 32)
         } else {
-          // Portrait layout
-          VStack {
-            Spacer()
+          VStack(spacing: 32) {
+            timerColumn(for: geometry.size)
 
-            // Timer view
-            TimerCircleView(timerViewModel: timerViewModel)
-              .frame(width: 200, height: 200)
-              .padding(.bottom, 20)
-
-            Spacer()
-
-            // Bell controls
-            BellControlsGrid(timerViewModel: timerViewModel)
-              .padding()
-
-            // Timer controls
-            TimerControlButtons(timerViewModel: timerViewModel, presentationMode: presentationMode)
+            controlsContainer
           }
+          .padding(.horizontal, 24)
+          .padding(.vertical, 48)
         }
       }
+      .frame(width: geometry.size.width, height: geometry.size.height)
     }
     .onAppear {
       print("📱 TimerRunningView appeared - starting timer and Live Activity")
@@ -133,6 +109,80 @@ struct TimerRunningView: View {
   }
 }
 
+extension TimerRunningView {
+  fileprivate var controlsContainer: some View {
+    glassContainer {
+      VStack(spacing: 24) {
+        BellControlsGrid(timerViewModel: timerViewModel)
+          .frame(maxWidth: .infinity, alignment: .leading)
+
+        TimerControlButtons(timerViewModel: timerViewModel, presentationMode: presentationMode)
+      }
+    }
+  }
+
+  fileprivate func timerColumn(for size: CGSize) -> some View {
+    VStack {
+      Spacer(minLength: 0)
+      TimerCircleView(timerViewModel: timerViewModel)
+        .frame(
+          width: min(size.width, size.height) * 0.5,
+          height: min(size.width, size.height) * 0.5
+        )
+        .frame(minWidth: 180, maxWidth: 320, minHeight: 180, maxHeight: 320)
+        .padding(.horizontal, 12)
+      Spacer(minLength: 0)
+    }
+  }
+
+  @ViewBuilder
+  fileprivate var backgroundSurface: some View {
+    if reducesTransparency {
+      Color(UIColor.systemBackground).ignoresSafeArea()
+    } else {
+      LinearGradient(
+        colors: [
+          LiquidGlassTokens.primaryTint.opacity(0.18),
+          Color(UIColor.systemBackground),
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+      ).ignoresSafeArea()
+    }
+  }
+
+  fileprivate func glassContainer<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+    content()
+      .frame(maxWidth: .infinity)
+      .padding(24)
+      .background(
+        RoundedRectangle(cornerRadius: containerCornerRadius, style: .continuous)
+          .fill(
+            reducesTransparency
+              ? Color(UIColor.secondarySystemBackground)
+              : Color.white.opacity(0.12)
+          )
+          .background(
+            RoundedRectangle(cornerRadius: containerCornerRadius, style: .continuous)
+              .fill(
+                reducesTransparency
+                  ? Color(UIColor.secondarySystemBackground)
+                  : Color.white.opacity(0.05)
+              )
+          )
+      )
+      .overlay(
+        RoundedRectangle(cornerRadius: containerCornerRadius, style: .continuous)
+          .stroke(Color.white.opacity(reducesTransparency ? 0.18 : 0.25), lineWidth: 1)
+      )
+      .shadow(
+        color: LiquidGlassTokens.shadowColor,
+        radius: 20,
+        y: LiquidGlassTokens.shadowOffsetY
+      )
+  }
+}
+
 // MARK: - Timer Circle View
 struct TimerCircleView: View {
   @ObservedObject var timerViewModel: TimerViewModel
@@ -143,13 +193,15 @@ struct TimerCircleView: View {
         Circle()
           .stroke(lineWidth: 10)
           .opacity(timerViewModel.hasEndTarget ? 0.2 : 0)
-          .foregroundColor(Color.blue)
+          .foregroundColor(LiquidGlassTokens.primaryTint)
           .animation(.linear, value: timerViewModel.hasEndTarget)
 
         Circle()
           .trim(from: 0, to: timerViewModel.progress)
           .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
-          .foregroundColor(timerViewModel.isDone ? Color.green : Color.blue)
+          .foregroundColor(
+            timerViewModel.isDone ? LiquidGlassTokens.successTint : LiquidGlassTokens.primaryTint
+          )
           .rotationEffect(Angle(degrees: 270))
           .animation(.linear, value: timerViewModel.progress)
 
@@ -167,44 +219,37 @@ struct BellControlsGrid: View {
   let buttonsPerRow = 4
 
   var body: some View {
-    Grid {
+    VStack(alignment: .leading, spacing: 16) {
       Text("Timer (minutes)")
-        .foregroundColor(Color.gray)
-      ForEach(Array(0..<2), id: \.self) { rowIndex in
-        GridRow {
-          ForEach(Array(0..<buttonsPerRow), id: \.self) { columnIndex in
-            let index = rowIndex * buttonsPerRow + columnIndex
-            if index < timerViewModel.scheduledAlertOptions.count {
-              let scheduledAlertOption: OneTimeScheduledBellAlert =
-                timerViewModel.scheduledAlertOptions[index]
-              Button(
-                action: {
-                  handleAlertSelection(scheduledAlertOption)
-                },
-                label: {
-                  Text(scheduledAlertOption.name)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(
-                      timerViewModel.scheduledAlert == scheduledAlertOption
-                        ? Color.blue : Color(UIColor.systemBackground)
-                    )
-                    .foregroundColor(
-                      timerViewModel.scheduledAlert == scheduledAlertOption
-                        ? Color.white : Color.blue
-                    )
-                    .cornerRadius(8)
-                }
-              )
-              .accessibilityIdentifier(
-                timerViewModel.scheduledAlert == scheduledAlertOption
-                  ? "selected_duration_\(scheduledAlertOption.name)"
-                  : "duration_\(scheduledAlertOption.name)"
-              )
-              .accessibilityAddTraits(
-                timerViewModel.scheduledAlert == scheduledAlertOption ? .isSelected : []
-              )
-            } else {
+        .font(.caption.weight(.semibold))
+        .textCase(.uppercase)
+        .foregroundStyle(Color.secondary)
+
+      ForEach(
+        Array(timerViewModel.scheduledAlertOptions.chunked(into: buttonsPerRow).enumerated()),
+        id: \.offset
+      ) { _, row in
+        HStack(spacing: 12) {
+          ForEach(row, id: \.targetTimeInSec) { option in
+            Button {
+              handleAlertSelection(option)
+            } label: {
+              Text(option.name)
+            }
+            .buttonStyle(.plain)
+            .liquidGlassChip(isSelected: timerViewModel.scheduledAlert == option)
+            .accessibilityIdentifier(
+              timerViewModel.scheduledAlert == option
+                ? "selected_duration_\(option.name)"
+                : "duration_\(option.name)"
+            )
+            .accessibilityAddTraits(
+              timerViewModel.scheduledAlert == option ? .isSelected : []
+            )
+          }
+
+          if row.count < buttonsPerRow {
+            ForEach(0..<(buttonsPerRow - row.count), id: \.self) { _ in
               Spacer()
             }
           }
@@ -250,47 +295,36 @@ struct TimerControlButtons: View {
   var presentationMode: Binding<PresentationMode>
 
   var body: some View {
-    HStack {
-      ImageButton(
-        imageName: "xmark.circle.fill",
-        buttonText: "Cancel",
-        action: {
-          print("🔘 Cancel button tapped - ending Live Activity and resetting timer")
-          // For cancel, just end the Live Activity and reset - no HealthKit write
-          timerViewModel.endLiveActivity(completed: false)
-          timerViewModel.reset()
-          presentationMode.wrappedValue.dismiss()
-        }
-      )
-      .padding()
+    HStack(spacing: 16) {
+      Button {
+        print("🔘 Cancel button tapped - ending Live Activity and resetting timer")
+        timerViewModel.endLiveActivity(completed: false)
+        timerViewModel.reset()
+        presentationMode.wrappedValue.dismiss()
+      } label: {
+        Label("Cancel", systemImage: "xmark.circle.fill")
+      }
+      .accessibilityIdentifier("cancel_timer_button")
+      .liquidGlassButtonStyle(.prominent, role: .destructive)
 
-      ImageButton(
-        imageName: "checkmark.circle.fill",
-        buttonText: "Complete",
-        action: {
-          print("🔘 Complete button tapped - storing startDate for health integration")
-          // First store start date for HealthKit
-          timerViewModel.prepareSessionForFinish()
-
-          print("🔘 Writing to HealthKit directly")
-          // Write to HealthKit directly
-          timerViewModel.writeToHealthStore()
-
-          print("🔘 Providing haptic feedback for session completion")
-          // Provide haptic feedback for successful session completion
-          LiveActivityManager.shared.provideSessionCompletionFeedback()
-
-          print("🔘 Ending Live Activity with completed status")
-          // End live activity with completed status
-          timerViewModel.endLiveActivity(completed: true)
-
-          print("🔘 Dismissing timer view")
-          // Dismiss the view
-          presentationMode.wrappedValue.dismiss()
-        }
-      )
-      .padding()
+      Button {
+        print("🔘 Complete button tapped - storing startDate for health integration")
+        timerViewModel.prepareSessionForFinish()
+        print("🔘 Writing to HealthKit directly")
+        timerViewModel.writeToHealthStore()
+        print("🔘 Providing haptic feedback for session completion")
+        LiveActivityManager.shared.provideSessionCompletionFeedback()
+        print("🔘 Ending Live Activity with completed status")
+        timerViewModel.endLiveActivity(completed: true)
+        print("🔘 Dismissing timer view")
+        presentationMode.wrappedValue.dismiss()
+      } label: {
+        Label("Complete", systemImage: "checkmark.circle.fill")
+      }
+      .accessibilityIdentifier("complete_timer_button")
+      .liquidGlassButtonStyle(.prominent, role: .success)
     }
+    .frame(maxWidth: .infinity)
   }
 }
 
@@ -303,5 +337,19 @@ struct TimerRunningView_Previews: PreviewProvider {
       TimerRunningView()
         .previewInterfaceOrientation(.landscapeLeft)
     }
+  }
+}
+
+extension Array {
+  fileprivate func chunked(into size: Int) -> [[Element]] {
+    guard size > 0 else { return [] }
+    var chunks: [[Element]] = []
+    var index = 0
+    while index < count {
+      let end = Swift.min(index + size, count)
+      chunks.append(Array(self[index..<end]))
+      index += size
+    }
+    return chunks
   }
 }

@@ -16,11 +16,13 @@ struct ImageButton: View {
   var body: some View {
     Button(action: action) {
       Label(buttonText, systemImage: imageName)
+        .labelStyle(.titleAndIcon)
         .frame(maxWidth: .infinity)
-        .padding()
-        .foregroundColor(.white)
-        .background(Color.blue)
-        .cornerRadius(10)
+        .padding(.horizontal, 4)
     }
+    .liquidGlassButtonStyle(
+      .prominent,
+      controlHeight: LiquidGlassTokens.primaryControlHeight
+    )
   }
 }

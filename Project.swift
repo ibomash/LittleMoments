@@ -23,7 +23,7 @@ let project = Project(
       destinations: .iOS,
       product: .app,
       bundleId: "net.bomash.illya.LittleMoments",
-      deploymentTargets: .iOS("17.0"),
+      deploymentTargets: .iOS("26.0"),
       infoPlist: .file(path: "Little-Moments-Info.plist"),
       sources: [
         "LittleMoments/Core/**",
@@ -74,9 +74,12 @@ let project = Project(
       product: .appExtension,
       productName: "LittleMomentsWidgetExtension",
       bundleId: "net.bomash.illya.LittleMoments.WidgetExtension",
-      deploymentTargets: .iOS("17.0"),
+      deploymentTargets: .iOS("26.0"),
       infoPlist: .file(path: "LittleMoments/WidgetExtension/WidgetExtension-Info.plist"),
-      sources: ["LittleMoments/WidgetExtension/**"],
+      sources: [
+        "LittleMoments/WidgetExtension/**",
+        "LittleMoments/Core/Styling/LiquidGlassStyles.swift",
+      ],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(
         path: "LittleMoments/WidgetExtension/LittleMomentsWidgetExtension.entitlements"),
@@ -116,7 +119,7 @@ let project = Project(
       destinations: .iOS,
       product: .unitTests,
       bundleId: "net.bomash.illya.LittleMomentsTests",
-      deploymentTargets: .iOS("17.0"),
+      deploymentTargets: .iOS("26.0"),
       infoPlist: .default,
       sources: ["LittleMoments/Tests/UnitTests/**"],
       dependencies: [
@@ -130,7 +133,7 @@ let project = Project(
       destinations: .iOS,
       product: .uiTests,
       bundleId: "net.bomash.illya.LittleMomentsUITests",
-      deploymentTargets: .iOS("17.0"),
+      deploymentTargets: .iOS("26.0"),
       infoPlist: .default,
       sources: ["LittleMoments/Tests/UITests/**"],
       dependencies: [

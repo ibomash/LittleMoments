@@ -60,8 +60,8 @@ Tuist keeps the generated Xcode project aligned with this structure; regenerate 
   - `lint`: Runs SwiftLint with appropriate configuration
   - `format_code`: Formats Swift code using swift-format
   - `generate`: Generates Xcode project using Tuist
-  - `test_unit`: Runs unit tests on iPhone 16 simulator
-  - `test_ui`: Runs UI tests on iPhone 16 simulator
+  - `test_unit`: Runs unit tests on iPhone 17 simulator
+  - `test_ui`: Runs UI tests on iPhone 17 simulator
   - `test`: Runs all tests (unit and UI)
   - `build`: Builds the app using Tuist
   - `quality_check`: Runs format_code, lint, test, and build lanes in sequence
@@ -128,8 +128,8 @@ The automation catalog lives in `fastlane/Fastfile`. Key iOS lanes include:
 - `lint` – Runs SwiftLint in strict mode with the repository configuration.
 - `format_code` – Formats source files via `swift-format`.
 - `generate` – Calls Tuist to regenerate the Xcode project.
-- `test_unit` – Executes unit tests for the `LittleMoments` scheme on the iPhone 16 simulator.
-- `test_ui` – Executes UI tests with the `LittleMoments-UI` scheme on the iPhone 16 simulator.
+- `test_unit` – Executes unit tests for the `LittleMoments` scheme on the iPhone 17 simulator.
+- `test_ui` – Executes UI tests with the `LittleMoments-UI` scheme on the iPhone 17 simulator.
 - `test` – Aggregates the unit and UI test lanes.
 - `build` – Performs a Tuist build and falls back to `xcodebuild` for a generic iOS device if Tuist fails.
 - `quality_check` – Runs formatting, linting, tests, and build sequentially.

@@ -3,71 +3,46 @@ import SwiftUI
 
 struct TimerStartView: View {
   @StateObject private var appState = AppState.shared
+  @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
 
   var body: some View {
     NavigationStack {
-      VStack {
-        Spacer()
+      ZStack {
+        backgroundSurface
 
-        Text(
-          "🙏🏻"
-        )
-        .font(.largeTitle)
-        .padding(.vertical, 20)
-        .italic()
-        .lineSpacing(20)
-        .frame(minWidth: 200, maxWidth: 300)
-        .multilineTextAlignment(.center)
+        VStack(spacing: 32) {
+          Spacer()
 
-        Spacer()
+          Text("🙏🏻")
+            .font(.largeTitle)
+            .padding(.vertical, 20)
+            .italic()
+            .lineSpacing(20)
+            .frame(minWidth: 200, maxWidth: 300)
+            .multilineTextAlignment(.center)
 
-        HStack {
-          Button(
-            action: {
-              appState.showSettingsView = true
-            },
-            label: {
-              Image(systemName: "gear")
-                .resizable()
-                .frame(width: 36, height: 36)
-            }
-          )
-          .frame(minWidth: 80, minHeight: 80, maxHeight: 80)
-          .padding()
+          Spacer()
 
-          ImageButton(
-            imageName: "play.fill", buttonText: "Start session",
-            action: {
-              var intent = MeditationSessionIntent()
-              intent.durationMinutes = appState.pendingStartDurationSeconds.map { $0 / 60 }
-              // Print the intent I'm donating
-              let donationManager = IntentDonationManager.shared
-              // Donate the intent and print confirmation for debugging purposes depending on success or failure
-              let donationID = donationManager.donate(intent: intent)
-              // Print the intent and result within my log message
-              print("Donated: \(intent) with result: \(donationID)")
-              appState.showTimerRunningView = true
-            }
-          )
-          .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
-          .foregroundColor(.white)
-          .background(Color.blue)
-          .cornerRadius(10)
-          .padding()
+          controlsRow
         }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 48)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
-      .frame(maxHeight: .infinity)
     }
     .onAppear {
       // Request notification authorization the first time the main screen shows
       // Keep this non-blocking and avoid touching SwiftUI state in callbacks
       requestNotificationAuthorizationIfNeeded()
     }
-    .sheet(isPresented: $appState.showTimerRunningView) {
+    .fullScreenCover(isPresented: $appState.showTimerRunningView) {
       TimerRunningView()
     }
     .sheet(isPresented: $appState.showSettingsView) {
       SettingsView()
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
+        .presentationCornerRadius(32)
     }
   }
 
@@ -79,6 +54,57 @@ struct TimerStartView: View {
     Task {
       await NotificationManager.shared.requestAuthorizationIfNeeded()
     }
+  }
+
+  private var controlsRow: some View {
+    HStack(spacing: 20) {
+      settingsButton
+
+      ImageButton(
+        imageName: "play.fill",
+        buttonText: "Start session",
+        action: startSession
+      )
+      .accessibilityIdentifier("start_session_button")
+    }
+  }
+
+  private var settingsButton: some View {
+    Button(action: { appState.showSettingsView = true }) {
+      Image(systemName: "gearshape.fill")
+        .symbolVariant(.fill)
+        .symbolRenderingMode(.hierarchical)
+        .font(.system(size: 24, weight: .semibold))
+    }
+    .accessibilityLabel(Text("Settings"))
+    .liquidGlassIconButtonStyle(variant: .subtle, diameter: 64)
+  }
+
+  private func startSession() {
+    var intent = MeditationSessionIntent()
+    intent.durationMinutes = appState.pendingStartDurationSeconds.map { $0 / 60 }
+    let donationManager = IntentDonationManager.shared
+    let donationID = donationManager.donate(intent: intent)
+    print("Donated: \(intent) with result: \(donationID)")
+    appState.showTimerRunningView = true
+  }
+
+  private var backgroundSurface: some View {
+    Group {
+      if reducesTransparency {
+        Color(UIColor.systemBackground)
+      } else {
+        LinearGradient(
+          colors: [
+            LiquidGlassTokens.primaryTint.opacity(0.12),
+            Color(UIColor.systemBackground),
+          ],
+          startPoint: .topLeading,
+          endPoint: .bottomTrailing
+        )
+      }
+    }
+    .ignoresSafeArea()
   }
 }
 

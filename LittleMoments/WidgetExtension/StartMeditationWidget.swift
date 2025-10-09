@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import WidgetKit
 
 // A simple Lock Screen/Home Screen widget that starts a session via deep link
@@ -33,6 +34,7 @@ private struct Entry: TimelineEntry { let date: Date }
 private struct StartMeditationWidgetView: View {
   @Environment(\.widgetFamily) private var family
   @Environment(\.showsWidgetContainerBackground) private var showsBackground
+  @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
 
   var body: some View {
     let content = Group {
@@ -57,27 +59,34 @@ private struct StartMeditationWidgetView: View {
       }
     }
 
-    if #available(iOS 17.0, *) {
-      content.containerBackground(for: .widget) { Color.clear }
-    } else {
-      content
-    }
+    content.containerBackground(for: .widget) { Color.clear }
   }
 
   // MARK: - Subviews
   private var smallWidget: some View {
     ZStack {
       // Soothing gradient background that respects widget chrome
-      if #available(iOS 17.0, *) {
-        // Additional subtle vignette when the system doesn't draw a chrome
-        if !showsBackground {
-          ContainerRelativeShape()
-            .fill(
-              LinearGradient(
-                colors: [Color.blue.opacity(0.75), Color.purple.opacity(0.75)],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-              ))
-        }
+      // Additional subtle vignette when the system doesn't draw a chrome
+      if !showsBackground {
+        ContainerRelativeShape()
+          .fill(
+            LiquidGlassTokens.surfaceFill(
+              tint: LiquidGlassTokens.primaryTint,
+              reducesTransparency: reducesTransparency,
+              fallback: Color(UIColor.systemGroupedBackground),
+              opacity: 0.32
+            )
+          )
+          .overlay(
+            ContainerRelativeShape()
+              .stroke(
+                LiquidGlassTokens.surfaceStroke(
+                  reducesTransparency: reducesTransparency,
+                  fallback: Color.white.opacity(0.18)
+                ),
+                lineWidth: 1
+              )
+          )
       }
 
       VStack(alignment: .leading, spacing: 8) {
@@ -102,9 +111,26 @@ private struct StartMeditationWidgetView: View {
           safeLink("littlemoments://startSession") {
             Image(systemName: "play.fill")
               .font(.system(size: 13, weight: .semibold))
-              .padding(7)
-              .background(Color.white.opacity(0.15))
-              .clipShape(Circle())
+              .padding(10)
+              .background(
+                Circle().fill(
+                  LiquidGlassTokens.surfaceFill(
+                    tint: LiquidGlassTokens.primaryTint,
+                    reducesTransparency: reducesTransparency,
+                    fallback: Color(UIColor.systemGroupedBackground),
+                    opacity: 0.28
+                  )
+                )
+              )
+              .overlay(
+                Circle().stroke(
+                  LiquidGlassTokens.surfaceStroke(
+                    reducesTransparency: reducesTransparency,
+                    fallback: Color.white.opacity(0.18)
+                  ),
+                  lineWidth: 1
+                )
+              )
               .accessibilityLabel("Start now")
           }
         }
@@ -166,11 +192,30 @@ private struct StartMeditationWidgetView: View {
           .lineLimit(1)
           .fixedSize(horizontal: true, vertical: false)
       }
-      .padding(.vertical, 5)
-      .padding(.horizontal, 8)
+      .padding(.vertical, 6)
+      .padding(.horizontal, 10)
       .frame(minWidth: 28, alignment: .center)
-      .background(Color.white.opacity(0.15))
-      .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+      .background(
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+          .fill(
+            LiquidGlassTokens.surfaceFill(
+              tint: LiquidGlassTokens.secondaryTint,
+              reducesTransparency: reducesTransparency,
+              fallback: Color(UIColor.systemGroupedBackground),
+              opacity: 0.24
+            )
+          )
+      )
+      .overlay(
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+          .stroke(
+            LiquidGlassTokens.surfaceStroke(
+              reducesTransparency: reducesTransparency,
+              fallback: Color.white.opacity(0.16)
+            ),
+            lineWidth: 1
+          )
+      )
       .accessibilityLabel("Start \(numberText)\(suffix) session")
       .layoutPriority(1)
     }
@@ -193,7 +238,7 @@ private struct StartMeditationWidgetView: View {
     if showsBackground {
       return AnyShapeStyle(.primary)
     } else {
-      return AnyShapeStyle(.white)
+      return AnyShapeStyle(LiquidGlassTokens.prominentForeground)
     }
   }
 

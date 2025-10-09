@@ -26,8 +26,8 @@ jobs:
     env:
       SCHEME: LittleMoments
       UI_SCHEME: LittleMoments-UI
-      DEVICE: "iPhone 16 Pro"
-      DESTINATION: "platform=iOS Simulator,name=iPhone 16 Pro"
+      DEVICE: "iPhone 17 Pro"
+      DESTINATION: "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.0"
 
     steps:
       - name: Checkout
