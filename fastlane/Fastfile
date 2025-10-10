@@ -65,20 +65,33 @@ platform :ios do
     scheme = ENV["SCHEME"] || "LittleMoments"
     ui_scheme = ENV["UI_SCHEME"] || "LittleMoments-UI"
     device = ENV["DEVICE"] || "iPhone 17 Pro"
+    destinations = (ENV["SCAN_DESTINATIONS"] || "")
+                  .split("|")
+                  .map(&:strip)
+                  .reject(&:empty?)
 
-    scan(
+    unit_scan_options = {
       scheme: scheme,
       clean: true,
-      device: device,
       result_bundle_path: "build/UnitTests.xcresult"
-    )
+    }
 
-    scan(
+    ui_scan_options = {
       scheme: ui_scheme,
       clean: false,
-      device: device,
       result_bundle_path: "build/UITests.xcresult"
-    )
+    }
+
+    if destinations.any?
+      unit_scan_options[:destinations] = destinations
+      ui_scan_options[:destinations] = destinations
+    else
+      unit_scan_options[:device] = device
+      ui_scan_options[:device] = device
+    end
+
+    scan(unit_scan_options)
+    scan(ui_scan_options)
   end
 
   desc "Generate repository overview with Repomix"

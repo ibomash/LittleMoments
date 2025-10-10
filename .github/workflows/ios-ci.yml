@@ -27,7 +27,7 @@ jobs:
       SCHEME: LittleMoments
       UI_SCHEME: LittleMoments-UI
       DEVICE: "iPhone 17 Pro"
-      DESTINATION: "platform=iOS Simulator,name=iPhone 17 Pro,OS=26.0"
+      SCAN_DESTINATIONS: "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest"
 
     steps:
       - name: Checkout
@@ -35,6 +35,9 @@ jobs:
 
       - name: Print Xcode version
         run: xcodebuild -version
+
+      - name: List available simulators
+        run: xcrun simctl list devices
 
       - name: Set up Ruby with Bundler cache
         uses: ruby/setup-ruby@v1
@@ -47,8 +50,8 @@ jobs:
           brew update
           brew install tuist xcbeautify
 
-      - name: Generate Xcode project with Tuist
-        run: tuist generate --no-open
+      - name: Generate Xcode project
+        run: bundle exec fastlane generate
 
       - name: Fastlane version
         run: bundle exec fastlane --version
@@ -65,7 +68,7 @@ jobs:
       #     mkdir -p build
       #     xcodebuild \
       #       -scheme "$SCHEME" \
-      #       -destination "$DESTINATION" \
+      #       -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
       #       -resultBundlePath build/Result.xcresult \
       #       clean build test | xcbeautify
 
