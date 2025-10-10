@@ -65,10 +65,8 @@ platform :ios do
     scheme = ENV["SCHEME"] || "LittleMoments"
     ui_scheme = ENV["UI_SCHEME"] || "LittleMoments-UI"
     device = ENV["DEVICE"] || "iPhone 17 Pro"
-    destinations = (ENV["SCAN_DESTINATIONS"] || "")
-                  .split("|")
-                  .map(&:strip)
-                  .reject(&:empty?)
+    destination = (ENV["SCAN_DESTINATION"] || "").strip
+    destination = nil if destination.empty?
 
     unit_scan_options = {
       scheme: scheme,
@@ -82,9 +80,9 @@ platform :ios do
       result_bundle_path: "build/UITests.xcresult"
     }
 
-    if destinations.any?
-      unit_scan_options[:destinations] = destinations
-      ui_scan_options[:destinations] = destinations
+    if destination
+      unit_scan_options[:destination] = destination
+      ui_scan_options[:destination] = destination
     else
       unit_scan_options[:device] = device
       ui_scan_options[:device] = device

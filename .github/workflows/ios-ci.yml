@@ -27,7 +27,7 @@ jobs:
       SCHEME: LittleMoments
       UI_SCHEME: LittleMoments-UI
       DEVICE: "iPhone 17 Pro"
-      SCAN_DESTINATIONS: "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest"
+      SCAN_DESTINATION: "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest"
 
     steps:
       - name: Checkout
