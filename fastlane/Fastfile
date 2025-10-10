@@ -27,12 +27,12 @@ platform :ios do
 
   desc "Run unit tests"
   lane :test_unit do
-  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16,OS=18.6\" -only-testing:LittleMomentsTests"
+  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 17,OS=26.0\" -only-testing:LittleMomentsTests"
   end
 
   desc "Run UI tests"
   lane :test_ui do
-  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 16,OS=18.6\""
+  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 17,OS=26.0\""
   end
 
   desc "Run all tests"
@@ -64,21 +64,32 @@ platform :ios do
   lane :ci do
     scheme = ENV["SCHEME"] || "LittleMoments"
     ui_scheme = ENV["UI_SCHEME"] || "LittleMoments-UI"
-    device = ENV["DEVICE"] || "iPhone 16 Pro"
+    device = ENV["DEVICE"] || "iPhone 17 Pro"
+    destination = (ENV["SCAN_DESTINATION"] || "").strip
+    destination = nil if destination.empty?
 
-    scan(
+    unit_scan_options = {
       scheme: scheme,
       clean: true,
-      device: device,
       result_bundle_path: "build/UnitTests.xcresult"
-    )
+    }
 
-    scan(
+    ui_scan_options = {
       scheme: ui_scheme,
       clean: false,
-      device: device,
       result_bundle_path: "build/UITests.xcresult"
-    )
+    }
+
+    if destination
+      unit_scan_options[:destination] = destination
+      ui_scan_options[:destination] = destination
+    else
+      unit_scan_options[:device] = device
+      ui_scan_options[:device] = device
+    end
+
+    scan(unit_scan_options)
+    scan(ui_scan_options)
   end
 
   desc "Generate repository overview with Repomix"

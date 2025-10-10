@@ -79,6 +79,14 @@ Build app with Tuist
 
 Format, lint, test, and build
 
+### ios ci
+
+```sh
+[bundle exec] fastlane ios ci
+```
+
+CI: build + test on Simulator
+
 ### ios repomix
 
 ```sh

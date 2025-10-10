@@ -10,13 +10,13 @@ import LittleMoments
 import SwiftUI
 
 struct SettingsView: View {
-  @Environment(\.presentationMode)
-  var presentationMode
+  @Environment(\.dismiss) private var dismiss
+  @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
 
   @ObservedObject var settings: JustNowSettings = JustNowSettings.shared
 
   var body: some View {
-    NavigationView {
+    NavigationStack {
       Form {
         Section(header: Text("Health")) {
           Toggle(isOn: $settings.writeToHealth, label: { Text("Write sessions to Health") })
@@ -44,7 +44,6 @@ struct SettingsView: View {
           ) {
             Text(attributedString)
           }
-
         }
 
         Section(header: Text("Credits")) {
@@ -60,14 +59,53 @@ struct SettingsView: View {
           )
         }
       }
-      .navigationBarTitle("Settings")
-      .navigationBarItems(
-        trailing: Button(
-          "Dismiss",
-          action: {
-            self.presentationMode.wrappedValue.dismiss()
-          }))
+      .formStyle(.grouped)
+      .scrollContentBackground(.hidden)
+      .background(formBackground)
+      .tint(LiquidGlassTokens.primaryTint)
+      .toolbar {
+        ToolbarItem(placement: .topBarTrailing) {
+          Button(action: { dismiss() }) {
+            Image(systemName: "xmark")
+              .font(.system(size: 18, weight: .semibold))
+          }
+          .accessibilityLabel(Text("Dismiss"))
+          .liquidGlassIconButtonStyle(variant: .subtle, role: .neutral, diameter: 44)
+        }
+      }
+      .navigationTitle("Settings")
+      .navigationBarTitleDisplayMode(.large)
+      .background(backgroundSurface)
     }
+    .background(backgroundSurface)
+  }
+
+  private var formBackground: some View {
+    Group {
+      if reducesTransparency {
+        Color(UIColor.secondarySystemBackground)
+      } else {
+        Color.white.opacity(0.05)
+      }
+    }
+  }
+
+  private var backgroundSurface: some View {
+    Group {
+      if reducesTransparency {
+        Color(UIColor.systemGroupedBackground)
+      } else {
+        LinearGradient(
+          colors: [
+            LiquidGlassTokens.primaryTint.opacity(0.12),
+            Color(UIColor.systemGroupedBackground),
+          ],
+          startPoint: .topLeading,
+          endPoint: .bottomTrailing
+        )
+      }
+    }
+    .ignoresSafeArea()
   }
 }
 
