@@ -1,23 +1,49 @@
 default_platform(:ios)
 
-# Use `fastlane ...` directly rather than `bundle exec fastlane ...`
-# and instead of calling `tuist generate` directly, call `fastlane generate`
-# so that the agent can run fastlane commands without having to approve every command.
+require "shellwords"
+
+# Use the project wrapper `bin/fastlane ...` rather than `bundle exec fastlane ...`
+# and instead of calling `tuist generate` directly, call `bin/fastlane generate`
+# so agents can stay on a consistent, approved command surface.
 
 platform :ios do
-  desc "Run SwiftLint"
-  lane :lint do
-    swiftlint(
+  DEFAULT_SIM_DESTINATION = 'platform=iOS Simulator,name=iPhone 17 Pro'.freeze
+
+  desc "Run SwiftLint (optionally scoped via path:)"
+  lane :lint do |options|
+    path = options[:path]
+    swiftlint_options = {
       config_file: ".swiftlint.yml",
       quiet: true,
-      strict: true,
-      ignore_exit_status: true
-    )
+      strict: true
+    }
+
+    # When provided, this can significantly speed up lint loops.
+    swiftlint_options[:path] = path if path && !path.to_s.strip.empty?
+
+    swiftlint(swiftlint_options)
   end
 
-  desc "Format Swift code"
-  lane :format_code do
-    sh "cd .. && swift-format -i -r . --configuration .swift-format.json"
+  desc "Format Swift code (optionally scoped via path:)"
+  lane :format_code do |options|
+    path = (options[:path] || ".").to_s
+    repo_root = File.expand_path("..", __dir__)
+
+    if path.match?(/[\*\?\[]/)
+      matches = Dir.glob(File.join(repo_root, path))
+      UI.user_error!("No files matched path: #{path}") if matches.empty?
+
+      rel_paths = matches.map { |p| p.sub("#{repo_root}/", "") }
+      escaped_paths = rel_paths.map { |p| Shellwords.shellescape(p) }.join(" ")
+      sh "cd .. && swift-format -i #{escaped_paths} --configuration .swift-format.json"
+    else
+      sh "cd .. && swift-format -i -r #{Shellwords.shellescape(path)} --configuration .swift-format.json"
+    end
+  end
+
+  desc "Format Swift code (alias)"
+  lane :format do |options|
+    format_code(options)
   end
 
   desc "Generate Xcode project with Tuist"
@@ -27,18 +53,48 @@ platform :ios do
 
   desc "Run unit tests"
   lane :test_unit do
-  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 17,OS=26.0\" -only-testing:LittleMomentsTests"
+    destination = (ENV["SIM_DESTINATION"] || DEFAULT_SIM_DESTINATION).to_s
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"#{destination}\" -only-testing:LittleMomentsTests"
   end
 
   desc "Run UI tests"
   lane :test_ui do
-  sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,name=iPhone 17,OS=26.0\""
+    destination = (ENV["SIM_DESTINATION"] || DEFAULT_SIM_DESTINATION).to_s
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments-UI\" -configuration Debug -sdk iphonesimulator -destination \"#{destination}\""
   end
 
   desc "Run all tests"
   lane :test do
     test_unit
     test_ui
+  end
+
+  desc "Run a subset of tests via targets: (comma-separated)"
+  lane :test_targets do |options|
+    targets = (options[:targets] || "").to_s.split(",").map(&:strip).reject(&:empty?)
+    if targets.empty?
+      UI.user_error!("Provide targets:, e.g. targets:'LittleMomentsTests,LittleMomentsUITests'")
+    end
+
+    run_unit = targets.include?("LittleMomentsTests")
+    run_ui = targets.include?("LittleMomentsUITests")
+
+    unknown = targets - ["LittleMomentsTests", "LittleMomentsUITests"]
+    UI.user_error!("Unknown targets: #{unknown.join(", ")}") unless unknown.empty?
+
+    test_unit if run_unit
+    test_ui if run_ui
+  end
+
+  desc "Run tests using an Xcode test plan"
+  lane :test_plan do |options|
+    plan = (options[:plan] || "").to_s.strip
+    UI.user_error!("Provide plan:, e.g. plan:'Default'") if plan.empty?
+
+    scheme = (options[:scheme] || "LittleMoments").to_s
+    destination = (options[:destination] || ENV["SIM_DESTINATION"] || DEFAULT_SIM_DESTINATION).to_s
+
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme #{Shellwords.shellescape(scheme)} -configuration Debug -sdk iphonesimulator -destination #{Shellwords.shellescape(destination)} -testPlan #{Shellwords.shellescape(plan)}"
   end
 
   desc "Build app with Tuist"

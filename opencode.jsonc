@@ -1,0 +1,59 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Project-scoped OpenCode configuration.
+  // This repo is intentionally CLI-first: prefer Fastlane lanes over calling Tuist directly.
+
+  "instructions": [
+    "AGENTS.md",
+    "backlog/AGENTS.md"
+  ],
+
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      "**/DerivedData/**",
+      "**/.build/**",
+      "Tuist/.build/**",
+      "build/**"
+    ]
+  },
+
+  "mcp": {
+    "apple_docs_sosumi": {
+      "type": "remote",
+      "url": "https://sosumi.ai/mcp",
+      "enabled": true,
+      "timeout": 10000
+    },
+    "XcodeBuildMCP": {
+      "type": "local",
+      "command": ["npx", "-y", "xcodebuildmcp@latest", "mcp"],
+      "enabled": false,
+      "timeout": 10000
+    }
+  },
+
+  "command": {
+    "ios_generate": {
+      "description": "Generate Xcode project",
+      "template": "Run `bin/fastlane generate` (required first step) and report any errors with the minimal fix."
+    },
+    "ios_format": {
+      "description": "Format Swift code",
+      "template": "Run `bin/fastlane format_code` and summarize what changed."
+    },
+    "ios_lint": {
+      "description": "Run SwiftLint",
+      "template": "Run `bin/fastlane lint` and fix any violations introduced by the current changes."
+    },
+    "ios_test": {
+      "description": "Run all tests",
+      "template": "Run `bin/fastlane test` and focus on the first failing test if any."
+    },
+    "ios_quality": {
+      "description": "Format, lint, test, build",
+      "template": "Run `bin/fastlane quality_check` and provide a short, actionable failure report if anything breaks."
+    }
+  }
+}

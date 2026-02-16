@@ -3,6 +3,11 @@
 		"sosumi.ai": {
 			"url": "https://sosumi.ai/mcp",
 			"type": "http"
+		},
+		"XcodeBuildMCP": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "xcodebuildmcp@latest", "mcp"]
 		}
 	},
 	"inputs": []

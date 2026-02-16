@@ -2,32 +2,36 @@
 
 ## Build & Test — Quickstart
 
-> Always use Fastlane lanes (never call `tuist`/`bundle exec` directly).
+> Always use Fastlane lanes (never call `tuist` directly).
+
+This repo uses a project-local Fastlane wrapper: `bin/fastlane`.
 
 ```sh
 # Generate project (required first step)
-fastlane generate
+bin/fastlane generate
 # Format + lint (all files)
-fastlane format_code && fastlane lint
+bin/fastlane format_code && bin/fastlane lint
 # Run tests (all)
-fastlane test
+bin/fastlane test
 # Full quality gate (format → lint → tests → build)
-fastlane quality_check
+bin/fastlane quality_check
 ````
 
 ### Fast, file-scoped loops (use for small diffs)
 
 ```sh
 # Format only changed paths (glob or file path)
-fastlane format path:"LittleMoments/Features/Timer/*.swift"
+bin/fastlane format_code path:"LittleMoments/Features/Timer/Views/*.swift"
+# (alias)
+bin/fastlane format path:"LittleMoments/Features/Timer/Views/*.swift"
 
 # Lint only changed paths
-fastlane lint path:"LittleMoments/Features/Timer/*.swift"
+bin/fastlane lint path:"LittleMoments/Features/Timer/Views/*.swift"
 
 # Run a subset of tests (preferred)
-fastlane test_targets targets:"LittleMomentsTests,LittleMomentsUITests"
+bin/fastlane test_targets targets:"LittleMomentsTests,LittleMomentsUITests"
 # or, if using test plans:
-fastlane test_plan plan:"Default"
+bin/fastlane test_plan plan:"Default"
 ```
 
 > If a lane doesn’t exist yet, prefer adding it rather than calling tools directly.
@@ -57,7 +61,7 @@ fastlane test_plan plan:"Default"
 
 ## Testing
 
-* Default simulator: **iPhone 17 Pro (iOS 26)** (set in lanes).
+* Default simulator: **iPhone 17 Pro** (set in lanes; OS resolved from installed runtimes).
 * Targets: `LittleMomentsTests` (unit), `LittleMomentsUITests` (UI).
 * Coverage: enabled for app target.
 * **Add/update tests for any behavior change in the same PR** (enforced by checklist).
@@ -106,6 +110,13 @@ fastlane test_plan plan:"Default"
 
 * Use `apple_docs_sosumi` for Apple docs (Markdown mirror of developer.apple.com).
 * Agents should prefer the lanes above to external commands.
+
+## OpenCode (MCP)
+
+Project config lives in `opencode.jsonc`.
+
+* `apple_docs_sosumi` is enabled by default.
+* `XcodeBuildMCP` is configured but disabled by default (enable it in `opencode.jsonc` when you want agentic `xcodebuild`/simulator tooling).
 
 ## Backlog.md
 

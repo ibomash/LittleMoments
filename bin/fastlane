@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Project-local Fastlane wrapper.
+# We use Bundler so contributors (and agents) don't need a global fastlane install.
+
+# Ensure we respect the repo's `.ruby-version` when rbenv is available.
+if command -v rbenv >/dev/null 2>&1; then
+  export RBENV_ROOT="${RBENV_ROOT:-$HOME/.rbenv}"
+  export PATH="$RBENV_ROOT/bin:$PATH"
+  # shellcheck disable=SC1090
+  eval "$(rbenv init - bash)"
+fi
+
+# Fastlane expects UTF-8 locale.
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+
+if ! command -v bundle >/dev/null 2>&1; then
+  echo "Error: bundler (bundle) is not installed or not on PATH." >&2
+  echo "Install Ruby/Bundler, then run: bundle install" >&2
+  exit 1
+fi
+
+exec bundle exec fastlane "$@"

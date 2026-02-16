@@ -21,7 +21,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios lint
 ```
 
-Run SwiftLint
+Run SwiftLint (optionally scoped via path:)
 
 ### ios format_code
 
@@ -29,7 +29,15 @@ Run SwiftLint
 [bundle exec] fastlane ios format_code
 ```
 
-Format Swift code
+Format Swift code (optionally scoped via path:)
+
+### ios format
+
+```sh
+[bundle exec] fastlane ios format
+```
+
+Format Swift code (alias)
 
 ### ios generate
 
@@ -62,6 +70,22 @@ Run UI tests
 ```
 
 Run all tests
+
+### ios test_targets
+
+```sh
+[bundle exec] fastlane ios test_targets
+```
+
+Run a subset of tests via targets: (comma-separated)
+
+### ios test_plan
+
+```sh
+[bundle exec] fastlane ios test_plan
+```
+
+Run tests using an Xcode test plan
 
 ### ios build
 
