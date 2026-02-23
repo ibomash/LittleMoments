@@ -22,12 +22,14 @@ final class TimerTests: XCTestCase {
   @MainActor override func setUp() async throws {
     try await super.setUp()
     UserDefaultsReset.resetDefaults()
+    try? SessionHistoryStore.shared.purgeAllEntries()
     timerViewModel = TimerViewModel()
   }
 
   /// Tear down method runs after each test
   /// Ensures proper cleanup of timer and resources
   @MainActor override func tearDown() async throws {
+    try? SessionHistoryStore.shared.purgeAllEntries()
     timerViewModel?.reset()
     timerViewModel = nil
     try await super.tearDown()
@@ -181,5 +183,27 @@ final class TimerTests: XCTestCase {
     }
 
     wait(for: [expectation], timeout: 1)
+  }
+
+  func testRecordCompletedSessionAddsHistoryEntry() throws {
+    guard let timerViewModel else {
+      XCTFail("TimerViewModel should be initialized")
+      return
+    }
+
+    let initialCount = try SessionHistoryStore.shared.fetchAllEntriesNewestFirst().count
+
+    timerViewModel.start()
+    timerViewModel.prepareSessionForFinish()
+    timerViewModel.recordCompletedSession()
+
+    let entries = try SessionHistoryStore.shared.fetchAllEntriesNewestFirst()
+    XCTAssertEqual(entries.count, initialCount + 1)
+
+    let latestEntry = try XCTUnwrap(entries.first)
+    XCTAssertTrue(
+      latestEntry.healthWriteStatus == .pendingHealthWrite
+        || latestEntry.healthWriteStatus == .writtenToHealth
+    )
   }
 }

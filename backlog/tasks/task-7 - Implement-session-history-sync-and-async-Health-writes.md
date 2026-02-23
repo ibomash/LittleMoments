@@ -1,9 +1,10 @@
 ---
 id: TASK-7
 title: Implement session history sync and async Health writes
-status: Later
+status: Now
 assignee: []
 created_date: '2026-02-23 19:39'
+updated_date: '2026-02-23 19:46'
 labels: []
 dependencies: []
 priority: high

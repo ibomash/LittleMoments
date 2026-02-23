@@ -77,11 +77,12 @@ struct TimerStartView: View {
         .font(.system(size: 24, weight: .semibold))
     }
     .accessibilityLabel(Text("Settings"))
+    .accessibilityIdentifier("settings_button")
     .liquidGlassIconButtonStyle(variant: .subtle, diameter: 64)
   }
 
   private func startSession() {
-    var intent = MeditationSessionIntent()
+    let intent = MeditationSessionIntent()
     intent.durationMinutes = appState.pendingStartDurationSeconds.map { $0 / 60 }
     let donationManager = IntentDonationManager.shared
     let donationID = donationManager.donate(intent: intent)

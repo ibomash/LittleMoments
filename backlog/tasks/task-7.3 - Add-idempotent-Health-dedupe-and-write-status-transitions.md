@@ -1,9 +1,10 @@
 ---
 id: TASK-7.3
 title: Add idempotent Health dedupe and write status transitions
-status: Later
+status: Done
 assignee: []
 created_date: '2026-02-23 19:40'
+updated_date: '2026-02-23 20:10'
 labels: []
 dependencies:
   - TASK-7.2

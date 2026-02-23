@@ -1,9 +1,10 @@
 ---
 id: TASK-7.1
 title: Add SessionHistoryEntry model and SessionHistoryStore
-status: Later
+status: Done
 assignee: []
 created_date: '2026-02-23 19:39'
+updated_date: '2026-02-23 20:10'
 labels: []
 dependencies: []
 documentation:

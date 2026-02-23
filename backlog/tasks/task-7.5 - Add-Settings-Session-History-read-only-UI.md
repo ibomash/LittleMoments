@@ -1,9 +1,10 @@
 ---
 id: TASK-7.5
 title: Add Settings -> Session History read-only UI
-status: Later
+status: Done
 assignee: []
 created_date: '2026-02-23 19:40'
+updated_date: '2026-02-23 20:10'
 labels:
   - ui
 dependencies:

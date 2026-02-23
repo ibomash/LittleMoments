@@ -1,9 +1,10 @@
 ---
 id: TASK-7.4
 title: Integrate timer completion with history-first async pipeline
-status: Later
+status: Done
 assignee: []
 created_date: '2026-02-23 19:40'
+updated_date: '2026-02-23 20:10'
 labels: []
 dependencies:
   - TASK-7.1

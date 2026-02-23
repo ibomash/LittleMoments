@@ -160,65 +160,48 @@ class TimerViewModel: ObservableObject {
   // Add this property to store the startDate when a session is finishing
   private var sessionStartDateForFinish: Date?
 
-  func writeToHealthStore() {
-    if !JustNowSettings.shared.writeToHealth {
-      print("Health integration disabled - skipping health store write")
-      return
-    }
-
-    // Check if session was cancelled
+  func recordCompletedSession() {
     if wasCancelled {
-      print("❌❌❌ BLOCKED HEALTH WRITE - Session was cancelled")
+      print("❌❌❌ BLOCKED SESSION RECORD - Session was cancelled")
       if let lastCancelTime = lastCancelTime {
         print("❌❌❌ Last cancellation was at \(lastCancelTime)")
       }
       return
     }
 
-    // First try using the stored session start date (used when finishing from Live Activity)
     let sessionStartDate = sessionStartDateForFinish ?? startDate
-
     guard let sessionStartDate else {
-      print("Error: Cannot write to health store - startDate is nil")
+      print("Error: Cannot record session history - startDate is nil")
       return
     }
+
     let endDate = Date()
-
-    print(
-      "Writing to HealthKit - session from \(sessionStartDate) to \(endDate) (duration: \(endDate.timeIntervalSince(sessionStartDate)) seconds)"
-    )
-
-    // Create a new mindful session
-    guard
-      let mindfulSession = HealthKitManager.shared.createMindfulSession(
-        startDate: sessionStartDate, endDate: endDate)
-    else {
-      print("Error: Failed to create mindful session")
+    guard endDate >= sessionStartDate else {
+      print("Error: Cannot record session history - endDate precedes startDate")
+      sessionStartDateForFinish = nil
       return
     }
 
-    // Save the session to HealthKit
-    HealthKitManager.shared.saveMindfulSession(
-      mindfulSession: mindfulSession
-    ) { [weak self] success, error in
-      Task { @MainActor in
-        guard let self = self else { return }
-
-        if success {
-          let sessionDuration = endDate.timeIntervalSince(sessionStartDate)
-          print(
-            "✅ Health integration - Mindful session of \(Int(sessionDuration)) seconds saved successfully"
-          )
-        } else {
-          print(
-            "❌ Health integration - Failed to save mindful session: \(error?.localizedDescription ?? "Unknown error")"
-          )
-        }
-
-        // Clear the stored session start date after saving
-        self.sessionStartDateForFinish = nil
+    do {
+      let entry = try SessionHistoryStore.shared.recordCompletedSession(
+        startDate: sessionStartDate,
+        endDate: endDate
+      )
+      print(
+        "Queued session history entry \(entry.id) from \(sessionStartDate) to \(endDate) for async Health processing"
+      )
+      Task {
+        await HealthWriteCoordinator.shared.triggerProcessing(.sessionCompleted)
       }
+    } catch {
+      print("❌ Failed to persist session history entry: \(error.localizedDescription)")
     }
+
+    sessionStartDateForFinish = nil
+  }
+
+  func writeToHealthStore() {
+    recordCompletedSession()
   }
 
   // Add a function to safely store the start date before finishing
@@ -349,9 +332,8 @@ class TimerViewModel: ObservableObject {
         // Store the start date for later use
         self.prepareSessionForFinish()
 
-        // Write to HealthKit directly
-        print("📱 Writing to HealthKit from finishSession notification")
-        self.writeToHealthStore()
+        print("📱 Recording completed session from finishSession notification")
+        self.recordCompletedSession()
 
         // Provide haptic feedback for successful session completion
         print("📱 Providing haptic feedback for session completion")

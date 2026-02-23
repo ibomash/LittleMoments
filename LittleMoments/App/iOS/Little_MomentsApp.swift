@@ -7,6 +7,7 @@
 
 import ActivityKit
 import OSLog
+import SwiftData
 import SwiftUI
 import UIKit
 
@@ -30,6 +31,13 @@ struct LittleMomentsApp: App {
   var body: some Scene {
     WindowGroup {
       TimerStartView()
+        .task {
+          if ProcessInfo.processInfo.arguments.contains("-RESET_SESSION_HISTORY_FOR_TESTS") {
+            try? SessionHistoryStore.shared.purgeAllEntries()
+          }
+
+          await HealthWriteCoordinator.shared.triggerProcessing(.appLaunch)
+        }
         .onOpenURL { url in
           controlsLogger.notice("onOpenURL fired with: \(url.absoluteString, privacy: .public)")
           handleDeepLink(url: url)
@@ -38,6 +46,9 @@ struct LittleMomentsApp: App {
           switch newPhase {
           case .active:
             controlsLogger.notice("App became active (possible Control tap -> OpenAppIntent)")
+            Task {
+              await HealthWriteCoordinator.shared.triggerProcessing(.appBecameActive)
+            }
           case .background:
             controlsLogger.debug("App moved to background")
           case .inactive:
@@ -46,6 +57,7 @@ struct LittleMomentsApp: App {
             controlsLogger.debug("App scenePhase unknown state")
           }
         }
+        .modelContainer(SessionHistoryStore.shared.modelContainer)
     }
   }
 
@@ -97,9 +109,8 @@ struct LittleMomentsApp: App {
           // Access the timer view model directly
           timerRunningView.timerViewModel.prepareSessionForFinish()
 
-          // Write to HealthKit directly
-          print("📲 Writing to HealthKit from deep link")
-          timerRunningView.timerViewModel.writeToHealthStore()
+          print("📲 Recording completed session from deep link")
+          timerRunningView.timerViewModel.recordCompletedSession()
 
           // Provide haptic feedback for successful session completion
           print("📲 Providing haptic feedback for session completion")

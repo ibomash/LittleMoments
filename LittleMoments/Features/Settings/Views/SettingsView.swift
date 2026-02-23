@@ -5,8 +5,6 @@
 //  Created by Illya Bomash on 5/29/23.
 //
 
-// Import JustNowSettings from Models folder
-import LittleMoments
 import SwiftUI
 
 struct SettingsView: View {
@@ -20,6 +18,13 @@ struct SettingsView: View {
       Form {
         Section(header: Text("Health")) {
           Toggle(isOn: $settings.writeToHealth, label: { Text("Write sessions to Health") })
+
+          NavigationLink {
+            SessionHistoryView()
+          } label: {
+            Text("Session History")
+          }
+          .accessibilityIdentifier("session_history_link")
         }
 
         Section(header: Text("Sounds")) {

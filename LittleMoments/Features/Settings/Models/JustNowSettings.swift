@@ -26,14 +26,19 @@ final class JustNowSettings: ObservableObject {
             print("HealthKit permission denied: ", error?.localizedDescription ?? "Unknown error")
             return
           }
-          // If we need to update UI state based on the result, use MainActor:
-          // Task { @MainActor in
-          //   // Update UI state here
-          // }
+
+          Task {
+            await HealthWriteCoordinator.shared.triggerProcessing(.settingsChanged)
+          }
         }
       }
+
       userDefaults.set(newValue, forKey: "writeToHealth")
       userDefaults.synchronize()
+
+      Task {
+        await HealthWriteCoordinator.shared.triggerProcessing(.settingsChanged)
+      }
     }
   }
 
