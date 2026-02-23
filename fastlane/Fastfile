@@ -11,17 +11,37 @@ platform :ios do
 
   desc "Run SwiftLint (optionally scoped via path:)"
   lane :lint do |options|
-    path = options[:path]
-    swiftlint_options = {
-      config_file: ".swiftlint.yml",
-      quiet: true,
-      strict: true
-    }
+    raw_path = options[:path].to_s.strip
+    repo_root = File.expand_path("..", __dir__)
 
-    # When provided, this can significantly speed up lint loops.
-    swiftlint_options[:path] = path if path && !path.to_s.strip.empty?
+    lint_paths = if raw_path.empty?
+                   []
+                 else
+                   raw_path.split(",").map(&:strip).reject(&:empty?).flat_map do |candidate|
+                     if candidate.match?(/[\*\?\[\{]/)
+                       Dir.glob(File.join(repo_root, candidate)).map { |p| p.sub("#{repo_root}/", "") }
+                     else
+                       expanded_path = File.expand_path(candidate, repo_root)
+                       if File.exist?(expanded_path)
+                         [expanded_path.sub("#{repo_root}/", "")]
+                       else
+                         UI.user_error!("Path not found for lint: #{candidate}")
+                       end
+                     end
+                   end.uniq
+                 end
 
-    swiftlint(swiftlint_options)
+    if !raw_path.empty? && lint_paths.empty?
+      UI.user_error!("No files matched path: #{raw_path}")
+    end
+
+    lint_command = "cd .. && swiftlint lint --strict --config .swiftlint.yml --quiet"
+    unless lint_paths.empty?
+      escaped_paths = lint_paths.map { |lint_path| Shellwords.shellescape(lint_path) }.join(" ")
+      lint_command = "#{lint_command} #{escaped_paths}"
+    end
+
+    sh lint_command
   end
 
   desc "Format Swift code (optionally scoped via path:)"

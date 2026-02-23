@@ -25,7 +25,9 @@ bin/fastlane format_code path:"LittleMoments/Features/Timer/Views/*.swift"
 # (alias)
 bin/fastlane format path:"LittleMoments/Features/Timer/Views/*.swift"
 
-# Lint only changed paths
+# Lint only changed paths (single file, directory, or glob)
+bin/fastlane lint path:"LittleMoments/App/iOS/Little_MomentsApp.swift"
+# Example glob:
 bin/fastlane lint path:"LittleMoments/Features/Timer/Views/*.swift"
 
 # Run a subset of tests (preferred)
