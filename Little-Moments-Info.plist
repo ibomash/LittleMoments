@@ -31,6 +31,24 @@
             </array>
         </dict>
     </array>
+    <key>UIApplicationShortcutItems</key>
+    <array>
+        <dict>
+            <key>UIApplicationShortcutItemType</key>
+            <string>net.bomash.illya.LittleMoments.startQuickSession</string>
+            <key>UIApplicationShortcutItemTitle</key>
+            <string>Quick Session</string>
+            <key>UIApplicationShortcutItemSubtitle</key>
+            <string>Start 5-minute timer</string>
+            <key>UIApplicationShortcutItemIconType</key>
+            <string>UIApplicationShortcutIconTypePlay</string>
+            <key>UIApplicationShortcutItemUserInfo</key>
+            <dict>
+                <key>duration</key>
+                <string>300</string>
+            </dict>
+        </dict>
+    </array>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>UIApplicationSceneManifest</key>

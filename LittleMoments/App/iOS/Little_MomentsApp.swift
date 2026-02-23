@@ -20,8 +20,13 @@ import UIKit
 struct LittleMomentsApp: App {
   @StateObject private var appState = AppState.shared
   @Environment(\.scenePhase) private var scenePhase
+  @UIApplicationDelegateAdaptor(LittleMomentsAppDelegate.self) private var appDelegate
   private let controlsLogger = Logger(
     subsystem: "net.bomash.illya.LittleMoments", category: "Controls")
+
+  static let quickSessionShortcutType = "net.bomash.illya.LittleMoments.startQuickSession"
+  static let quickSessionDurationUserInfoKey = "duration"
+  static let quickSessionDefaultDurationSeconds = 300
 
   init() {
     SoundManager.initialize()
@@ -153,6 +158,12 @@ struct LittleMomentsApp: App {
       }
     } else if url.host == "startSession" || url.host == "start" || url.path == "/start" {
       print("📲 Processing startSession deep link")
+
+      if appState.showTimerRunningView {
+        print("⚠️ Start request ignored - session already running")
+        return
+      }
+
       // Parse optional duration query item (seconds). Accept forms like "60", "60s", "1m".
       if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false),
         let items = comps.queryItems
@@ -174,6 +185,45 @@ struct LittleMomentsApp: App {
   // swiftlint:enable function_body_length
 
   // MARK: - Helpers
+  @MainActor
+  static func handleHomeScreenQuickAction(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+    guard shortcutItem.type == quickSessionShortcutType else {
+      print("❌ Quick action ignored - unknown type: \(shortcutItem.type)")
+      return false
+    }
+
+    if AppState.shared.showTimerRunningView {
+      print("⚠️ Quick action ignored - session already running")
+      return true
+    }
+
+    let durationSeconds = quickActionDurationSeconds(from: shortcutItem)
+    AppState.shared.pendingStartDurationSeconds = durationSeconds
+    AppState.shared.showTimerRunningView = true
+
+    print("📲 Quick action started session with preset duration: \(durationSeconds) sec")
+    return true
+  }
+
+  static func quickActionDurationSeconds(from shortcutItem: UIApplicationShortcutItem) -> Int {
+    guard let rawValue = shortcutItem.userInfo?[quickSessionDurationUserInfoKey] else {
+      return quickSessionDefaultDurationSeconds
+    }
+
+    if let number = rawValue as? NSNumber, number.intValue > 0 {
+      return number.intValue
+    }
+
+    if let stringValue = rawValue as? NSString,
+      let seconds = parseDurationToSeconds(String(stringValue)),
+      seconds > 0
+    {
+      return seconds
+    }
+
+    return quickSessionDefaultDurationSeconds
+  }
+
   static func parseDurationToSeconds(_ raw: String) -> Int? {
     let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     if trimmed.hasSuffix("m"), let minutes = Int(trimmed.dropLast()) {
