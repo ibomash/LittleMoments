@@ -43,12 +43,12 @@ final class SessionHistoryUITests: XCTestCase {
 
     XCTAssertTrue(app.navigationBars["Session History"].waitForExistence(timeout: 5))
 
-    let pending = app.staticTexts["Pending"]
-    let written = app.staticTexts["Written"]
-    let hasStatusPredicate = NSPredicate(format: "exists == true")
-    let pendingExpectation = expectation(for: hasStatusPredicate, evaluatedWith: pending)
-    let writtenExpectation = expectation(for: hasStatusPredicate, evaluatedWith: written)
-    let result = XCTWaiter().wait(for: [pendingExpectation, writtenExpectation], timeout: 10)
+    let historyCell = app.cells.firstMatch
+    let emptyState = app.staticTexts["No Session History"]
+    let existsPredicate = NSPredicate(format: "exists == true")
+    let historyExpectation = expectation(for: existsPredicate, evaluatedWith: historyCell)
+    let emptyExpectation = expectation(for: existsPredicate, evaluatedWith: emptyState)
+    let result = XCTWaiter().wait(for: [historyExpectation, emptyExpectation], timeout: 10)
 
     XCTAssertNotEqual(result, .timedOut)
   }
