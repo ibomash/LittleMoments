@@ -11,7 +11,7 @@ struct PendingSessionHistorySnapshot: Sendable {
 final class SessionHistoryStore {
   static let shared = SessionHistoryStore()
 
-  static let cloudKitContainerIdentifier = "iCloud.net.bomash.illya.LittleMoments"
+  static let cloudKitContainerIdentifier = "iCloud.net.bomash.illya.LittleMoments.v202602"
   private static let deviceIdentifierDefaultsKey = "sessionHistoryDeviceIdentifier"
 
   let modelContainer: ModelContainer
@@ -135,22 +135,12 @@ final class SessionHistoryStore {
 
   static func makeDefaultModelContainer() -> ModelContainer {
     do {
-      let cloudKitDatabase: ModelConfiguration.CloudKitDatabase =
-        cloudKitSyncEnabled() ? .private(cloudKitContainerIdentifier) : .none
-      let configuration = ModelConfiguration(
-        "SessionHistory",
-        groupContainer: .none,
-        cloudKitDatabase: cloudKitDatabase
-      )
+      let configuration = try makeCloudKitConfiguration()
       return try ModelContainer(for: SessionHistoryEntry.self, configurations: configuration)
     } catch {
       print("SessionHistoryStore: falling back to local-only SwiftData store: \(error)")
       do {
-        let fallbackConfiguration = ModelConfiguration(
-          "SessionHistoryLocal",
-          groupContainer: .none,
-          cloudKitDatabase: .none
-        )
+        let fallbackConfiguration = try makeLocalConfiguration()
         return try ModelContainer(
           for: SessionHistoryEntry.self,
           configurations: fallbackConfiguration
@@ -161,14 +151,31 @@ final class SessionHistoryStore {
     }
   }
 
-  private static func cloudKitSyncEnabled() -> Bool {
-    guard
-      FileManager.default.url(forUbiquityContainerIdentifier: cloudKitContainerIdentifier) != nil
-    else {
-      print("SessionHistoryStore: iCloud container unavailable; using local SwiftData store")
-      return false
-    }
+  private static func makeCloudKitConfiguration() throws -> ModelConfiguration {
+    let storeURL = try makeStoreURL(fileName: "SessionHistory.store")
+    return ModelConfiguration(
+      "SessionHistory",
+      url: storeURL,
+      cloudKitDatabase: .private(cloudKitContainerIdentifier)
+    )
+  }
 
-    return true
+  private static func makeLocalConfiguration() throws -> ModelConfiguration {
+    let storeURL = try makeStoreURL(fileName: "SessionHistoryLocal.store")
+    return ModelConfiguration(
+      "SessionHistoryLocal",
+      url: storeURL,
+      cloudKitDatabase: .none
+    )
+  }
+
+  private static func makeStoreURL(fileName: String) throws -> URL {
+    let appSupport = try FileManager.default.url(
+      for: .applicationSupportDirectory,
+      in: .userDomainMask,
+      appropriateFor: nil,
+      create: true
+    )
+    return appSupport.appendingPathComponent(fileName)
   }
 }
