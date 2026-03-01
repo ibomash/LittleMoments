@@ -11,8 +11,8 @@ final class SessionHistoryStoreTests: XCTestCase {
   private var store: SessionHistoryStore!
   private var userDefaultsSuiteName: String!
 
-  override func setUpWithError() throws {
-    try super.setUpWithError()
+  @MainActor override func setUp() async throws {
+    try await super.setUp()
     modelContainer = try SessionHistoryStore.makeInMemoryModelContainer()
 
     userDefaultsSuiteName = "SessionHistoryStoreTests-\(UUID().uuidString)"
@@ -25,7 +25,7 @@ final class SessionHistoryStoreTests: XCTestCase {
     )
   }
 
-  override func tearDownWithError() throws {
+  @MainActor override func tearDown() async throws {
     if let userDefaults, let userDefaultsSuiteName {
       userDefaults.removePersistentDomain(forName: userDefaultsSuiteName)
     }
@@ -34,7 +34,7 @@ final class SessionHistoryStoreTests: XCTestCase {
     userDefaults = nil
     modelContainer = nil
     userDefaultsSuiteName = nil
-    try super.tearDownWithError()
+    try await super.tearDown()
   }
 
   func testRecordCompletedSessionPersistsPendingEntry() throws {
