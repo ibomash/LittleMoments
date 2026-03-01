@@ -308,10 +308,10 @@ struct TimerControlButtons: View {
       .liquidGlassButtonStyle(.prominent, role: .destructive)
 
       Button {
-        print("🔘 Complete button tapped - storing startDate for health integration")
+        print("🔘 Complete button tapped - storing startDate for async health pipeline")
         timerViewModel.prepareSessionForFinish()
-        print("🔘 Writing to HealthKit directly")
-        timerViewModel.writeToHealthStore()
+        print("🔘 Recording session history entry")
+        timerViewModel.recordCompletedSession()
         print("🔘 Providing haptic feedback for session completion")
         LiveActivityManager.shared.provideSessionCompletionFeedback()
         print("🔘 Ending Live Activity with completed status")
