@@ -26,16 +26,26 @@ struct LittleMomentsApp: App {
 
   init() {
     SoundManager.initialize()
+
+    let arguments = ProcessInfo.processInfo.arguments
+    if arguments.contains("-RESET_SESSION_HISTORY_FOR_TESTS") {
+      try? SessionHistoryStore.shared.purgeAllEntries()
+    }
+
+    if arguments.contains("-SEED_SESSION_HISTORY_FOR_TESTS") {
+      let endDate = Date()
+      let startDate = endDate.addingTimeInterval(-60)
+      _ = try? SessionHistoryStore.shared.recordCompletedSession(
+        startDate: startDate,
+        endDate: endDate
+      )
+    }
   }
 
   var body: some Scene {
     WindowGroup {
       TimerStartView()
         .task {
-          if ProcessInfo.processInfo.arguments.contains("-RESET_SESSION_HISTORY_FOR_TESTS") {
-            try? SessionHistoryStore.shared.purgeAllEntries()
-          }
-
           await HealthWriteCoordinator.shared.triggerProcessing(.appLaunch)
         }
         .onOpenURL { url in

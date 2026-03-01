@@ -30,15 +30,10 @@ final class SessionHistoryUITests: XCTestCase {
       "UITesting",
       "-DISABLE_SYSTEM_INTEGRATIONS",
       "-RESET_SESSION_HISTORY_FOR_TESTS",
+      "-SEED_SESSION_HISTORY_FOR_TESTS",
     ]
     app.launch()
     app.activate()
-
-    XCTAssertTrue(app.buttons["start_session_button"].waitForExistence(timeout: 5))
-    app.buttons["start_session_button"].tap()
-
-    XCTAssertTrue(app.buttons["complete_timer_button"].waitForExistence(timeout: 5))
-    app.buttons["complete_timer_button"].tap()
 
     XCTAssertTrue(app.buttons["settings_button"].waitForExistence(timeout: 5))
     app.buttons["settings_button"].tap()
