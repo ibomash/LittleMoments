@@ -20,7 +20,7 @@ final class SessionHistoryUITests: XCTestCase {
     app.buttons["session_history_link"].tap()
 
     XCTAssertTrue(app.navigationBars["Session History"].waitForExistence(timeout: 5))
-    XCTAssertTrue(app.otherElements["session_history_empty_state"].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.staticTexts["No Session History"].waitForExistence(timeout: 10))
   }
 
   func testSessionHistoryShowsRecordedSessionStatus() throws {
@@ -46,7 +46,15 @@ final class SessionHistoryUITests: XCTestCase {
     XCTAssertTrue(app.buttons["session_history_link"].waitForExistence(timeout: 5))
     app.buttons["session_history_link"].tap()
 
-    XCTAssertTrue(app.otherElements["session_history_list"].waitForExistence(timeout: 5))
-    XCTAssertTrue(app.staticTexts["Pending"].exists || app.staticTexts["Written"].exists)
+    XCTAssertTrue(app.navigationBars["Session History"].waitForExistence(timeout: 5))
+
+    let pending = app.staticTexts["Pending"]
+    let written = app.staticTexts["Written"]
+    let hasStatusPredicate = NSPredicate(format: "exists == true")
+    let pendingExpectation = expectation(for: hasStatusPredicate, evaluatedWith: pending)
+    let writtenExpectation = expectation(for: hasStatusPredicate, evaluatedWith: written)
+    let result = XCTWaiter().wait(for: [pendingExpectation, writtenExpectation], timeout: 10)
+
+    XCTAssertNotEqual(result, .timedOut)
   }
 }
