@@ -9,6 +9,7 @@ import ActivityKit
 import Foundation
 import SwiftUI
 import UIKit
+import UserNotifications
 
 @MainActor
 class TimerViewModel: ObservableObject {
@@ -40,13 +41,8 @@ class TimerViewModel: ObservableObject {
 
   // Options for and actually scheduled "end time" alert
   @Published var scheduledAlertOptions: [OneTimeScheduledBellAlert]
-  private var temporaryAlertOption: OneTimeScheduledBellAlert?
-  private var removedAlertOption: OneTimeScheduledBellAlert?
   @Published var scheduledAlert: OneTimeScheduledBellAlert? {
     didSet {
-      if let temp = temporaryAlertOption, scheduledAlert != temp {
-        removeTemporaryAlertOption()
-      }
       // Update Live Activity when timer duration changes
       if JustNowSettings.shared.enableLiveActivities {
         let targetSeconds: Double? = scheduledAlert.map { Double($0.targetTimeInSec) }
@@ -92,52 +88,75 @@ class TimerViewModel: ObservableObject {
     }
   }
 
+  var hasCustomDurationTarget: Bool {
+    guard let scheduledAlert else { return false }
+    return !scheduledAlertOptions.contains(scheduledAlert)
+  }
+
+  var customDurationLabel: String? {
+    guard hasCustomDurationTarget, let scheduledAlert else { return nil }
+    return scheduledAlert.name
+  }
+
   func applyPresetDuration(_ seconds: Int) {
-    // Check if this duration matches an existing option (excluding any temporary option)
-    let existingOption = scheduledAlertOptions.first(where: {
-      Int($0.targetTimeInSec) == seconds && $0 != temporaryAlertOption
-    })
+    setDurationTarget(seconds: seconds, schedulesNotification: false)
+  }
 
-    if existingOption != nil {
-      // Remove any existing temporary option before selecting the existing one
-      removeTemporaryAlertOption()
-      // Now find and select the existing option
-      if let match = scheduledAlertOptions.first(where: { Int($0.targetTimeInSec) == seconds }) {
-        scheduledAlert = match
-      }
+  func setDurationTarget(minutes: Int, schedulesNotification: Bool = true) {
+    guard let duration = try? MeditationDuration(minutes: minutes) else { return }
+    setDurationTarget(seconds: duration.seconds, schedulesNotification: schedulesNotification)
+  }
+
+  func setDurationTarget(seconds: Int, schedulesNotification: Bool = true) {
+    guard seconds > 0 else { return }
+
+    if let match = scheduledAlertOptions.first(where: { Int($0.targetTimeInSec) == seconds }) {
+      scheduledAlert = match
     } else {
-      // Create a temporary option for this duration
-      addTemporaryAlertOptionIfNeeded(seconds)
-      if let match = scheduledAlertOptions.first(where: { Int($0.targetTimeInSec) == seconds }) {
-        scheduledAlert = match
+      let minutes = seconds / 60
+      let label: String
+      if seconds % 60 == 0, let duration = try? MeditationDuration(minutes: minutes) {
+        label = duration.timerOptionName
+      } else {
+        label = "\(seconds)s"
       }
+      scheduledAlert = OneTimeScheduledBellAlert(targetTimeInSec: seconds, name: label)
+    }
+
+    if schedulesNotification, let scheduledAlert {
+      scheduleTimerNotification(for: scheduledAlert)
     }
   }
 
-  private func addTemporaryAlertOptionIfNeeded(_ seconds: Int) {
-    let label = seconds % 60 == 0 ? "\(seconds / 60)" : "\(seconds)s"
-
-    // Remove any existing temporary option first
-    removeTemporaryAlertOption()
-
-    // Create and add the new temporary option
-    let option = OneTimeScheduledBellAlert(targetTimeInSec: seconds, name: label)
-    scheduledAlertOptions.insert(option, at: 0)
-    if scheduledAlertOptions.count > 8 {
-      removedAlertOption = scheduledAlertOptions.removeLast()
-    }
-    temporaryAlertOption = option
+  func clearDurationTarget() {
+    scheduledAlert = nil
+    UNUserNotificationCenter.current().removePendingNotificationRequests(
+      withIdentifiers: ["timerNotification"]
+    )
   }
 
-  private func removeTemporaryAlertOption() {
-    if let temp = temporaryAlertOption, let index = scheduledAlertOptions.firstIndex(of: temp) {
-      scheduledAlertOptions.remove(at: index)
+  private func scheduleTimerNotification(for alert: OneTimeScheduledBellAlert) {
+    if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") {
+      return
     }
-    if let removed = removedAlertOption {
-      scheduledAlertOptions.append(removed)
-      removedAlertOption = nil
+
+    let remainingSeconds = TimeInterval(alert.targetTimeInSec - secondsElapsed)
+    guard remainingSeconds > 0 else {
+      UNUserNotificationCenter.current().removePendingNotificationRequests(
+        withIdentifiers: ["timerNotification"]
+      )
+      return
     }
-    temporaryAlertOption = nil
+
+    Task {
+      try? await NotificationManager.shared.scheduleTimerNotification(
+        identifier: "timerNotification",
+        title: "Timer Complete",
+        body: "Your \(alert.notificationDurationDescription) timer has finished",
+        soundName: "42095__fauxpress__bell-meditation.aif",
+        timeInterval: remainingSeconds
+      )
+    }
   }
 
   func start() {
@@ -266,7 +285,6 @@ class TimerViewModel: ObservableObject {
   init() {
     // Initialize scheduledAlertOptions with default values
     self.scheduledAlertOptions = [
-      OneTimeScheduledBellAlert(targetTimeInMin: 1),
       OneTimeScheduledBellAlert(targetTimeInMin: 5),
       OneTimeScheduledBellAlert(targetTimeInMin: 10),
       OneTimeScheduledBellAlert(targetTimeInMin: 15),
@@ -277,7 +295,7 @@ class TimerViewModel: ObservableObject {
     ]
 
     #if targetEnvironment(simulator)
-      // Add a short 5-second option for testing in simulator
+      // Add a short 5-second option for testing in simulator while keeping seven preset slots.
       scheduledAlertOptions[0] = OneTimeScheduledBellAlert(targetTimeInSec: 5, name: "5 sec")
     #endif
 
@@ -382,7 +400,6 @@ class TimerViewModel: ObservableObject {
     startDate = nil
 
     scheduledAlert = nil
-    removeTemporaryAlertOption()
 
     // Reset the cancelled flag and timestamp for future sessions
     wasCancelled = false

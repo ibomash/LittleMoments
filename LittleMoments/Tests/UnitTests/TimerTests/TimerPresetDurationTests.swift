@@ -4,86 +4,64 @@ import XCTest
 
 @MainActor
 final class TimerPresetDurationTests: XCTestCase {
-
-  func testApplyPresetDuration420() throws {
+  func testDefaultPresetDurationsReserveCustomSlot() throws {
     let timerViewModel = TimerViewModel()
 
-    // Check initial state
     XCTAssertNil(timerViewModel.scheduledAlert)
-    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 8)  // Default options
+    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 7)
 
-    // Apply 420 seconds (7 minutes)
-    timerViewModel.applyPresetDuration(420)
-
-    // Check that the count is still 8 (temporary option added, last option removed)
-    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 8)
-
-    // Check that the first option is the temporary 7-minute option
-    let firstOption = timerViewModel.scheduledAlertOptions[0]
-    XCTAssertEqual(firstOption.name, "7")
-    XCTAssertEqual(Int(firstOption.targetTimeInSec), 420)
-
-    // Check that this option is selected
-    XCTAssertNotNil(timerViewModel.scheduledAlert)
-    XCTAssertEqual(timerViewModel.scheduledAlert, firstOption)
-    XCTAssertEqual(timerViewModel.scheduledAlert?.name, "7")
+    #if targetEnvironment(simulator)
+      let expectedNames = ["5 sec", "10", "15", "20", "30", "45", "60"]
+    #else
+      let expectedNames = ["5", "10", "15", "20", "30", "45", "60"]
+    #endif
+    XCTAssertEqual(timerViewModel.scheduledAlertOptions.map(\.name), expectedNames)
   }
 
-  func testApplyPresetDuration315() throws {
+  func testApplyPresetDurationCreatesCustomTargetWithoutChangingPresetList() throws {
     let timerViewModel = TimerViewModel()
 
-    // Apply 315 seconds (5 minutes 15 seconds - not evenly divisible by 60)
+    timerViewModel.applyPresetDuration(420)
+
+    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 7)
+    XCTAssertEqual(timerViewModel.scheduledAlert?.name, "7")
+    XCTAssertEqual(Int(timerViewModel.scheduledAlert?.targetTimeInSec ?? 0), 420)
+    XCTAssertTrue(timerViewModel.hasCustomDurationTarget)
+    XCTAssertEqual(timerViewModel.customDurationLabel, "7")
+  }
+
+  func testApplyPresetDurationSupportsNonMinuteTarget() throws {
+    let timerViewModel = TimerViewModel()
+
     timerViewModel.applyPresetDuration(315)
 
-    // Check that a temporary option was created with "315s" label
-    let firstOption = timerViewModel.scheduledAlertOptions[0]
-    XCTAssertEqual(firstOption.name, "315s")
-    XCTAssertEqual(Int(firstOption.targetTimeInSec), 315)
-
-    // Check that this option is selected
-    XCTAssertEqual(timerViewModel.scheduledAlert, firstOption)
+    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 7)
+    XCTAssertEqual(timerViewModel.scheduledAlert?.name, "315s")
+    XCTAssertEqual(Int(timerViewModel.scheduledAlert?.targetTimeInSec ?? 0), 315)
+    XCTAssertTrue(timerViewModel.hasCustomDurationTarget)
   }
 
-  func testApplyPresetDurationExistingOption() throws {
+  func testApplyPresetDurationExistingOptionSelectsPreset() throws {
     let timerViewModel = TimerViewModel()
 
-    // Apply 300 seconds (5 minutes - should match existing option)
-    timerViewModel.applyPresetDuration(300)
+    timerViewModel.applyPresetDuration(600)
 
-    // Should not create a new option (still 8 total)
-    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 8)
-
-    // Should select the existing 5-minute option
+    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 7)
     XCTAssertNotNil(timerViewModel.scheduledAlert)
-    XCTAssertEqual(timerViewModel.scheduledAlert?.name, "5")
-    XCTAssertEqual(Int(timerViewModel.scheduledAlert!.targetTimeInSec), 300)
+    XCTAssertEqual(timerViewModel.scheduledAlert?.name, "10")
+    XCTAssertEqual(Int(timerViewModel.scheduledAlert?.targetTimeInSec ?? 0), 600)
+    XCTAssertFalse(timerViewModel.hasCustomDurationTarget)
   }
 
-  func testTemporaryOptionRemoval() throws {
+  func testClearDurationTargetClearsPresetAndCustomTargets() throws {
     let timerViewModel = TimerViewModel()
 
-    // Store reference to the last option before adding temporary
-    let originalLastOption = timerViewModel.scheduledAlertOptions.last!
-    XCTAssertEqual(originalLastOption.name, "60")  // 60 minutes
-
-    // Apply 420 seconds (7 minutes) - creates temporary option
     timerViewModel.applyPresetDuration(420)
+    XCTAssertNotNil(timerViewModel.scheduledAlert)
 
-    // Verify the temporary option is at the front and last option was removed
-    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 8)
-    XCTAssertEqual(timerViewModel.scheduledAlertOptions[0].name, "7")
-    XCTAssertNotEqual(timerViewModel.scheduledAlertOptions.last!.name, "60")  // 60min option should be gone
+    timerViewModel.clearDurationTarget()
 
-    // Apply an existing option (should remove temporary and restore removed option)
-    timerViewModel.applyPresetDuration(300)  // 5 minutes
-
-    // Verify count is still 8 and temporary option is gone
-    XCTAssertEqual(timerViewModel.scheduledAlertOptions.count, 8)
-    XCTAssertNotEqual(timerViewModel.scheduledAlertOptions[0].name, "7")  // Temporary should be gone
-
-    // Check if the 60-minute option was restored
-    let has60MinOption = timerViewModel.scheduledAlertOptions.contains { $0.name == "60" }
-    XCTAssertTrue(
-      has60MinOption, "60-minute option should be restored when temporary option is removed")
+    XCTAssertNil(timerViewModel.scheduledAlert)
+    XCTAssertFalse(timerViewModel.hasCustomDurationTarget)
   }
 }

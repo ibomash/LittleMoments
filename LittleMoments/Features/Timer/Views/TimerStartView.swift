@@ -4,6 +4,9 @@ import SwiftUI
 struct TimerStartView: View {
   @StateObject private var appState = AppState.shared
   @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
+  @AppStorage("lastCustomDurationMinutes") private var lastCustomDurationMinutes = 10
+  @State private var showCustomDurationSheet = false
+  @State private var suppressNextStartTap = false
 
   var body: some View {
     NavigationStack {
@@ -44,6 +47,17 @@ struct TimerStartView: View {
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(32)
     }
+    .sheet(isPresented: $showCustomDurationSheet) {
+      CustomDurationSheet(
+        mode: .start,
+        initialMinutes: lastCustomDurationMinutes,
+        onApply: startCustomSession,
+        onCancel: { showCustomDurationSheet = false }
+      )
+      .presentationDetents([.medium, .large])
+      .presentationDragIndicator(.visible)
+      .presentationCornerRadius(32)
+    }
   }
 
   private func requestNotificationAuthorizationIfNeeded() {
@@ -60,12 +74,36 @@ struct TimerStartView: View {
     HStack(spacing: 20) {
       settingsButton
 
-      ImageButton(
-        imageName: "play.fill",
-        buttonText: "Start session",
-        action: startSession
-      )
-      .accessibilityIdentifier("start_session_button")
+      startButton
+    }
+  }
+
+  private var startButton: some View {
+    Button {
+      if suppressNextStartTap {
+        suppressNextStartTap = false
+        return
+      }
+      startSession()
+    } label: {
+      Label("Start session", systemImage: "play.fill")
+        .labelStyle(.titleAndIcon)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 4)
+    }
+    .liquidGlassButtonStyle(
+      .prominent,
+      controlHeight: LiquidGlassTokens.primaryControlHeight
+    )
+    .accessibilityIdentifier("start_session_button")
+    .accessibilityHint("Long-press to set a custom duration.")
+    .onLongPressGesture(minimumDuration: 0.45) {
+      suppressNextStartTap = true
+      showCustomDurationSheet = true
+      UIImpactFeedbackGenerator(style: .light).impactOccurred()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        suppressNextStartTap = false
+      }
     }
   }
 
@@ -79,6 +117,13 @@ struct TimerStartView: View {
     .accessibilityLabel(Text("Settings"))
     .accessibilityIdentifier("settings_button")
     .liquidGlassIconButtonStyle(variant: .subtle, diameter: 64)
+  }
+
+  private func startCustomSession(_ duration: MeditationDuration) {
+    lastCustomDurationMinutes = duration.minutes
+    appState.pendingStartDurationSeconds = duration.seconds
+    showCustomDurationSheet = false
+    startSession()
   }
 
   private func startSession() {

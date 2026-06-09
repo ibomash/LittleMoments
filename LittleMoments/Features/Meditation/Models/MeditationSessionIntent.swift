@@ -27,7 +27,8 @@ public struct MeditationSessionIntent: AppIntent {
   @MainActor
   public func perform() async throws -> some IntentResult {
     if let durationMinutes {
-      AppState.shared.pendingStartDurationSeconds = durationMinutes * 60
+      let duration = try MeditationDuration(minutes: durationMinutes)
+      AppState.shared.pendingStartDurationSeconds = duration.seconds
     }
     AppState.shared.showTimerRunningView = true
     return .result()

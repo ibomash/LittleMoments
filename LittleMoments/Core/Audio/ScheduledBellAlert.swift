@@ -17,6 +17,15 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
 
   let targetTimeInSec: CGFloat
   let name: String
+  var notificationDurationDescription: String {
+    if Int(targetTimeInSec) % 60 == 0,
+      let duration = try? MeditationDuration(minutes: Int(targetTimeInSec) / 60)
+    {
+      return duration.shortLabel
+    }
+    return name
+  }
+
   var hasTriggered: Bool = false
   let hasTarget: Bool = true
 
@@ -52,8 +61,8 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
   }
 
   func doTrigger(secondsElapsed: CGFloat) {
-    let MAX_DELAY: CGFloat = 5.0
-    if secondsElapsed - targetTimeInSec > MAX_DELAY {
+    let maxDelay: CGFloat = 5.0
+    if secondsElapsed - targetTimeInSec > maxDelay {
       print("Skipping sound due to delay")
       return
     }

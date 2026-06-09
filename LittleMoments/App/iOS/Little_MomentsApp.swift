@@ -191,7 +191,7 @@ struct LittleMomentsApp: App {
       {
         if let durationString = items.first(where: { $0.name.lowercased() == "duration" })?.value {
           let seconds = Self.parseDurationToSeconds(durationString)
-          if let seconds {
+          if let seconds, seconds > 0 {
             print("📲 Will start with preset duration: \(seconds) sec")
             AppState.shared.pendingStartDurationSeconds = seconds
           }

@@ -31,7 +31,7 @@ final class TimerViewModelLiveActivityTests: XCTestCase {
 
   func testStartLiveActivityWithTarget() {
     // Set a target time for the session
-    let fiveMinAlert = timerViewModel?.scheduledAlertOptions[1]  // 5-minute timer
+    let fiveMinAlert = timerViewModel?.scheduledAlertOptions[0]  // 5-minute timer
     timerViewModel?.scheduledAlert = fiveMinAlert
 
     // Start Live Activity with target
