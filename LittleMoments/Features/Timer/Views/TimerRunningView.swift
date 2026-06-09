@@ -318,8 +318,7 @@ struct BellControlsGrid: View {
       Button {
         handleCustomSelection()
       } label: {
-        Label(customButtonTitle, systemImage: "slider.horizontal.3")
-          .labelStyle(.titleAndIcon)
+        customChipLabel
       }
       .buttonStyle(.plain)
       .liquidGlassChip(isSelected: timerViewModel.hasCustomDurationTarget)
@@ -330,8 +329,17 @@ struct BellControlsGrid: View {
     }
   }
 
-  private var customButtonTitle: String {
-    timerViewModel.customDurationLabel ?? "Custom"
+  @ViewBuilder
+  private var customChipLabel: some View {
+    if let label = timerViewModel.customDurationChipLabel {
+      Text(label)
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+    } else {
+      Image(systemName: "slider.horizontal.3")
+        .font(.system(size: 18, weight: .semibold))
+        .imageScale(.medium)
+    }
   }
 
   private var customAccessibilityLabel: Text {

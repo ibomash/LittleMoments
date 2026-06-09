@@ -6,7 +6,8 @@ struct TimerStartView: View {
   @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
   @AppStorage("lastCustomDurationMinutes") private var lastCustomDurationMinutes = 10
   @State private var showCustomDurationSheet = false
-  @State private var suppressNextStartTap = false
+  @State private var startPressWorkItem: DispatchWorkItem?
+  @State private var startLongPressTriggered = false
 
   var body: some View {
     NavigationStack {
@@ -80,11 +81,6 @@ struct TimerStartView: View {
 
   private var startButton: some View {
     Button {
-      if suppressNextStartTap {
-        suppressNextStartTap = false
-        return
-      }
-      startSession()
     } label: {
       Label("Start session", systemImage: "play.fill")
         .labelStyle(.titleAndIcon)
@@ -97,13 +93,43 @@ struct TimerStartView: View {
     )
     .accessibilityIdentifier("start_session_button")
     .accessibilityHint("Long-press to set a custom duration.")
-    .onLongPressGesture(minimumDuration: 0.45) {
-      suppressNextStartTap = true
-      showCustomDurationSheet = true
-      UIImpactFeedbackGenerator(style: .light).impactOccurred()
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-        suppressNextStartTap = false
+    .accessibilityAction { startSession() }
+    .highPriorityGesture(startPressGesture)
+  }
+
+  private var startPressGesture: some Gesture {
+    DragGesture(minimumDistance: 0)
+      .onChanged { _ in
+        beginStartPressIfNeeded()
       }
+      .onEnded { _ in
+        finishStartPress()
+      }
+  }
+
+  private func beginStartPressIfNeeded() {
+    guard startPressWorkItem == nil else { return }
+
+    startLongPressTriggered = false
+    let workItem = DispatchWorkItem {
+      Task { @MainActor in
+        startLongPressTriggered = true
+        showCustomDurationSheet = true
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+      }
+    }
+    startPressWorkItem = workItem
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: workItem)
+  }
+
+  private func finishStartPress() {
+    startPressWorkItem?.cancel()
+    startPressWorkItem = nil
+
+    if startLongPressTriggered {
+      startLongPressTriggered = false
+    } else {
+      startSession()
     }
   }
 

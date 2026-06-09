@@ -98,6 +98,14 @@ class TimerViewModel: ObservableObject {
     return scheduledAlert.name
   }
 
+  var customDurationChipLabel: String? {
+    guard hasCustomDurationTarget, let scheduledAlert else { return nil }
+
+    let seconds = Int(scheduledAlert.targetTimeInSec)
+    guard seconds.isMultiple(of: 60) else { return "\(seconds)s" }
+    return "\(seconds / 60)"
+  }
+
   func applyPresetDuration(_ seconds: Int) {
     setDurationTarget(seconds: seconds, schedulesNotification: false)
   }

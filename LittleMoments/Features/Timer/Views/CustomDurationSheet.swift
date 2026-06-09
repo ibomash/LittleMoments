@@ -11,7 +11,16 @@ enum CustomDurationSheetMode: Equatable {
     case .start:
       return "Choose when the bell should end this session."
     case .running:
-      return "Choose when the bell should end this session. Your timer keeps running."
+      return "Your timer keeps running while you adjust the bell."
+    }
+  }
+
+  var compactApplyTitle: String {
+    switch self {
+    case .start:
+      return "Start"
+    case .running:
+      return "Set"
     }
   }
 
@@ -52,18 +61,16 @@ struct CustomDurationSheet: View {
   }
 
   var body: some View {
-    ScrollView {
-      VStack(alignment: .leading, spacing: 28) {
-        header
-        durationReadout
-        sliderSection
-        textInputSection
-        actions
-      }
-      .padding(.horizontal, 24)
-      .padding(.top, 28)
-      .padding(.bottom, 32)
+    VStack(alignment: .leading, spacing: 18) {
+      header
+      durationEntryAndApplyRow
+      sliderSection
+      footerActions
     }
+    .padding(.horizontal, 24)
+    .padding(.top, 20)
+    .padding(.bottom, 18)
+    .frame(maxWidth: .infinity, alignment: .topLeading)
     .background(backgroundSurface)
     .accessibilityIdentifier("custom_duration_sheet")
     .toolbar {
@@ -75,51 +82,89 @@ struct CustomDurationSheet: View {
   }
 
   private var header: some View {
-    VStack(alignment: .leading, spacing: 8) {
+    VStack(alignment: .leading, spacing: 4) {
       Text(mode.title)
-        .font(.title2.weight(.bold))
+        .font(.headline.weight(.bold))
       Text(mode.subtitle)
-        .font(.subheadline)
+        .font(.footnote)
         .foregroundStyle(.secondary)
         .fixedSize(horizontal: false, vertical: true)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
 
-  private var durationReadout: some View {
-    Text(currentDuration.shortLabel)
-      .font(.system(.largeTitle, design: .rounded).weight(.bold))
-      .minimumScaleFactor(0.7)
-      .frame(maxWidth: .infinity)
-      .padding(.vertical, 24)
-      .padding(.horizontal, 18)
-      .background(
-        RoundedRectangle(cornerRadius: 28, style: .continuous)
-          .fill(
-            LiquidGlassTokens.surfaceFill(
-              reducesTransparency: reducesTransparency,
-              fallback: Color(UIColor.secondarySystemBackground),
-              opacity: 0.20
-            )
+  private var durationEntryAndApplyRow: some View {
+    VStack(alignment: .leading, spacing: 8) {
+      HStack(alignment: .center, spacing: 12) {
+        durationEntryCard
+
+        Button {
+          applyDuration()
+        } label: {
+          VStack(spacing: 3) {
+            Image(systemName: "checkmark")
+              .font(.system(size: 20, weight: .bold))
+            Text(mode.compactApplyTitle)
+              .font(.caption.weight(.semibold))
+          }
+        }
+        .accessibilityIdentifier("custom_duration_apply_button")
+        .accessibilityLabel(mode.applyTitle(for: currentDuration))
+        .liquidGlassIconButtonStyle(variant: .prominent, role: .success, diameter: 68)
+      }
+
+      Text(validationMessage ?? "Tap the value to type, or use the slider for 1 min–2 hr.")
+        .font(.footnote)
+        .foregroundStyle(validationMessage == nil ? Color.secondary : Color.red)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+  }
+
+  private var durationEntryCard: some View {
+    HStack(alignment: .firstTextBaseline, spacing: 8) {
+      TextField("Minutes", text: $minutesText)
+        .keyboardType(.numberPad)
+        .focused($isMinutesFieldFocused)
+        .multilineTextAlignment(.trailing)
+        .font(.system(.largeTitle, design: .rounded).weight(.bold))
+        .minimumScaleFactor(0.7)
+        .accessibilityIdentifier("custom_duration_minutes_field")
+        .accessibilityHint("Enter a duration in minutes; values over 2 hours are allowed.")
+        .onChange(of: minutesText) { _, newValue in
+          updateDraftMinutes(from: newValue)
+        }
+
+      Text("min")
+        .font(.headline.weight(.semibold))
+        .foregroundStyle(.secondary)
+    }
+    .padding(.vertical, 16)
+    .padding(.horizontal, 18)
+    .frame(maxWidth: .infinity, minHeight: 72)
+    .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+    .background(
+      RoundedRectangle(cornerRadius: 24, style: .continuous)
+        .fill(
+          LiquidGlassTokens.surfaceFill(
+            reducesTransparency: reducesTransparency,
+            fallback: Color(UIColor.secondarySystemBackground),
+            opacity: 0.20
           )
-      )
-      .overlay(
-        RoundedRectangle(cornerRadius: 28, style: .continuous)
-          .stroke(
-            LiquidGlassTokens.surfaceStroke(reducesTransparency: reducesTransparency),
-            lineWidth: 1
-          )
-      )
-      .accessibilityLabel(currentDuration.accessibilityLabel)
+        )
+    )
+    .overlay(
+      RoundedRectangle(cornerRadius: 24, style: .continuous)
+        .stroke(
+          LiquidGlassTokens.surfaceStroke(reducesTransparency: reducesTransparency),
+          lineWidth: 1
+        )
+    )
+    .onTapGesture { isMinutesFieldFocused = true }
+    .accessibilityLabel(currentDuration.accessibilityLabel)
   }
 
   private var sliderSection: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      Text("Quick set")
-        .font(.caption.weight(.semibold))
-        .textCase(.uppercase)
-        .foregroundStyle(.secondary)
-
+    VStack(alignment: .leading, spacing: 8) {
       Slider(
         value: sliderValue,
         in: Double(
@@ -140,50 +185,15 @@ struct CustomDurationSheet: View {
     }
   }
 
-  private var textInputSection: some View {
-    VStack(alignment: .leading, spacing: 10) {
-      Text("Minutes")
-        .font(.caption.weight(.semibold))
-        .textCase(.uppercase)
-        .foregroundStyle(.secondary)
-
-      TextField("Minutes", text: $minutesText)
-        .keyboardType(.numberPad)
-        .focused($isMinutesFieldFocused)
-        .textFieldStyle(.roundedBorder)
-        .font(.title3.monospacedDigit())
-        .accessibilityIdentifier("custom_duration_minutes_field")
-        .accessibilityHint("Enter a duration in minutes; values over 2 hours are allowed.")
-        .onChange(of: minutesText) { _, newValue in
-          updateDraftMinutes(from: newValue)
-        }
-
-      Text(validationMessage ?? "Enter minutes, or use the slider for 1 min–2 hr.")
-        .font(.footnote)
-        .foregroundStyle(validationMessage == nil ? Color.secondary : Color.red)
-        .fixedSize(horizontal: false, vertical: true)
+  private var footerActions: some View {
+    Button {
+      onCancel()
+    } label: {
+      Text("Cancel")
+        .frame(maxWidth: .infinity)
     }
-  }
-
-  private var actions: some View {
-    VStack(spacing: 12) {
-      Button {
-        applyDuration()
-      } label: {
-        Label(mode.applyTitle(for: currentDuration), systemImage: "checkmark.circle.fill")
-      }
-      .accessibilityIdentifier("custom_duration_apply_button")
-      .liquidGlassButtonStyle(.prominent, controlHeight: LiquidGlassTokens.primaryControlHeight)
-
-      Button {
-        onCancel()
-      } label: {
-        Text("Cancel")
-          .frame(maxWidth: .infinity)
-      }
-      .accessibilityIdentifier("custom_duration_cancel_button")
-      .liquidGlassButtonStyle(.subtle, role: .neutral)
-    }
+    .accessibilityIdentifier("custom_duration_cancel_button")
+    .liquidGlassButtonStyle(.subtle, role: .neutral, controlHeight: 44)
   }
 
   private var backgroundSurface: some View {
