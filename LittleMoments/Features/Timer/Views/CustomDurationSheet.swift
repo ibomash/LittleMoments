@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 enum CustomDurationSheetMode: Equatable {
   case start
@@ -40,7 +41,6 @@ struct CustomDurationSheet: View {
   let onCancel: () -> Void
 
   @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
-  @FocusState private var isMinutesFieldFocused: Bool
   @State private var draftMinutes: Int
   @State private var minutesText: String
   @State private var validationMessage: String?
@@ -73,12 +73,6 @@ struct CustomDurationSheet: View {
     .frame(maxWidth: .infinity, alignment: .topLeading)
     .background(backgroundSurface)
     .accessibilityIdentifier("custom_duration_sheet")
-    .toolbar {
-      ToolbarItemGroup(placement: .keyboard) {
-        Spacer()
-        Button("Done") { isMinutesFieldFocused = false }
-      }
-    }
   }
 
   private var header: some View {
@@ -122,13 +116,8 @@ struct CustomDurationSheet: View {
 
   private var durationEntryCard: some View {
     HStack(alignment: .firstTextBaseline, spacing: 8) {
-      TextField("Minutes", text: $minutesText)
-        .keyboardType(.numberPad)
-        .focused($isMinutesFieldFocused)
-        .multilineTextAlignment(.trailing)
-        .font(.system(.largeTitle, design: .rounded).weight(.bold))
-        .minimumScaleFactor(0.7)
-        .accessibilityIdentifier("custom_duration_minutes_field")
+      SelectAllMinutesTextField(text: $minutesText)
+        .frame(minHeight: 48)
         .accessibilityHint("Enter a duration in minutes; values over 2 hours are allowed.")
         .onChange(of: minutesText) { _, newValue in
           updateDraftMinutes(from: newValue)
@@ -159,7 +148,6 @@ struct CustomDurationSheet: View {
           lineWidth: 1
         )
     )
-    .onTapGesture { isMinutesFieldFocused = true }
     .accessibilityLabel(currentDuration.accessibilityLabel)
   }
 
@@ -259,11 +247,20 @@ struct CustomDurationSheet: View {
     switch MeditationDuration.parseMinutes(minutesText) {
     case .success(let duration):
       validationMessage = nil
-      isMinutesFieldFocused = false
+      dismissKeyboard()
       onApply(duration)
     case .failure(let error):
       validationMessage = error.errorDescription
     }
+  }
+
+  private func dismissKeyboard() {
+    UIApplication.shared.sendAction(
+      #selector(UIResponder.resignFirstResponder),
+      to: nil,
+      from: nil,
+      for: nil
+    )
   }
 
   private func provideSliderFeedbackIfNeeded(for minutes: Int) {
@@ -276,6 +273,81 @@ struct CustomDurationSheet: View {
     guard shouldProvideFeedback else { return }
 
     UIImpactFeedbackGenerator(style: .light).impactOccurred()
+  }
+}
+
+private struct SelectAllMinutesTextField: UIViewRepresentable {
+  @Binding var text: String
+
+  func makeUIView(context: Context) -> UITextField {
+    let textField = UITextField()
+    textField.delegate = context.coordinator
+    textField.keyboardType = .numberPad
+    textField.textAlignment = .right
+    textField.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+    textField.adjustsFontForContentSizeCategory = true
+    textField.minimumFontSize = 24
+    textField.adjustsFontSizeToFitWidth = true
+    textField.accessibilityIdentifier = "custom_duration_minutes_field"
+    textField.addTarget(
+      context.coordinator,
+      action: #selector(Coordinator.textDidChange(_:)),
+      for: .editingChanged
+    )
+    textField.inputAccessoryView = context.coordinator.makeToolbar()
+    return textField
+  }
+
+  func updateUIView(_ textField: UITextField, context: Context) {
+    if textField.text != text {
+      textField.text = text
+    }
+  }
+
+  func makeCoordinator() -> Coordinator {
+    Coordinator(text: $text)
+  }
+
+  final class Coordinator: NSObject, UITextFieldDelegate {
+    @Binding private var text: String
+
+    init(text: Binding<String>) {
+      _text = text
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+      DispatchQueue.main.async {
+        textField.selectAll(nil)
+      }
+    }
+
+    @objc func textDidChange(_ textField: UITextField) {
+      text = textField.text ?? ""
+    }
+
+    @objc func doneTapped() {
+      UIApplication.shared.sendAction(
+        #selector(UIResponder.resignFirstResponder),
+        to: nil,
+        from: nil,
+        for: nil
+      )
+    }
+
+    func makeToolbar() -> UIToolbar {
+      let toolbar = UIToolbar()
+      toolbar.items = [
+        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+        UIBarButtonItem(
+          title: "Done",
+          style: .done,
+          target: self,
+          action: #selector(doneTapped)
+        ),
+      ]
+      toolbar.sizeToFit()
+      return toolbar
+    }
   }
 }
 
