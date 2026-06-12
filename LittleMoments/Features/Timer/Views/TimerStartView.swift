@@ -55,7 +55,7 @@ struct TimerStartView: View {
         onApply: startCustomSession,
         onCancel: { showCustomDurationSheet = false }
       )
-      .presentationDetents([.medium, .large])
+      .presentationDetents([.medium])
       .presentationDragIndicator(.visible)
       .presentationCornerRadius(32)
     }

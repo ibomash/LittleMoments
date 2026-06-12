@@ -65,7 +65,7 @@ struct CustomDurationSheet: View {
     .padding(.horizontal, 24)
     .padding(.top, 20)
     .padding(.bottom, 18)
-    .frame(maxWidth: .infinity, alignment: .topLeading)
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     .background(backgroundSurface)
     .toolbar {
       ToolbarItemGroup(placement: .keyboard) {
@@ -93,7 +93,7 @@ struct CustomDurationSheet: View {
   private var durationEditorSection: some View {
     VStack(alignment: .leading, spacing: 10) {
       durationControlRow
-      Text(validationMessage ?? "Tap the value to type, or use the slider for 1 min–2 hr.")
+      Text(validationMessage ?? "Tap the value to type, or use the slider for 1 min–1 hr.")
         .font(.footnote)
         .foregroundStyle(validationMessage == nil ? Color.secondary : Color.red)
         .fixedSize(horizontal: false, vertical: true)
@@ -128,7 +128,7 @@ struct CustomDurationSheet: View {
         .focused($minutesFieldIsFocused)
         .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44, alignment: .trailing)
         .accessibilityIdentifier("custom_duration_minutes_field")
-        .accessibilityHint("Enter a duration in minutes; values over 2 hours are allowed.")
+        .accessibilityHint("Enter a duration in minutes; values over 1 hour can be typed.")
         .onChange(of: minutesText) { _, newValue in
           updateDraftMinutes(from: newValue)
         }
@@ -202,7 +202,7 @@ struct CustomDurationSheet: View {
       HStack {
         Text("1 min")
         Spacer()
-        Text("2 hr")
+        Text("1 hr")
       }
       .font(.caption)
       .foregroundStyle(.secondary)
@@ -289,7 +289,7 @@ struct CustomDurationSheet: View {
 
     let shouldProvideFeedback =
       minutes.isMultiple(of: 5)
-      || [30, 60, 120].contains(minutes)
+      || [30, 60].contains(minutes)
     guard shouldProvideFeedback else { return }
 
     UIImpactFeedbackGenerator(style: .light).impactOccurred()

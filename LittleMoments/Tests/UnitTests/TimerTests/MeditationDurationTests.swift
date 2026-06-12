@@ -35,9 +35,9 @@ final class MeditationDurationTests: XCTestCase {
     XCTAssertEqual(duration.minutes, 150)
   }
 
-  func testSliderMinutesClampToOneThroughTwoHours() {
+  func testSliderMinutesClampToOneThroughOneHour() {
     XCTAssertEqual(MeditationDuration.clampedSliderMinutes(-10), 1)
     XCTAssertEqual(MeditationDuration.clampedSliderMinutes(25.4), 25)
-    XCTAssertEqual(MeditationDuration.clampedSliderMinutes(140), 120)
+    XCTAssertEqual(MeditationDuration.clampedSliderMinutes(140), 60)
   }
 }

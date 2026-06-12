@@ -3,7 +3,7 @@ import Foundation
 struct MeditationDuration: Equatable {
   static let minimumMinutes = 1
   static let sliderMinimumMinutes = 1
-  static let sliderMaximumMinutes = 120
+  static let sliderMaximumMinutes = 60
 
   enum ValidationError: LocalizedError, Equatable {
     case empty

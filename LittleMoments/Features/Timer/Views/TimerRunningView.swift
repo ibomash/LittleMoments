@@ -98,7 +98,7 @@ struct TimerRunningView: View {
         onApply: applyCustomDuration,
         onCancel: { showCustomDurationSheet = false }
       )
-      .presentationDetents([.medium, .large])
+      .presentationDetents([.medium])
       .presentationDragIndicator(.visible)
       .presentationCornerRadius(32)
     }
