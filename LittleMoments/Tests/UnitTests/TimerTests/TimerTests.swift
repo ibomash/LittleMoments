@@ -59,7 +59,8 @@ final class TimerTests: XCTestCase {
 
     // Wait for 1 second to elapse
     let expectation = XCTestExpectation(description: "Timer running")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [weak self] in  // Wait just over 1 second
+    // Wait just over 1 second.
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [weak self] in
       Task { @MainActor in
         guard let self else { return }
         // Test with showSeconds = true
@@ -92,16 +93,16 @@ final class TimerTests: XCTestCase {
       // This shorter duration makes testing faster in the simulator
       XCTAssertEqual(timerViewModel?.scheduledAlert?.targetTimeInSec, 5)
     #else
-      // On device, first alert should be 3 minutes (180 seconds)
-      // This is the actual production value used in the app
-      XCTAssertEqual(timerViewModel?.scheduledAlert?.targetTimeInSec, 180)
+      // On device, first alert should be 5 minutes (300 seconds)
+      // This is the first production preset now that the 1-minute preset is removed
+      XCTAssertEqual(timerViewModel?.scheduledAlert?.targetTimeInSec, 300)
     #endif
   }
 
   /// Tests that the timer properly tracks progress
   /// Uses an async expectation to verify timer behavior over time
   func testTimerProgress() {
-    let fiveMinAlert = timerViewModel?.scheduledAlertOptions[1]  // 5-minute timer
+    let fiveMinAlert = timerViewModel?.scheduledAlertOptions[0]  // 5-minute timer
     timerViewModel?.scheduledAlert = fiveMinAlert
 
     timerViewModel?.start()

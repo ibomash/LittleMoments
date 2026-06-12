@@ -13,6 +13,7 @@ struct LittleMomentsShortcuts: AppShortcutsProvider {
         "Begin meditation in \(.applicationName)",
         "Meditate in \(.applicationName)",
         "Start an untimed meditation in \(.applicationName)",
+        "Start a timed meditation in \(.applicationName)",
       ],
       shortTitle: "Start Meditation",
       systemImageName: "play.circle.fill"

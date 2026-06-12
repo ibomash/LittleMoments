@@ -4,6 +4,10 @@ import SwiftUI
 struct TimerStartView: View {
   @StateObject private var appState = AppState.shared
   @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
+  @AppStorage("lastCustomDurationMinutes") private var lastCustomDurationMinutes = 10
+  @State private var showCustomDurationSheet = false
+  @State private var startPressWorkItem: DispatchWorkItem?
+  @State private var startLongPressTriggered = false
 
   var body: some View {
     NavigationStack {
@@ -44,6 +48,17 @@ struct TimerStartView: View {
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(32)
     }
+    .sheet(isPresented: $showCustomDurationSheet) {
+      CustomDurationSheet(
+        mode: .start,
+        initialMinutes: lastCustomDurationMinutes,
+        onApply: startCustomSession,
+        onCancel: { showCustomDurationSheet = false }
+      )
+      .presentationDetents([.medium, .large])
+      .presentationDragIndicator(.visible)
+      .presentationCornerRadius(32)
+    }
   }
 
   private func requestNotificationAuthorizationIfNeeded() {
@@ -60,12 +75,61 @@ struct TimerStartView: View {
     HStack(spacing: 20) {
       settingsButton
 
-      ImageButton(
-        imageName: "play.fill",
-        buttonText: "Start session",
-        action: startSession
-      )
-      .accessibilityIdentifier("start_session_button")
+      startButton
+    }
+  }
+
+  private var startButton: some View {
+    Button {
+    } label: {
+      Label("Start session", systemImage: "play.fill")
+        .labelStyle(.titleAndIcon)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 4)
+    }
+    .liquidGlassButtonStyle(
+      .prominent,
+      controlHeight: LiquidGlassTokens.primaryControlHeight
+    )
+    .accessibilityIdentifier("start_session_button")
+    .accessibilityHint("Long-press to set a custom duration.")
+    .accessibilityAction { startSession() }
+    .highPriorityGesture(startPressGesture)
+  }
+
+  private var startPressGesture: some Gesture {
+    DragGesture(minimumDistance: 0)
+      .onChanged { _ in
+        beginStartPressIfNeeded()
+      }
+      .onEnded { _ in
+        finishStartPress()
+      }
+  }
+
+  private func beginStartPressIfNeeded() {
+    guard startPressWorkItem == nil else { return }
+
+    startLongPressTriggered = false
+    let workItem = DispatchWorkItem {
+      Task { @MainActor in
+        startLongPressTriggered = true
+        showCustomDurationSheet = true
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+      }
+    }
+    startPressWorkItem = workItem
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: workItem)
+  }
+
+  private func finishStartPress() {
+    startPressWorkItem?.cancel()
+    startPressWorkItem = nil
+
+    if startLongPressTriggered {
+      startLongPressTriggered = false
+    } else {
+      startSession()
     }
   }
 
@@ -79,6 +143,13 @@ struct TimerStartView: View {
     .accessibilityLabel(Text("Settings"))
     .accessibilityIdentifier("settings_button")
     .liquidGlassIconButtonStyle(variant: .subtle, diameter: 64)
+  }
+
+  private func startCustomSession(_ duration: MeditationDuration) {
+    lastCustomDurationMinutes = duration.minutes
+    appState.pendingStartDurationSeconds = duration.seconds
+    showCustomDurationSheet = false
+    startSession()
   }
 
   private func startSession() {

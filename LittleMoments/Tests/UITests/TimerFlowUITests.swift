@@ -83,8 +83,8 @@ final class TimerFlowUITests: XCTestCase {
   private func selectShortDuration(app: XCUIApplication) {
     if app.buttons["5 sec"].exists {
       app.buttons["5 sec"].tap()
-    } else if app.buttons["1"].exists {
-      app.buttons["1"].tap()
+    } else if app.buttons["5"].exists {
+      app.buttons["5"].tap()
     }
   }
 

@@ -14,6 +14,8 @@ struct TimerRunningView: View {
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
   @State private var liveActivityUpdateTimer: Timer?
+  @State private var showCustomDurationSheet = false
+  @AppStorage("lastCustomDurationMinutes") private var lastCustomDurationMinutes = 10
   @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
   private let containerCornerRadius: CGFloat = 32
 
@@ -63,7 +65,7 @@ struct TimerRunningView: View {
         // Use a small delay to ensure Live Activity setup is complete
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
           print("📱 Applying preset duration: \(preset) seconds")
-          timerViewModel.applyPresetDuration(preset)
+          timerViewModel.setDurationTarget(seconds: preset)
           print(
             "📱 Applied preset duration, scheduledAlert: \(timerViewModel.scheduledAlert?.name ?? "nil")"
           )
@@ -89,6 +91,17 @@ struct TimerRunningView: View {
         }
       }
     }
+    .sheet(isPresented: $showCustomDurationSheet) {
+      CustomDurationSheet(
+        mode: .running,
+        initialMinutes: customDurationInitialMinutes,
+        onApply: applyCustomDuration,
+        onCancel: { showCustomDurationSheet = false }
+      )
+      .presentationDetents([.medium, .large])
+      .presentationDragIndicator(.visible)
+      .presentationCornerRadius(32)
+    }
     .onDisappear {
       print("📱 TimerRunningView disappeared - cleaning up timer resources")
       // Invalidate the live activity update timer
@@ -113,12 +126,31 @@ extension TimerRunningView {
   fileprivate var controlsContainer: some View {
     glassContainer {
       VStack(spacing: 24) {
-        BellControlsGrid(timerViewModel: timerViewModel)
-          .frame(maxWidth: .infinity, alignment: .leading)
+        BellControlsGrid(
+          timerViewModel: timerViewModel,
+          onCustomDurationTapped: { showCustomDurationSheet = true }
+        )
+        .frame(maxWidth: .infinity, alignment: .leading)
 
         TimerControlButtons(timerViewModel: timerViewModel, presentationMode: presentationMode)
       }
     }
+  }
+
+  fileprivate var customDurationInitialMinutes: Int {
+    if timerViewModel.hasCustomDurationTarget,
+      let targetSeconds = timerViewModel.scheduledAlert?.targetTimeInSec
+    {
+      return max(Int(targetSeconds / 60), MeditationDuration.minimumMinutes)
+    }
+    return lastCustomDurationMinutes
+  }
+
+  fileprivate func applyCustomDuration(_ duration: MeditationDuration) {
+    lastCustomDurationMinutes = duration.minutes
+    timerViewModel.setDurationTarget(minutes: duration.minutes)
+    showCustomDurationSheet = false
+    UIImpactFeedbackGenerator(style: .light).impactOccurred()
   }
 
   fileprivate func timerColumn(for size: CGSize) -> some View {
@@ -214,9 +246,28 @@ struct TimerCircleView: View {
 }
 
 // MARK: - Bell Controls Grid
+private enum TimerDurationGridItem {
+  case preset(OneTimeScheduledBellAlert)
+  case custom
+
+  var id: String {
+    switch self {
+    case .preset(let option):
+      return "preset-\(Int(option.targetTimeInSec))-\(option.name)"
+    case .custom:
+      return "custom"
+    }
+  }
+}
+
 struct BellControlsGrid: View {
   @ObservedObject var timerViewModel: TimerViewModel
+  let onCustomDurationTapped: () -> Void
   let buttonsPerRow = 4
+
+  private var gridItems: [TimerDurationGridItem] {
+    timerViewModel.scheduledAlertOptions.map(TimerDurationGridItem.preset) + [.custom]
+  }
 
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
@@ -226,26 +277,12 @@ struct BellControlsGrid: View {
         .foregroundStyle(Color.secondary)
 
       ForEach(
-        Array(timerViewModel.scheduledAlertOptions.chunked(into: buttonsPerRow).enumerated()),
+        Array(gridItems.chunked(into: buttonsPerRow).enumerated()),
         id: \.offset
       ) { _, row in
         HStack(spacing: 12) {
-          ForEach(row, id: \.targetTimeInSec) { option in
-            Button {
-              handleAlertSelection(option)
-            } label: {
-              Text(option.name)
-            }
-            .buttonStyle(.plain)
-            .liquidGlassChip(isSelected: timerViewModel.scheduledAlert == option)
-            .accessibilityIdentifier(
-              timerViewModel.scheduledAlert == option
-                ? "selected_duration_\(option.name)"
-                : "duration_\(option.name)"
-            )
-            .accessibilityAddTraits(
-              timerViewModel.scheduledAlert == option ? .isSelected : []
-            )
+          ForEach(row, id: \.id) { item in
+            gridButton(for: item)
           }
 
           if row.count < buttonsPerRow {
@@ -258,33 +295,84 @@ struct BellControlsGrid: View {
     }
   }
 
+  @ViewBuilder
+  private func gridButton(for item: TimerDurationGridItem) -> some View {
+    switch item {
+    case .preset(let option):
+      Button {
+        handleAlertSelection(option)
+      } label: {
+        Text(option.name)
+      }
+      .buttonStyle(.plain)
+      .liquidGlassChip(isSelected: timerViewModel.scheduledAlert == option)
+      .accessibilityIdentifier(
+        timerViewModel.scheduledAlert == option
+          ? "selected_duration_\(option.name)"
+          : "duration_\(option.name)"
+      )
+      .accessibilityAddTraits(
+        timerViewModel.scheduledAlert == option ? .isSelected : []
+      )
+    case .custom:
+      Button {
+        handleCustomSelection()
+      } label: {
+        customChipLabel
+      }
+      .buttonStyle(.plain)
+      .liquidGlassChip(isSelected: timerViewModel.hasCustomDurationTarget)
+      .accessibilityIdentifier("custom_duration_running_chip")
+      .accessibilityLabel(customAccessibilityLabel)
+      .accessibilityHint(customAccessibilityHint)
+      .accessibilityAddTraits(timerViewModel.hasCustomDurationTarget ? .isSelected : [])
+    }
+  }
+
+  @ViewBuilder
+  private var customChipLabel: some View {
+    if let label = timerViewModel.customDurationChipLabel {
+      Text(label)
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+    } else {
+      Image(systemName: "slider.horizontal.3")
+        .font(.system(size: 18, weight: .semibold))
+        .imageScale(.medium)
+    }
+  }
+
+  private var customAccessibilityLabel: Text {
+    if let label = timerViewModel.customDurationLabel {
+      return Text("Custom duration, \(label), selected")
+    }
+    return Text("Custom duration")
+  }
+
+  private var customAccessibilityHint: Text {
+    if timerViewModel.hasCustomDurationTarget {
+      return Text("Clears the custom timer")
+    }
+    return Text("Opens custom duration settings")
+  }
+
   @MainActor
   private func handleAlertSelection(_ scheduledAlertOption: OneTimeScheduledBellAlert) {
     if timerViewModel.scheduledAlert == scheduledAlertOption {
-      // Clear selection and pending notifications on the main actor
-      timerViewModel.scheduledAlert = nil
-      UNUserNotificationCenter.current().removePendingNotificationRequests(
-        withIdentifiers: ["timerNotification"]
-      )
+      timerViewModel.clearDurationTarget()
     } else {
-      // Optimistically set selection on main actor
-      timerViewModel.scheduledAlert = scheduledAlertOption
+      timerViewModel.setDurationTarget(seconds: Int(scheduledAlertOption.targetTimeInSec))
+    }
+  }
 
-      // In tests with system integrations disabled, avoid scheduling notifications
-      if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") {
-        return
-      }
-
-      // Schedule a local notification via NotificationManager (Swift 6 safe)
-      Task {
-        try? await NotificationManager.shared.scheduleTimerNotification(
-          identifier: "timerNotification",
-          title: "Timer Complete",
-          body: "Your \(scheduledAlertOption.name) minute timer has finished",
-          soundName: "42095__fauxpress__bell-meditation.aif",
-          timeInterval: TimeInterval(scheduledAlertOption.targetTimeInSec)
-        )
-      }
+  @MainActor
+  private func handleCustomSelection() {
+    if timerViewModel.hasCustomDurationTarget {
+      timerViewModel.clearDurationTarget()
+      UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    } else {
+      onCustomDurationTapped()
+      UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
   }
 }

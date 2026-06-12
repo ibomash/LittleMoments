@@ -82,6 +82,38 @@ final class DeepLinkTests: XCTestCase {
     XCTAssertEqual(AppState.shared.pendingStartDurationSeconds, 120)
   }
 
+  func testMeditationSessionIntentPerformAcceptsDurationOverTwoHours() {
+    AppState.shared.resetState()
+    var intent = MeditationSessionIntent()
+    intent.durationMinutes = 150
+    let exp = expectation(description: "intent perform")
+    Task {
+      _ = try? await intent.perform()
+      exp.fulfill()
+    }
+    wait(for: [exp], timeout: 2.0)
+    XCTAssertTrue(AppState.shared.showTimerRunningView)
+    XCTAssertEqual(AppState.shared.pendingStartDurationSeconds, 9_000)
+  }
+
+  func testMeditationSessionIntentPerformRejectsNonPositiveDuration() {
+    AppState.shared.resetState()
+    var intent = MeditationSessionIntent()
+    intent.durationMinutes = 0
+    let exp = expectation(description: "intent perform")
+    Task {
+      do {
+        _ = try await intent.perform()
+        XCTFail("Expected non-positive duration to throw")
+      } catch {
+        XCTAssertFalse(AppState.shared.showTimerRunningView)
+        XCTAssertNil(AppState.shared.pendingStartDurationSeconds)
+      }
+      exp.fulfill()
+    }
+    wait(for: [exp], timeout: 2.0)
+  }
+
   func testParseDurationHelper() throws {
     XCTAssertEqual(LittleMomentsApp.parseDurationToSeconds("60"), 60)
     XCTAssertEqual(LittleMomentsApp.parseDurationToSeconds("60s"), 60)
