@@ -3,7 +3,7 @@ id: doc-24
 title: 'Feature: Custom Meditation Duration'
 type: specification
 created_date: '2026-06-09 14:25'
-updated_date: '2026-06-09 14:57'
+updated_date: '2026-06-10 11:15'
 tags:
   - feature
   - spec
@@ -58,45 +58,42 @@ Use a sheet rather than a full-screen replacement so the feature feels optional 
 - **iPad / landscape:** allow the sheet to size comfortably as a centered form or large detent while preserving a visible running timer in the background when possible.
 
 ### Layout and Spacing
-Use a single, focused vertical layout with generous spacing:
+Use a single, focused vertical layout with generous spacing. The sheet has one job in both entry contexts: set when the bell should sound. The start and running flows may use different action verbs, but the editor should not feel like two different experiences.
 
 1. **Header block**
    - Title: “Custom duration”.
-   - Subtitle: “Choose when the bell should end this session.”
-   - Optional context line on the running screen: “Your timer is still running.”
+   - Subtitle: “Set when the bell should sound.”
+   - Avoid over-emphasizing whether the session is already running or about to start; that distinction belongs primarily in the primary action label.
    - Use 24 pt horizontal padding and 24–32 pt vertical spacing between major groups, aligning with the existing start/running screens.
 
-2. **Large duration readout**
-   - Centered prominent text, e.g. “25 min” or “1 hr 30 min”.
-   - Use a large rounded rectangle / Liquid Glass card with the accent tint at low opacity.
-   - Update live as slider or text input changes.
+2. **Stable duration field**
+   - Use one fixed-height Liquid Glass numeric field for the selected duration rather than separate “display” and “editing” controls.
+   - Show the editable minute value prominently with a trailing “min” label.
+   - Treat this field as the authoritative duration readout; do not add a second large label that competes with the editable value.
+   - The field is not focused by default, updates live as the slider changes, and can be tapped for precise typed entry.
+   - Focus should never change the field’s height or the sheet’s visual hierarchy; editing state may show selection/caret affordances only.
+   - The field should remain compact enough to sit in a horizontal control row with the sheet actions on standard iPhone portrait widths.
 
-3. **Slider section**
+3. **Sheet actions**
+   - Place Cancel and the primary action in the same horizontal control row as the duration field when space permits, with the primary action trailing.
+   - Use a compact primary label: “Start” from the Start screen, “Set” from the Timer Running screen.
+   - Accessibility labels should include the full consequence and duration, e.g. “Start 25 min session” or “Set bell for 25 min”.
+   - If horizontal space is constrained, wrap the actions below the field while preserving the same visual grouping.
+
+4. **Slider section**
    - Slider range: 1...120 minutes.
    - Step: 1 minute.
    - Min/max labels: “1 min” and “2 hr”.
    - Include subtle tick labels at helpful milestones if space allows: 15, 30, 60, 90, 120. Avoid dense tick marks that clutter the calm design.
    - Provide haptic selection feedback at meaningful boundaries such as 5-minute increments, 30 minutes, 60 minutes, and 120 minutes.
 
-4. **Text input section**
-   - Label: “Minutes”.
-   - Numeric text field using `.numberPad`, constrained to whole minutes.
-   - Optional stepper with minus/plus controls for one-minute nudges if it does not crowd the sheet.
-   - Text entry should accept any positive whole-minute value. Invalid or partial input should not immediately punish the user; validate on commit/apply and show inline guidance.
+5. **Validation and keyboard behavior**
+   - Numeric text entry should accept any positive whole-minute value. Invalid or partial input should not immediately punish the user; validate on commit/apply and show inline guidance.
    - Inline helper/error examples:
-     - Normal: “Enter minutes, or use the slider for 1 min–2 hr.”
+     - Normal: “Tap the value to type, or use the slider for 1 min–2 hr.”
      - Empty while editing: “Add a duration before applying.”
      - Zero/negative: “Enter at least 1 minute.”
-
-5. **Sheet actions**
-   - When opened from the launch/home Start button:
-     - Primary: “Start 25 min session”. Applies duration, donates the intent, dismisses the custom-duration sheet, and starts the timer.
-     - Secondary: “Cancel”. Dismisses the sheet without starting.
-     - Optional tertiary text button: “Start without timer” only if usability testing suggests users need it here; default tap Start already covers this.
-   - When opened from the Timer Running screen:
-     - Primary: “Set bell for 25 min”. Applies a new end target relative to session start, schedules/updates notification, updates Live Activity, and dismisses the custom-duration sheet.
-     - Secondary: “Cancel”. Dismisses the sheet without changes.
-     - Clearing an active timer target should happen by tapping the active preset/custom chip again in the timer grid, matching the existing preset-toggle behavior, rather than through a separate sheet action.
+   - Use safe-area-aware keyboard controls, preferably SwiftUI keyboard toolbar placement. Avoid custom input accessory views that can be clipped by the sheet or device edge.
 
 ### Visual Style
 - Reuse existing Liquid Glass button, chip, and surface treatments so the sheet feels native to the app.
@@ -109,10 +106,10 @@ Use a single, focused vertical layout with generous spacing:
 - Respect Reduce Transparency with solid system backgrounds, matching current Liquid Glass wrappers.
 
 ### Accessibility
-- VoiceOver order: title, explanation, current duration, slider, text input, helper/error text, primary action, secondary actions.
+- VoiceOver order: title, explanation, duration field, helper/error text, Cancel, primary action, slider.
 - Slider accessibility value should speak formatted duration, e.g. “25 minutes” or “1 hour 30 minutes”.
 - Text field should have an accessibility hint: “Enter a duration in minutes; values over 2 hours are allowed when typed.”
-- Dynamic Type: large readout can wrap to two lines; controls should remain reachable without overlapping.
+- Dynamic Type: the duration field may scale the numeric text down within its fixed height; controls should remain reachable without overlapping.
 - Button labels should include the selected duration, not only “Apply”.
 - Add accessibility identifiers for UI tests:
   - `custom_duration_sheet`

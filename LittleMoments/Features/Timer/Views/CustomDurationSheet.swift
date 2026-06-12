@@ -8,12 +8,7 @@ enum CustomDurationSheetMode: Equatable {
   var title: String { "Custom duration" }
 
   var subtitle: String {
-    switch self {
-    case .start:
-      return "Choose when the bell should end this session."
-    case .running:
-      return "Your timer keeps running while you adjust the bell."
-    }
+    "Set when the bell should sound."
   }
 
   var compactApplyTitle: String {
@@ -45,6 +40,7 @@ struct CustomDurationSheet: View {
   @State private var minutesText: String
   @State private var validationMessage: String?
   @State private var lastHapticMinute: Int
+  @FocusState private var minutesFieldIsFocused: Bool
 
   init(
     mode: CustomDurationSheetMode,
@@ -61,17 +57,24 @@ struct CustomDurationSheet: View {
   }
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 18) {
+    VStack(alignment: .leading, spacing: 20) {
       header
-      durationEntryAndApplyRow
+      durationEditorSection
       sliderSection
-      footerActions
     }
     .padding(.horizontal, 24)
     .padding(.top, 20)
     .padding(.bottom, 18)
     .frame(maxWidth: .infinity, alignment: .topLeading)
     .background(backgroundSurface)
+    .toolbar {
+      ToolbarItemGroup(placement: .keyboard) {
+        Spacer()
+        Button("Done") {
+          dismissKeyboard()
+        }
+      }
+    }
     .accessibilityIdentifier("custom_duration_sheet")
   }
 
@@ -87,26 +90,9 @@ struct CustomDurationSheet: View {
     .frame(maxWidth: .infinity, alignment: .leading)
   }
 
-  private var durationEntryAndApplyRow: some View {
-    VStack(alignment: .leading, spacing: 8) {
-      HStack(alignment: .center, spacing: 12) {
-        durationEntryCard
-
-        Button {
-          applyDuration()
-        } label: {
-          VStack(spacing: 3) {
-            Image(systemName: "checkmark")
-              .font(.system(size: 20, weight: .bold))
-            Text(mode.compactApplyTitle)
-              .font(.caption.weight(.semibold))
-          }
-        }
-        .accessibilityIdentifier("custom_duration_apply_button")
-        .accessibilityLabel(mode.applyTitle(for: currentDuration))
-        .liquidGlassIconButtonStyle(variant: .prominent, role: .success, diameter: 68)
-      }
-
+  private var durationEditorSection: some View {
+    VStack(alignment: .leading, spacing: 10) {
+      durationControlRow
       Text(validationMessage ?? "Tap the value to type, or use the slider for 1 min–2 hr.")
         .font(.footnote)
         .foregroundStyle(validationMessage == nil ? Color.secondary : Color.red)
@@ -114,10 +100,34 @@ struct CustomDurationSheet: View {
     }
   }
 
-  private var durationEntryCard: some View {
+  private var durationControlRow: some View {
+    ViewThatFits(in: .horizontal) {
+      HStack(alignment: .center, spacing: 10) {
+        durationEntryField
+        actionButtons
+      }
+
+      VStack(alignment: .leading, spacing: 12) {
+        durationEntryField
+        actionButtons
+          .frame(maxWidth: .infinity, alignment: .trailing)
+      }
+    }
+  }
+
+  private var durationEntryField: some View {
     HStack(alignment: .firstTextBaseline, spacing: 8) {
-      SelectAllMinutesTextField(text: $minutesText)
-        .frame(minHeight: 48)
+      TextField("", text: $minutesText)
+        .keyboardType(.numberPad)
+        .textInputAutocapitalization(.never)
+        .disableAutocorrection(true)
+        .multilineTextAlignment(.trailing)
+        .font(.system(size: 34, weight: .bold, design: .default))
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+        .focused($minutesFieldIsFocused)
+        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44, alignment: .trailing)
+        .accessibilityIdentifier("custom_duration_minutes_field")
         .accessibilityHint("Enter a duration in minutes; values over 2 hours are allowed.")
         .onChange(of: minutesText) { _, newValue in
           updateDraftMinutes(from: newValue)
@@ -127,10 +137,13 @@ struct CustomDurationSheet: View {
         .font(.headline.weight(.semibold))
         .foregroundStyle(.secondary)
     }
-    .padding(.vertical, 16)
     .padding(.horizontal, 18)
-    .frame(maxWidth: .infinity, minHeight: 72)
+    .frame(minWidth: 132, maxWidth: .infinity)
+    .frame(height: 72)
     .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+    .onTapGesture {
+      minutesFieldIsFocused = true
+    }
     .background(
       RoundedRectangle(cornerRadius: 24, style: .continuous)
         .fill(
@@ -149,6 +162,29 @@ struct CustomDurationSheet: View {
         )
     )
     .accessibilityLabel(currentDuration.accessibilityLabel)
+  }
+
+  private var actionButtons: some View {
+    HStack(spacing: 10) {
+      Button {
+        onCancel()
+      } label: {
+        Text("Cancel")
+      }
+      .accessibilityIdentifier("custom_duration_cancel_button")
+      .liquidGlassButtonStyle(.subtle, role: .neutral, controlHeight: 72)
+      .frame(width: 92)
+
+      Button {
+        applyDuration()
+      } label: {
+        Text(mode.compactApplyTitle)
+      }
+      .accessibilityIdentifier("custom_duration_apply_button")
+      .accessibilityLabel(mode.applyTitle(for: currentDuration))
+      .liquidGlassButtonStyle(.prominent, role: .success, controlHeight: 72)
+      .frame(width: 78)
+    }
   }
 
   private var sliderSection: some View {
@@ -171,17 +207,6 @@ struct CustomDurationSheet: View {
       .font(.caption)
       .foregroundStyle(.secondary)
     }
-  }
-
-  private var footerActions: some View {
-    Button {
-      onCancel()
-    } label: {
-      Text("Cancel")
-        .frame(maxWidth: .infinity)
-    }
-    .accessibilityIdentifier("custom_duration_cancel_button")
-    .liquidGlassButtonStyle(.subtle, role: .neutral, controlHeight: 44)
   }
 
   private var backgroundSurface: some View {
@@ -255,12 +280,7 @@ struct CustomDurationSheet: View {
   }
 
   private func dismissKeyboard() {
-    UIApplication.shared.sendAction(
-      #selector(UIResponder.resignFirstResponder),
-      to: nil,
-      from: nil,
-      for: nil
-    )
+    minutesFieldIsFocused = false
   }
 
   private func provideSliderFeedbackIfNeeded(for minutes: Int) {
@@ -273,81 +293,6 @@ struct CustomDurationSheet: View {
     guard shouldProvideFeedback else { return }
 
     UIImpactFeedbackGenerator(style: .light).impactOccurred()
-  }
-}
-
-private struct SelectAllMinutesTextField: UIViewRepresentable {
-  @Binding var text: String
-
-  func makeUIView(context: Context) -> UITextField {
-    let textField = UITextField()
-    textField.delegate = context.coordinator
-    textField.keyboardType = .numberPad
-    textField.textAlignment = .right
-    textField.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-    textField.adjustsFontForContentSizeCategory = true
-    textField.minimumFontSize = 24
-    textField.adjustsFontSizeToFitWidth = true
-    textField.accessibilityIdentifier = "custom_duration_minutes_field"
-    textField.addTarget(
-      context.coordinator,
-      action: #selector(Coordinator.textDidChange(_:)),
-      for: .editingChanged
-    )
-    textField.inputAccessoryView = context.coordinator.makeToolbar()
-    return textField
-  }
-
-  func updateUIView(_ textField: UITextField, context: Context) {
-    if textField.text != text {
-      textField.text = text
-    }
-  }
-
-  func makeCoordinator() -> Coordinator {
-    Coordinator(text: $text)
-  }
-
-  final class Coordinator: NSObject, UITextFieldDelegate {
-    @Binding private var text: String
-
-    init(text: Binding<String>) {
-      _text = text
-    }
-
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-      DispatchQueue.main.async {
-        textField.selectAll(nil)
-      }
-    }
-
-    @objc func textDidChange(_ textField: UITextField) {
-      text = textField.text ?? ""
-    }
-
-    @objc func doneTapped() {
-      UIApplication.shared.sendAction(
-        #selector(UIResponder.resignFirstResponder),
-        to: nil,
-        from: nil,
-        for: nil
-      )
-    }
-
-    func makeToolbar() -> UIToolbar {
-      let toolbar = UIToolbar()
-      toolbar.items = [
-        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-        UIBarButtonItem(
-          title: "Done",
-          style: .done,
-          target: self,
-          action: #selector(doneTapped)
-        ),
-      ]
-      toolbar.sizeToFit()
-      return toolbar
-    }
   }
 }
 
