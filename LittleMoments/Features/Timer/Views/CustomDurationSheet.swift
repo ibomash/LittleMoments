@@ -60,6 +60,7 @@ struct CustomDurationSheet: View {
     VStack(alignment: .leading, spacing: 20) {
       header
       durationEditorSection
+      projectedFinishSection
       sliderSection
     }
     .padding(.horizontal, 24)
@@ -209,6 +210,43 @@ struct CustomDurationSheet: View {
     }
   }
 
+  private var projectedFinishSection: some View {
+    TimelineView(.periodic(from: .now, by: 30)) { context in
+      HStack(alignment: .firstTextBaseline, spacing: 8) {
+        Image(systemName: "clock")
+          .font(.footnote.weight(.semibold))
+          .foregroundStyle(.secondary)
+          .accessibilityHidden(true)
+
+        Text("Ends around")
+          .font(.footnote.weight(.medium))
+          .foregroundStyle(.secondary)
+
+        Text(projectedFinishTime(from: context.date))
+          .font(.footnote.weight(.semibold))
+          .monospacedDigit()
+          .foregroundStyle(.primary)
+          .accessibilityIdentifier("custom_duration_projected_finish_time")
+      }
+      .padding(.horizontal, 14)
+      .padding(.vertical, 10)
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .background(
+        Capsule(style: .continuous)
+          .fill(
+            LiquidGlassTokens.surfaceFill(
+              reducesTransparency: reducesTransparency,
+              fallback: Color(UIColor.secondarySystemBackground),
+              opacity: 0.12
+            )
+          )
+      )
+      .accessibilityElement(children: .combine)
+      .accessibilityLabel("Projected finish time")
+      .accessibilityValue("Ends around \(projectedFinishTime(from: context.date))")
+    }
+  }
+
   private var backgroundSurface: some View {
     Group {
       if reducesTransparency {
@@ -237,6 +275,18 @@ struct CustomDurationSheet: View {
   private static let minimumDuration = try? MeditationDuration(
     minutes: MeditationDuration.minimumMinutes
   )
+
+  private func projectedFinishTime(from now: Date) -> String {
+    let finishDate = now.addingTimeInterval(TimeInterval(currentDuration.seconds))
+    return Self.finishTimeFormatter.string(from: finishDate)
+  }
+
+  private static let finishTimeFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.timeStyle = .short
+    formatter.dateStyle = .none
+    return formatter
+  }()
 
   private var sliderValue: Binding<Double> {
     Binding(
