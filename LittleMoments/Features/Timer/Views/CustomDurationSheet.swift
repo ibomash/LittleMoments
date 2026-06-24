@@ -7,10 +7,6 @@ enum CustomDurationSheetMode: Equatable {
 
   var title: String { "Custom duration" }
 
-  var subtitle: String {
-    "Set when the bell should sound."
-  }
-
   var compactApplyTitle: String {
     switch self {
     case .start:
@@ -60,6 +56,7 @@ struct CustomDurationSheet: View {
     VStack(alignment: .leading, spacing: 20) {
       header
       durationEditorSection
+      projectedFinishSection
       sliderSection
     }
     .padding(.horizontal, 24)
@@ -79,24 +76,20 @@ struct CustomDurationSheet: View {
   }
 
   private var header: some View {
-    VStack(alignment: .leading, spacing: 4) {
-      Text(mode.title)
-        .font(.headline.weight(.bold))
-      Text(mode.subtitle)
-        .font(.footnote)
-        .foregroundStyle(.secondary)
-        .fixedSize(horizontal: false, vertical: true)
-    }
-    .frame(maxWidth: .infinity, alignment: .leading)
+    Text(mode.title)
+      .font(.headline.weight(.bold))
+      .frame(maxWidth: .infinity, alignment: .leading)
   }
 
   private var durationEditorSection: some View {
     VStack(alignment: .leading, spacing: 10) {
       durationControlRow
-      Text(validationMessage ?? "Tap the value to type, or use the slider for 1 min–1 hr.")
-        .font(.footnote)
-        .foregroundStyle(validationMessage == nil ? Color.secondary : Color.red)
-        .fixedSize(horizontal: false, vertical: true)
+      if let validationMessage {
+        Text(validationMessage)
+          .font(.footnote)
+          .foregroundStyle(Color.red)
+          .fixedSize(horizontal: false, vertical: true)
+      }
     }
   }
 
@@ -209,6 +202,31 @@ struct CustomDurationSheet: View {
     }
   }
 
+  private var projectedFinishSection: some View {
+    TimelineView(.periodic(from: .now, by: 30)) { context in
+      HStack(alignment: .firstTextBaseline, spacing: 8) {
+        Image(systemName: "clock")
+          .font(.footnote.weight(.semibold))
+          .foregroundStyle(.secondary)
+          .accessibilityHidden(true)
+
+        Text("Ends around")
+          .font(.footnote.weight(.medium))
+          .foregroundStyle(.secondary)
+
+        Text(projectedFinishTime(from: context.date))
+          .font(.footnote.weight(.semibold))
+          .monospacedDigit()
+          .foregroundStyle(.primary)
+          .accessibilityIdentifier("custom_duration_projected_finish_time")
+      }
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .accessibilityElement(children: .combine)
+      .accessibilityLabel("Projected finish time")
+      .accessibilityValue("Ends around \(projectedFinishTime(from: context.date))")
+    }
+  }
+
   private var backgroundSurface: some View {
     Group {
       if reducesTransparency {
@@ -237,6 +255,18 @@ struct CustomDurationSheet: View {
   private static let minimumDuration = try? MeditationDuration(
     minutes: MeditationDuration.minimumMinutes
   )
+
+  private func projectedFinishTime(from now: Date) -> String {
+    let finishDate = now.addingTimeInterval(TimeInterval(currentDuration.seconds))
+    return Self.finishTimeFormatter.string(from: finishDate)
+  }
+
+  private static let finishTimeFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.timeStyle = .short
+    formatter.dateStyle = .none
+    return formatter
+  }()
 
   private var sliderValue: Binding<Double> {
     Binding(
