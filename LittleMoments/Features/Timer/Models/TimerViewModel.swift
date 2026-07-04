@@ -25,6 +25,7 @@ class TimerViewModel: ObservableObject {
   private var wasCancelled = false
   // Timestamp of the last cancelSession notification
   private var lastCancelTime: Date?
+  private let bellPlaybackCoordinator: BellPlaybackCoordinating
 
   // Running timer
   private var startDate: Date?
@@ -134,6 +135,8 @@ class TimerViewModel: ObservableObject {
     if schedulesNotification, let scheduledAlert {
       scheduleTimerNotification(for: scheduledAlert)
     }
+
+    updateBellPlaybackTarget()
   }
 
   func clearDurationTarget() {
@@ -141,12 +144,17 @@ class TimerViewModel: ObservableObject {
     UNUserNotificationCenter.current().removePendingNotificationRequests(
       withIdentifiers: ["timerNotification"]
     )
+    bellPlaybackCoordinator.setTarget(
+      secondsFromSessionStart: nil,
+      elapsedSeconds: TimeInterval(secondsElapsed)
+    )
   }
 
   private func scheduleTimerNotification(for alert: OneTimeScheduledBellAlert) {
     if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") {
       return
     }
+    guard bellPlaybackCoordinator.schedulesNotifications else { return }
 
     let remainingSeconds = TimeInterval(alert.targetTimeInSec - secondsElapsed)
     guard remainingSeconds > 0 else {
@@ -170,6 +178,13 @@ class TimerViewModel: ObservableObject {
   func start() {
     timer?.invalidate()
     startDate = Date()
+    if let startDate {
+      bellPlaybackCoordinator.startSession(
+        startDate: startDate,
+        ringBellAtStart: settings.ringBellAtStart
+      )
+    }
+    updateBellPlaybackTarget()
     timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
       Task { @MainActor in
         guard let self else { return }
@@ -182,6 +197,15 @@ class TimerViewModel: ObservableObject {
       UIApplication.shared.endBackgroundTask(self.backgroundTask)
       self.backgroundTask = .invalid
     }
+  }
+
+  private func updateBellPlaybackTarget() {
+    guard timer != nil || startDate != nil else { return }
+
+    bellPlaybackCoordinator.setTarget(
+      secondsFromSessionStart: scheduledAlert.map { Int($0.targetTimeInSec) },
+      elapsedSeconds: TimeInterval(secondsElapsed)
+    )
   }
 
   // Add this property to store the startDate when a session is finishing
@@ -290,7 +314,9 @@ class TimerViewModel: ObservableObject {
   private var finishObserver: NSObjectProtocol?
   private var cancelObserver: NSObjectProtocol?
 
-  init() {
+  init(bellPlaybackCoordinator: BellPlaybackCoordinating = BellPlaybackCoordinator.shared) {
+    self.bellPlaybackCoordinator = bellPlaybackCoordinator
+
     // Initialize scheduledAlertOptions with default values
     self.scheduledAlertOptions = [
       OneTimeScheduledBellAlert(targetTimeInMin: 5),
@@ -403,6 +429,7 @@ class TimerViewModel: ObservableObject {
 
   func reset() {
     print("Timer reset - clearing timer state and canceling timer")
+    bellPlaybackCoordinator.cancelSession()
     timer?.invalidate()
     timer = nil
     startDate = nil
