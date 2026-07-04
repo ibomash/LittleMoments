@@ -1,0 +1,28 @@
+schemaVersion: 1
+
+# Keep the advertised MCP tool catalog useful for this app without exposing
+# unrelated device-management or macOS workflows by default.
+enabledWorkflows:
+  - simulator
+  - project-discovery
+  - debugging
+  - ui-automation
+  - coverage
+  - xcode-ide
+
+sessionDefaults:
+  projectPath: "./LittleMoments.xcodeproj"
+  scheme: "LittleMoments"
+  configuration: "Debug"
+  simulatorName: "iPhone 17 Pro"
+  simulatorPlatform: "iOS Simulator"
+  useLatestOS: true
+  platform: "iOS Simulator"
+  bundleId: "net.bomash.illya.LittleMoments"
+
+filePathRenderStyle: "tree"
+showTestTiming: true
+incrementalBuildsEnabled: false
+debug: false
+sentryDisabled: true
+uiDebuggerGuardMode: "error"

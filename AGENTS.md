@@ -54,7 +54,7 @@ bin/fastlane test_plan plan:"Default"
 * **Linter:** `SwiftLint` strict; fix new violations before commit.
 * **Language/tooling versions:**
 
-  * Xcode: **18.x (iOS 26 SDK)**
+  * Xcode: **26.x (iOS 26 SDK)**
   * Swift: **6.0**
   * iOS minimum: **26.0**
   * SwiftFormat: **(version)**
@@ -112,13 +112,17 @@ bin/fastlane test_plan plan:"Default"
 
 * Use `apple_docs_sosumi` for Apple docs (Markdown mirror of developer.apple.com).
 * Agents should prefer the lanes above to external commands.
+* Use XcodeBuildMCP for structured Xcode context, simulator launch/log/screenshot flows, accessibility snapshots, LLDB debugging, coverage inspection, and Xcode IDE bridge tools.
+* Before any XcodeBuildMCP build/run/test call, inspect session defaults and use the repo defaults in `.xcodebuildmcp/config.yaml` if they are missing.
+* See `docs/agentic-xcodebuildmcp.md` for the agent workflow, common task routing, Xcode IDE bridge notes, and guardrails.
 
-## OpenCode (MCP)
+## Agent MCP
 
-Project config lives in `opencode.jsonc`.
+Project config lives in `opencode.jsonc`, `.vscode/mcp.json`, `.codex/config.toml`, and `.xcodebuildmcp/config.yaml`.
 
 * `apple_docs_sosumi` is enabled by default.
-* `XcodeBuildMCP` is configured but disabled by default (enable it in `opencode.jsonc` when you want agentic `xcodebuild`/simulator tooling).
+* `XcodeBuildMCP` is enabled for simulator, project-discovery, debugging, UI automation, coverage, and Xcode IDE bridge workflows.
+* Official quality gates still go through `bin/fastlane`; MCP is for app/simulator inspection and interactive agent workflows.
 
 ## Backlog.md
 
