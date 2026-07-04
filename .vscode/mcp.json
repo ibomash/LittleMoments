@@ -7,7 +7,13 @@
 		"XcodeBuildMCP": {
 			"type": "stdio",
 			"command": "npx",
-			"args": ["-y", "xcodebuildmcp@latest", "mcp"]
+			"args": ["-y", "xcodebuildmcp@latest", "mcp"],
+			"env": {
+				"XCODEBUILDMCP_CWD": "/Users/ibomash/Local/LittleMoments",
+				"XCODEBUILDMCP_ENABLED_WORKFLOWS": "simulator,project-discovery,debugging,ui-automation,coverage,xcode-ide",
+				"XCODEBUILDMCP_MCP_IDLE_TIMEOUT_MS": "600000",
+				"XCODEBUILDMCP_SENTRY_DISABLED": "true"
+			}
 		}
 	},
 	"inputs": []
