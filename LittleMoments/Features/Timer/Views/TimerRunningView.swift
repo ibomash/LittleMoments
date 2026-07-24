@@ -13,7 +13,6 @@ struct TimerRunningView: View {
   @StateObject var timerViewModel = TimerViewModel()
   @Environment(\.presentationMode) var presentationMode
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
-  @State private var liveActivityUpdateTimer: Timer?
   @State private var showCustomDurationSheet = false
   @AppStorage("lastCustomDurationMinutes") private var lastCustomDurationMinutes = 10
   @Environment(\.accessibilityReduceTransparency) private var reducesTransparency
@@ -72,24 +71,6 @@ struct TimerRunningView: View {
         }
       }
 
-      // Update timer for Live Activity
-      liveActivityUpdateTimer = Timer.scheduledTimer(
-        withTimeInterval: 1.0,
-        repeats: true
-      ) { [weak timerViewModel] _ in
-        Task { @MainActor in
-          guard let timerViewModel = timerViewModel else { return }
-
-          // Only update if the timer is active (not nil)
-          if timerViewModel.timer != nil {
-            timerViewModel.updateLiveActivity()
-          } else {
-            // If timer is no longer running, invalidate this update timer
-            self.liveActivityUpdateTimer?.invalidate()
-            self.liveActivityUpdateTimer = nil
-          }
-        }
-      }
     }
     .sheet(isPresented: $showCustomDurationSheet) {
       CustomDurationSheet(
@@ -104,9 +85,6 @@ struct TimerRunningView: View {
     }
     .onDisappear {
       print("📱 TimerRunningView disappeared - cleaning up timer resources")
-      // Invalidate the live activity update timer
-      liveActivityUpdateTimer?.invalidate()
-      liveActivityUpdateTimer = nil
 
       // Remove any pending timer notification without clearing unrelated ones
       UNUserNotificationCenter.current().removePendingNotificationRequests(

@@ -24,12 +24,9 @@ struct MeditationLiveActivityWidget: Widget {
         // Expanded UI
         DynamicIslandExpandedRegion(.leading) {
           Label {
-            Text(
-              timerDisplayFromSeconds(
-                seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
-            )
-            .monospacedDigit()
-            .font(.title2)
+            LiveActivityElapsedTimeView(state: context.state)
+              .monospacedDigit()
+              .font(.title2)
           } icon: {
             Image(systemName: "timer")
           }
@@ -37,8 +34,8 @@ struct MeditationLiveActivityWidget: Widget {
         }
 
         DynamicIslandExpandedRegion(.trailing) {
-          if let targetTime = context.state.targetTimeInSeconds {
-            ProgressView(value: min(context.state.secondsElapsed / targetTime, 1.0))
+          if context.state.targetTimeInSeconds != nil {
+            LiveActivityProgressView(state: context.state)
               .progressViewStyle(.circular)
               .frame(width: 40, height: 40)
               .padding(.trailing)
@@ -76,12 +73,9 @@ struct MeditationLiveActivityWidget: Widget {
       } compactLeading: {
         Image(systemName: "timer")
       } compactTrailing: {
-        Text(
-          timerDisplayFromSeconds(
-            seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
-        )
-        .monospacedDigit()
-        .font(.caption2)
+        LiveActivityElapsedTimeView(state: context.state)
+          .monospacedDigit()
+          .font(.caption2)
       } minimal: {
         Image(systemName: "timer")
       }

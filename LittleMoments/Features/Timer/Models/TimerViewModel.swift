@@ -256,34 +256,22 @@ class TimerViewModel: ObservableObject {
     print("Starting live activity with target seconds: \(targetSeconds ?? 0)")
     LiveActivityManager.shared.startActivity(
       sessionName: "Meditation",
-      targetTimeInSeconds: targetSeconds
+      targetTimeInSeconds: targetSeconds,
+      startDate: startDate ?? Date()
     )
-  }
-
-  func updateLiveActivity() {
-    if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") { return }
-    guard JustNowSettings.shared.enableLiveActivities else { return }
-
-    // Don't update if the timer has been reset
-    guard timer != nil else { return }
-
-    Task { await LiveActivityManager.shared.updateActivity(secondsElapsed: secondsElapsed) }
   }
 
   func endLiveActivity(completed: Bool = true) {
     if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") { return }
     guard JustNowSettings.shared.enableLiveActivities else { return }
 
-    if completed {
-      Task {
-        await LiveActivityManager.shared.updateActivity(
-          secondsElapsed: secondsElapsed,
-          isCompleted: true
-        )
-      }
+    let finalSecondsElapsed = secondsElapsed
+    Task {
+      await LiveActivityManager.shared.endActivity(
+        finalSecondsElapsed: finalSecondsElapsed,
+        completed: completed
+      )
     }
-
-    Task { await LiveActivityManager.shared.endActivity() }
   }
 
   // LiveActivity notification observers

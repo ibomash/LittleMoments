@@ -66,17 +66,24 @@ final class MeditationLiveActivityAttributesTests: XCTestCase {
 
   func testContentStateInitializer() {
     // Test ContentState initializer with various showSeconds values
+    let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
     let stateWithSeconds = MeditationLiveActivityAttributes.ContentState(
       secondsElapsed: 120,
       targetTimeInSeconds: 300,
       isCompleted: false,
-      showSeconds: true
+      showSeconds: true,
+      startDate: startDate
     )
 
     XCTAssertEqual(stateWithSeconds.secondsElapsed, 120)
     XCTAssertEqual(stateWithSeconds.targetTimeInSeconds, 300)
     XCTAssertEqual(stateWithSeconds.isCompleted, false)
     XCTAssertEqual(stateWithSeconds.showSeconds, true)
+    XCTAssertEqual(stateWithSeconds.startDate, startDate)
+    XCTAssertEqual(
+      stateWithSeconds.targetEndDate,
+      startDate.addingTimeInterval(300)
+    )
 
     let stateWithoutSeconds = MeditationLiveActivityAttributes.ContentState(
       secondsElapsed: 120,
@@ -86,6 +93,42 @@ final class MeditationLiveActivityAttributesTests: XCTestCase {
     )
 
     XCTAssertEqual(stateWithoutSeconds.showSeconds, false)
+  }
+
+  func testContentStateDerivesStartDateFromElapsedSnapshot() {
+    let beforeCreation = Date()
+    let state = MeditationLiveActivityAttributes.ContentState(secondsElapsed: 90)
+    let afterCreation = Date()
+
+    XCTAssertGreaterThanOrEqual(
+      state.startDate,
+      beforeCreation.addingTimeInterval(-90)
+    )
+    XCTAssertLessThanOrEqual(
+      state.startDate,
+      afterCreation.addingTimeInterval(-90)
+    )
+    XCTAssertNil(state.targetEndDate)
+  }
+
+  func testContentStateTimingDatesSurviveCodableRoundTrip() throws {
+    let startDate = Date(timeIntervalSinceReferenceDate: 10_000)
+    let state = MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: 45,
+      targetTimeInSeconds: 600,
+      isCompleted: false,
+      showSeconds: true,
+      startDate: startDate
+    )
+
+    let encoded = try JSONEncoder().encode(state)
+    let decoded = try JSONDecoder().decode(
+      MeditationLiveActivityAttributes.ContentState.self,
+      from: encoded
+    )
+
+    XCTAssertEqual(decoded, state)
+    XCTAssertEqual(decoded.targetEndDate, startDate.addingTimeInterval(600))
   }
 
   func testContentStateDefaultValues() {

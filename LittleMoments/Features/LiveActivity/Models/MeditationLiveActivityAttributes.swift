@@ -20,15 +20,21 @@ public struct MeditationLiveActivityAttributes: ActivityAttributes {
     public var targetTimeInSeconds: Double?
     public var isCompleted: Bool
     public var showSeconds: Bool
+    public var startDate: Date
 
     public init(
       secondsElapsed: Double, targetTimeInSeconds: Double? = nil, isCompleted: Bool = false,
-      showSeconds: Bool = true
+      showSeconds: Bool = true, startDate: Date? = nil
     ) {
       self.secondsElapsed = secondsElapsed
       self.targetTimeInSeconds = targetTimeInSeconds
       self.isCompleted = isCompleted
       self.showSeconds = showSeconds
+      self.startDate = startDate ?? Date().addingTimeInterval(-secondsElapsed)
+    }
+
+    public var targetEndDate: Date? {
+      targetTimeInSeconds.map { startDate.addingTimeInterval($0) }
     }
   }
 

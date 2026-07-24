@@ -16,7 +16,7 @@ final class LiveActivityManagerTests: XCTestCase {
     let manager = LiveActivityManager.shared
 
     // This shouldn't throw any errors even if activity is nil
-    await manager.updateActivity(secondsElapsed: 10)
+    await manager.updateActivity(secondsElapsed: 10, targetTimeInSeconds: nil)
   }
 
   func testActivityEndWithNilActivity() async {

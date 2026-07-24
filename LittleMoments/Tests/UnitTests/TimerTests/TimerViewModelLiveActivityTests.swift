@@ -40,15 +40,13 @@ final class TimerViewModelLiveActivityTests: XCTestCase {
     XCTAssertTrue(timerViewModel?.hasEndTarget ?? false)
   }
 
-  func testUpdateLiveActivity() {
-    // Start timer and Live Activity
+  func testDateDrivenLiveActivityDoesNotRequireTickUpdates() {
+    // Starting the session supplies the Live Activity with a start date. The system-rendered
+    // timer advances from that date without app-driven ActivityKit updates every second.
     timerViewModel?.start()
     timerViewModel?.startLiveActivity()
 
-    // Update Live Activity
-    timerViewModel?.updateLiveActivity()
-    // This is just testing that the function doesn't crash
-    XCTAssertNotNil(timerViewModel)
+    XCTAssertGreaterThanOrEqual(timerViewModel?.secondsElapsed ?? -1, 0)
   }
 
   func testEndLiveActivity() {
@@ -68,7 +66,6 @@ final class TimerViewModelLiveActivityTests: XCTestCase {
 
     // These should all be no-ops when disabled
     timerViewModel?.startLiveActivity()
-    timerViewModel?.updateLiveActivity()
     timerViewModel?.endLiveActivity()
 
     // Just verify that nothing crashed

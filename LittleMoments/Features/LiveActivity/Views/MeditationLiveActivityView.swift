@@ -18,15 +18,15 @@ struct MeditationLiveActivityView: View {
         HStack(spacing: 16) {
           // Timer display
           VStack {
-            Text(timerDisplay)
+            LiveActivityElapsedTimeView(state: context.state)
               .font(.system(size: 28, weight: .bold, design: .rounded))
               .monospacedDigit()
               .minimumScaleFactor(0.5)
           }
 
           // Progress bar (for timed sessions)
-          if let targetTime = context.state.targetTimeInSeconds, targetTime > 0 {
-            ProgressView(value: min(context.state.secondsElapsed / targetTime, 1.0))
+          if context.state.targetTimeInSeconds != nil {
+            LiveActivityProgressView(state: context.state)
               .progressViewStyle(.circular)
               .frame(width: 40, height: 40)
           }
@@ -54,8 +54,42 @@ struct MeditationLiveActivityView: View {
     }
   }
 
-  private var timerDisplay: String {
-    return timerDisplayFromSeconds(
-      seconds: context.state.secondsElapsed, showSeconds: context.state.showSeconds)
+}
+
+struct LiveActivityElapsedTimeView: View {
+  let state: MeditationLiveActivityAttributes.ContentState
+
+  @ViewBuilder
+  var body: some View {
+    if state.isCompleted {
+      Text(
+        timerDisplayFromSeconds(
+          seconds: state.secondsElapsed,
+          showSeconds: state.showSeconds
+        )
+      )
+    } else if state.showSeconds {
+      Text(state.startDate, style: .timer)
+    } else {
+      Text(state.startDate, style: .relative)
+    }
+  }
+}
+
+struct LiveActivityProgressView: View {
+  let state: MeditationLiveActivityAttributes.ContentState
+
+  @ViewBuilder
+  var body: some View {
+    if state.isCompleted, let targetTime = state.targetTimeInSeconds, targetTime > 0 {
+      ProgressView(value: min(state.secondsElapsed / targetTime, 1.0))
+    } else if let targetEndDate = state.targetEndDate, targetEndDate > state.startDate {
+      ProgressView(
+        timerInterval: state.startDate...targetEndDate,
+        countsDown: false
+      )
+    } else {
+      ProgressView(value: 0)
+    }
   }
 }
