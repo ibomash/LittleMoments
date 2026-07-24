@@ -152,12 +152,18 @@ class TimerViewModel: ObservableObject {
 
   private func scheduleTimerNotification(for alert: OneTimeScheduledBellAlert) {
     if ProcessInfo.processInfo.arguments.contains("-DISABLE_SYSTEM_INTEGRATIONS") {
+      BellPlaybackDiagnostics.notificationSkipped(reason: "system_integrations_disabled")
       return
     }
-    guard bellPlaybackCoordinator.schedulesNotifications else { return }
+    guard bellPlaybackCoordinator.schedulesNotifications else {
+      BellPlaybackDiagnostics.notificationSkipped(reason: "mode_does_not_schedule_notifications")
+      return
+    }
 
     let remainingSeconds = TimeInterval(alert.targetTimeInSec - secondsElapsed)
     guard remainingSeconds > 0 else {
+      BellPlaybackDiagnostics.notificationSkipped(
+        reason: "target_elapsed", mode: bellPlaybackCoordinator.mode)
       UNUserNotificationCenter.current().removePendingNotificationRequests(
         withIdentifiers: ["timerNotification"]
       )
@@ -173,6 +179,10 @@ class TimerViewModel: ObservableObject {
         timeInterval: remainingSeconds
       )
     }
+    BellPlaybackDiagnostics.notificationScheduled(
+      remainingSeconds: remainingSeconds,
+      mode: bellPlaybackCoordinator.mode
+    )
   }
 
   func start() {

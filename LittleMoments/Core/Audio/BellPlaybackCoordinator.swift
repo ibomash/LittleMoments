@@ -115,6 +115,8 @@ extension BellPlaybackCoordinating {
 final class BellPlaybackCoordinator: BellPlaybackCoordinating {
   static let shared = BellPlaybackCoordinator()
 
+  private static let silentLoopDurationSeconds: Double = 60
+
   private var sessionStartDate: Date?
   private var targetPlanID = UUID()
   private var completionTask: Task<Void, Never>?
@@ -132,17 +134,28 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     mode.usesAudioPlayback
   }
 
-  func startSession(startDate: Date, ringBellAtStart _: Bool) {
+  func startSession(startDate: Date, ringBellAtStart: Bool) {
     sessionStartDate = startDate
     targetPlanID = UUID()
+    BellPlaybackDiagnostics.sessionStarted(
+      startDate: startDate,
+      mode: mode,
+      ringBellAtStart: ringBellAtStart
+    )
   }
 
   func setTarget(secondsFromSessionStart: Int?, elapsedSeconds: TimeInterval) {
-    completionTask?.cancel()
-    completionTask = nil
+    cancelCompletionTask(reason: "target_replaced")
+    BellPlaybackDiagnostics.targetRequested(
+      mode: mode,
+      secondsFromSessionStart: secondsFromSessionStart,
+      elapsedSeconds: elapsedSeconds
+    )
+
     targetPlanID = UUID()
 
     guard mode.usesAudioPlayback else {
+      BellPlaybackDiagnostics.notificationSkipped(reason: "mode_does_not_use_audio", mode: mode)
       stopPlayback(deactivateSession: true)
       return
     }
@@ -154,27 +167,53 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
 
     let remainingSeconds = TimeInterval(secondsFromSessionStart) - elapsedSeconds
     guard remainingSeconds > 0 else {
+      BellPlaybackDiagnostics.completionPlanCancelled(
+        planID: targetPlanID, reason: "target_elapsed")
       stopPlayback(deactivateSession: true)
       return
     }
 
     let planID = targetPlanID
+    guard startPlaybackPlan() else { return }
 
+    BellPlaybackDiagnostics.completionPlanScheduled(
+      planID: planID,
+      targetSeconds: secondsFromSessionStart,
+      elapsedSeconds: elapsedSeconds,
+      remainingSeconds: remainingSeconds
+    )
+    scheduleCompletionBell(planID: planID, remainingSeconds: remainingSeconds)
+  }
+
+  private func cancelCompletionTask(reason: String) {
+    if completionTask != nil {
+      BellPlaybackDiagnostics.completionPlanCancelled(planID: targetPlanID, reason: reason)
+    }
+    completionTask?.cancel()
+    completionTask = nil
+  }
+
+  private func startPlaybackPlan() -> Bool {
     do {
       try configureAudioSession()
       try startSilentLoop()
+      return true
     } catch {
+      BellPlaybackDiagnostics.audioSessionActivationFailed(error)
       print("Failed to start robust bell silence loop: \(error.localizedDescription)")
       stopPlayback(deactivateSession: true)
-      return
+      return false
     }
+  }
 
+  private func scheduleCompletionBell(planID: UUID, remainingSeconds: TimeInterval) {
     completionTask = Task { [weak self] in
       let nanoseconds = UInt64(max(0, remainingSeconds) * 1_000_000_000)
       try? await Task.sleep(nanoseconds: nanoseconds)
 
       await MainActor.run {
         guard let self, !Task.isCancelled, self.targetPlanID == planID else { return }
+        BellPlaybackDiagnostics.completionPlanFired(planID: planID)
         self.playCompletionBell()
       }
     }
@@ -195,10 +234,12 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     try audioSession.setCategory(.playback)
     try audioSession.setActive(true)
     isAudioSessionActive = true
+    BellPlaybackDiagnostics.audioSessionActivated()
   }
 
   private func startSilentLoop() throws {
     if queuePlayer != nil {
+      BellPlaybackDiagnostics.silentLoopAlreadyRunning()
       return
     }
 
@@ -210,6 +251,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     queuePlayer = player
     playerLooper = AVPlayerLooper(player: player, templateItem: item)
     player.play()
+    BellPlaybackDiagnostics.silentLoopStarted(url: silentAudioURL)
   }
 
   private func playCompletionBell() {
@@ -220,6 +262,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     queuePlayer?.removeAllItems()
 
     guard let soundURL = SoundManager.soundURL else {
+      BellPlaybackDiagnostics.finalBellMissingSound()
       print("Could not find bell sound file for robust playback")
       stopPlayback(deactivateSession: true)
       return
@@ -229,6 +272,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     observeCompletion(of: bellItem)
     queuePlayer = AVQueuePlayer(playerItem: bellItem)
     queuePlayer?.play()
+    BellPlaybackDiagnostics.finalBellStarted()
   }
 
   private func observeCompletion(of item: AVPlayerItem) {
@@ -242,12 +286,15 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       queue: .main
     ) { [weak self] _ in
       Task { @MainActor in
+        BellPlaybackDiagnostics.finalBellEnded()
         self?.stopPlayback(deactivateSession: true)
       }
     }
   }
 
   private func stopPlayback(deactivateSession: Bool) {
+    let hadTask = completionTask != nil
+    let hadPlayer = queuePlayer != nil
     completionTask?.cancel()
     completionTask = nil
     targetPlanID = UUID()
@@ -261,11 +308,19 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       self.completionObserver = nil
     }
 
+    BellPlaybackDiagnostics.playbackStopped(
+      deactivateSession: deactivateSession,
+      hadPlayer: hadPlayer,
+      hadTask: hadTask
+    )
+
     if deactivateSession, isAudioSessionActive {
       do {
         try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
         isAudioSessionActive = false
+        BellPlaybackDiagnostics.audioSessionDeactivated()
       } catch {
+        BellPlaybackDiagnostics.audioSessionDeactivationFailed(error)
         print("Failed to deactivate robust bell audio session: \(error.localizedDescription)")
       }
     }
@@ -283,7 +338,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       appropriateFor: nil,
       create: true
     )
-    let url = cachesDirectory.appendingPathComponent("little-moments-silence.caf")
+    let url = cachesDirectory.appendingPathComponent("little-moments-silence-60s.caf")
 
     if fileManager.fileExists(atPath: url.path) {
       cachedSilentAudioURL = url
@@ -293,7 +348,9 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     guard let format = AVAudioFormat(standardFormatWithSampleRate: 44_100, channels: 1),
       let buffer = AVAudioPCMBuffer(
         pcmFormat: format,
-        frameCapacity: AVAudioFrameCount(format.sampleRate)
+        frameCapacity: AVAudioFrameCount(
+          format.sampleRate * Self.silentLoopDurationSeconds
+        )
       )
     else {
       throw CocoaError(.fileWriteUnknown)
@@ -303,6 +360,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     let file = try AVAudioFile(forWriting: url, settings: format.settings)
     try file.write(from: buffer)
     cachedSilentAudioURL = url
+    BellPlaybackDiagnostics.silentAudioCreated(url: url)
     return url
   }
 }
