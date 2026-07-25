@@ -258,8 +258,8 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     completionTask?.cancel()
     completionTask = nil
     targetPlanID = UUID()
+    playerLooper?.disableLooping()
     playerLooper = nil
-    queuePlayer?.removeAllItems()
 
     guard let soundURL = SoundManager.soundURL else {
       BellPlaybackDiagnostics.finalBellMissingSound()
@@ -268,11 +268,69 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       return
     }
 
+    guard let queuePlayer else {
+      BellPlaybackDiagnostics.finalBellQueueUnavailable()
+      print("Could not play robust completion bell because the audio queue was unavailable")
+      stopPlayback(deactivateSession: true)
+      return
+    }
+
     let bellItem = AVPlayerItem(url: soundURL)
+    guard Self.replaceQueueContents(with: bellItem, in: queuePlayer) else {
+      BellPlaybackDiagnostics.finalBellQueueTransitionFailed()
+      print("Could not insert robust completion bell into the active audio queue")
+      stopPlayback(deactivateSession: true)
+      return
+    }
+
     observeCompletion(of: bellItem)
-    queuePlayer = AVQueuePlayer(playerItem: bellItem)
-    queuePlayer?.play()
-    BellPlaybackDiagnostics.finalBellStarted()
+    queuePlayer.play()
+    BellPlaybackDiagnostics.finalBellStarted(
+      playerStatus: queuePlayer.status,
+      timeControlStatus: queuePlayer.timeControlStatus,
+      itemStatus: bellItem.status
+    )
+    scheduleFinalBellProgressCheck(player: queuePlayer, item: bellItem)
+  }
+
+  @discardableResult
+  static func replaceQueueContents(
+    with item: AVPlayerItem,
+    in player: AVQueuePlayer
+  ) -> Bool {
+    player.removeAllItems()
+    guard player.canInsert(item, after: nil) else { return false }
+    player.insert(item, after: nil)
+    return true
+  }
+
+  private func scheduleFinalBellProgressCheck(
+    player: AVQueuePlayer,
+    item: AVPlayerItem
+  ) {
+    Task { [weak self, weak player, weak item] in
+      try? await Task.sleep(for: .seconds(1))
+
+      guard
+        let self,
+        let player,
+        let item,
+        self.queuePlayer === player,
+        player.currentItem === item
+      else { return }
+
+      BellPlaybackDiagnostics.finalBellProgressChecked(
+        BellPlaybackDiagnostics.FinalBellPlaybackState(
+          elapsedSeconds: player.currentTime().seconds,
+          playerStatus: player.status.rawValue,
+          timeControlStatus: player.timeControlStatus.rawValue,
+          itemStatus: item.status.rawValue,
+          waitingReason: player.reasonForWaitingToPlay?.rawValue,
+          playerError: player.error?.localizedDescription,
+          itemError: item.error?.localizedDescription
+        )
+      )
+    }
   }
 
   private func observeCompletion(of item: AVPlayerItem) {

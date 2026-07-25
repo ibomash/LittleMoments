@@ -5,10 +5,21 @@
 //  Temporary structured diagnostics for robust completion bell validation.
 //
 
+import AVFoundation
 import Foundation
 import OSLog
 
 enum BellPlaybackDiagnostics {
+  struct FinalBellPlaybackState {
+    let elapsedSeconds: TimeInterval
+    let playerStatus: Int
+    let timeControlStatus: Int
+    let itemStatus: Int
+    let waitingReason: String?
+    let playerError: String?
+    let itemError: String?
+  }
+
   #if DEBUG
     private static let logger = Logger(
       subsystem: "net.bomash.illya.LittleMoments",
@@ -93,8 +104,20 @@ enum BellPlaybackDiagnostics {
       logger.info("silent_audio_created url=\(url.lastPathComponent, privacy: .public)")
     }
 
-    static func finalBellStarted() {
-      logger.info("final_bell_started")
+    static func finalBellStarted(
+      playerStatus: AVPlayer.Status,
+      timeControlStatus: AVPlayer.TimeControlStatus,
+      itemStatus: AVPlayerItem.Status
+    ) {
+      logger.info(
+        "final_bell_started player_status=\(playerStatus.rawValue, privacy: .public) time_control_status=\(timeControlStatus.rawValue, privacy: .public) item_status=\(itemStatus.rawValue, privacy: .public)"
+      )
+    }
+
+    static func finalBellProgressChecked(_ state: FinalBellPlaybackState) {
+      logger.info(
+        "final_bell_progress elapsed=\(state.elapsedSeconds, privacy: .public) player_status=\(state.playerStatus, privacy: .public) time_control_status=\(state.timeControlStatus, privacy: .public) item_status=\(state.itemStatus, privacy: .public) waiting_reason=\(state.waitingReason ?? "none", privacy: .public) player_error=\(state.playerError ?? "none", privacy: .public) item_error=\(state.itemError ?? "none", privacy: .public)"
+      )
     }
 
     static func finalBellEnded() {
@@ -103,6 +126,14 @@ enum BellPlaybackDiagnostics {
 
     static func finalBellMissingSound() {
       logger.error("final_bell_missing_sound")
+    }
+
+    static func finalBellQueueUnavailable() {
+      logger.error("final_bell_queue_unavailable")
+    }
+
+    static func finalBellQueueTransitionFailed() {
+      logger.error("final_bell_queue_transition_failed")
     }
 
     static func foregroundBellSuppressed() {
@@ -143,9 +174,16 @@ enum BellPlaybackDiagnostics {
     static func silentLoopStarted(url: URL) {}
     static func silentLoopAlreadyRunning() {}
     static func silentAudioCreated(url: URL) {}
-    static func finalBellStarted() {}
+    static func finalBellStarted(
+      playerStatus: AVPlayer.Status,
+      timeControlStatus: AVPlayer.TimeControlStatus,
+      itemStatus: AVPlayerItem.Status
+    ) {}
+    static func finalBellProgressChecked(_ state: FinalBellPlaybackState) {}
     static func finalBellEnded() {}
     static func finalBellMissingSound() {}
+    static func finalBellQueueUnavailable() {}
+    static func finalBellQueueTransitionFailed() {}
     static func foregroundBellSuppressed() {}
     static func notificationSkipped(reason: String, mode: BellPlaybackMode? = nil) {}
     static func notificationScheduled(remainingSeconds: TimeInterval, mode: BellPlaybackMode) {}

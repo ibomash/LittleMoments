@@ -30,7 +30,6 @@ class TimerViewModel: ObservableObject {
   // Running timer
   private var startDate: Date?
   var timer: Timer?
-  var backgroundTask: UIBackgroundTaskIdentifier = .invalid
   var timeElapsedFormatted: String {
     return getTimeElapsedFormatted()
   }
@@ -200,12 +199,6 @@ class TimerViewModel: ObservableObject {
         guard let self else { return }
         self.scheduledAlert?.checkTrigger(secondsElapsed: self.secondsElapsed)
       }
-    }
-    self.backgroundTask = UIApplication.shared.beginBackgroundTask(
-      withName: "Timer Background Task"
-    ) {
-      UIApplication.shared.endBackgroundTask(self.backgroundTask)
-      self.backgroundTask = .invalid
     }
   }
 
@@ -437,11 +430,6 @@ class TimerViewModel: ObservableObject {
     // Reset the cancelled flag and timestamp for future sessions
     wasCancelled = false
     lastCancelTime = nil
-
-    if backgroundTask != .invalid {
-      UIApplication.shared.endBackgroundTask(backgroundTask)
-      backgroundTask = .invalid
-    }
 
     UIApplication.shared.isIdleTimerDisabled = false
   }
