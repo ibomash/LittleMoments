@@ -86,109 +86,60 @@ struct MeditationLiveActivityWidget: Widget {
 #if DEBUG
   // MARK: - Live Activity Previews
 
-  // Shared preview view that uses the same logic as the real widget
-  struct LiveActivityPreviewView: View {
-    let state: MeditationLiveActivityAttributes.ContentState
-    let attributes: MeditationLiveActivityAttributes
-    @Environment(\.showsWidgetContainerBackground) var showsWidgetBackground
-
-    var body: some View {
-      ZStack {
-        ContainerRelativeShape()
-          .fill(showsWidgetBackground ? .clear : .black.opacity(0.1))
-
-        VStack {
-          Text("Meditation in progress")
-            .font(.headline)
-
-          HStack(spacing: 16) {
-            // Timer display using shared logic
-            VStack {
-              Text(
-                timerDisplayFromSeconds(
-                  seconds: state.secondsElapsed, showSeconds: state.showSeconds)
-              )
-              .font(.system(size: 28, weight: .bold, design: .rounded))
-              .monospacedDigit()
-              .minimumScaleFactor(0.5)
-            }
-
-            // Progress bar (for timed sessions)
-            if let targetTime = state.targetTimeInSeconds, targetTime > 0 {
-              ProgressView(value: min(state.secondsElapsed / targetTime, 1.0))
-                .progressViewStyle(.circular)
-                .frame(width: 40, height: 40)
-            }
-          }
-          .padding(.vertical, 4)
-
-          // Use links instead of buttons for deep linking
-          HStack(spacing: 12) {
-            if let url = URL(string: "littlemoments://cancelSession") {
-              Link(destination: url) {
-                Text("Cancel")
-                  .frame(maxWidth: .infinity)
-                  .padding(.vertical, 6)
-                  .background(Color.red.opacity(0.2))
-                  .cornerRadius(8)
-                  .foregroundColor(.red)
-              }
-            }
-
-            if let url = URL(string: "littlemoments://finishSession") {
-              Link(destination: url) {
-                Text("Finish")
-                  .frame(maxWidth: .infinity)
-                  .padding(.vertical, 6)
-                  .background(Color.green.opacity(0.2))
-                  .cornerRadius(8)
-                  .foregroundColor(.green)
-              }
-            }
-          }
-        }
-        .padding()
-      }
-    }
+  private var previewStateWithoutSeconds: MeditationLiveActivityAttributes.ContentState {
+    MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: 185,
+      targetTimeInSeconds: 600,
+      isCompleted: false,
+      showSeconds: false
+    )
   }
 
-  // Standard preview provider using shared logic
-  struct LiveActivityPreviews: PreviewProvider {
-    static var previews: some View {
-      Group {
-        // Preview in-progress with system background
-        LiveActivityPreviewView(
-          state: MeditationLiveActivityAttributes.previewState,
-          attributes: MeditationLiveActivityAttributes.preview
-        )
-        .containerBackground(for: .widget) {
-          Color(.systemBackground)
-        }
-        .previewDisplayName("Light Mode")
-        .previewContext(WidgetPreviewContext(family: .systemMedium))
+  private var previewStateUntimed: MeditationLiveActivityAttributes.ContentState {
+    MeditationLiveActivityAttributes.ContentState(
+      secondsElapsed: 185,
+      isCompleted: false,
+      showSeconds: true
+    )
+  }
 
-        // Preview with dark background
-        LiveActivityPreviewView(
-          state: MeditationLiveActivityAttributes.previewState,
-          attributes: MeditationLiveActivityAttributes.preview
-        )
-        .containerBackground(for: .widget) {
-          Color.black
-        }
-        .previewDisplayName("Dark Mode")
-        .previewContext(WidgetPreviewContext(family: .systemMedium))
+  #Preview(
+    "Lock Screen · Seconds",
+    as: .content,
+    using: MeditationLiveActivityAttributes.preview
+  ) {
+    MeditationLiveActivityWidget()
+  } contentStates: {
+    MeditationLiveActivityAttributes.previewState
+  }
 
-        // Preview completed
-        LiveActivityPreviewView(
-          state: MeditationLiveActivityAttributes.previewStateCompleted,
-          attributes: MeditationLiveActivityAttributes.preview
-        )
-        .containerBackground(for: .widget) {
-          Color(.systemBackground)
-        }
-        .previewDisplayName("Completed")
-        .previewContext(WidgetPreviewContext(family: .systemMedium))
-      }
-    }
+  #Preview(
+    "Lock Screen · Minutes",
+    as: .content,
+    using: MeditationLiveActivityAttributes.preview
+  ) {
+    MeditationLiveActivityWidget()
+  } contentStates: {
+    previewStateWithoutSeconds
+  }
+
+  #Preview(
+    "Lock Screen · Untimed",
+    as: .content,
+    using: MeditationLiveActivityAttributes.preview
+  ) {
+    MeditationLiveActivityWidget()
+  } contentStates: {
+    previewStateUntimed
+  }
+
+  #Preview(
+    "Lock Screen · Complete",
+    as: .content,
+    using: MeditationLiveActivityAttributes.preview
+  ) {
+    MeditationLiveActivityWidget()
+  } contentStates: {
+    MeditationLiveActivityAttributes.previewStateCompleted
   }
 #endif
