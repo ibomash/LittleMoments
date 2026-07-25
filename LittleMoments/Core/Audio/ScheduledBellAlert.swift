@@ -68,6 +68,12 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
     }
     print("Triggered \(name) alert")
     Task { @MainActor in
+      if BellPlaybackCoordinator.shared.shouldSuppressForegroundTimerBell {
+        BellPlaybackDiagnostics.foregroundBellSuppressed()
+        print("Skipping foreground timer bell because robust bell audio is active")
+        return
+      }
+
       SoundManager.playSound()
     }
   }

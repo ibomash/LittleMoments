@@ -54,7 +54,7 @@ class MockHealthKitManager {
 /// Utility for resetting UserDefaults between tests
 class UserDefaultsReset {
   static func resetDefaults() {
-    let keys = ["writeToHealth", "ringBellAtStart", "showSeconds"]
+    let keys = ["writeToHealth", "ringBellAtStart", "showSeconds", "robustBellPlaybackMode"]
     keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
   }
 }
