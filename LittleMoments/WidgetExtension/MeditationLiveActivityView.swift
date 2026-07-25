@@ -7,6 +7,8 @@ struct MeditationLiveActivityView: View {
   let context: ActivityViewContext<MeditationLiveActivityAttributes>
   @Environment(\.showsWidgetContainerBackground) var showsWidgetBackground
 
+  private let horizontalPadding: CGFloat = 16
+
   @ViewBuilder
   var body: some View {
     let reducesTransparency = UIAccessibility.isReduceTransparencyEnabled
@@ -22,7 +24,7 @@ struct MeditationLiveActivityView: View {
     )
     let fillStyle: AnyShapeStyle = showsWidgetBackground ? AnyShapeStyle(Color.clear) : baseFill
 
-    let content = ZStack {
+    let content = ZStack(alignment: .bottom) {
       ContainerRelativeShape()
         .fill(fillStyle)
         .overlay {
@@ -31,44 +33,48 @@ struct MeditationLiveActivityView: View {
           }
         }
 
-      VStack {
-        Text("Meditation in progress")
-          .font(.headline)
+      VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 2) {
+          Text(context.state.isCompleted ? "Meditation complete" : "Meditating")
+            .font(.caption2.weight(.semibold))
+            .tracking(1)
+            .textCase(.uppercase)
+            .foregroundStyle(.secondary)
 
-        HStack(spacing: 16) {
-          // Timer display
-          VStack {
-            LiveActivityElapsedTimeView(state: context.state)
-              .font(.system(size: 28, weight: .bold, design: .rounded))
-              .monospacedDigit()
-              .minimumScaleFactor(0.5)
-          }
-
-          // Progress bar (for timed sessions)
-          if context.state.targetTimeInSeconds != nil {
-            LiveActivityProgressView(state: context.state)
-              .progressViewStyle(.circular)
-              .frame(width: 40, height: 40)
-          }
+          LiveActivityElapsedTimeView(state: context.state)
+            .font(.system(size: 44, weight: .bold, design: .rounded))
+            .monospacedDigit()
+            .minimumScaleFactor(0.7)
+            .lineLimit(1)
+            .contentTransition(.numericText())
         }
-        .padding(.vertical, 4)
 
-        // Use links instead of buttons for deep linking
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
           if let url = URL(string: "littlemoments://cancelSession") {
             Link(destination: url) {
-              glassLinkLabel("Cancel", role: .destructive, reducesTransparency: reducesTransparency)
+              glassLinkLabel("Cancel", role: .neutral, reducesTransparency: reducesTransparency)
             }
           }
 
           if let url = URL(string: "littlemoments://finishSession") {
             Link(destination: url) {
-              glassLinkLabel("Finish", role: .success, reducesTransparency: reducesTransparency)
+              glassLinkLabel("Finish", role: .accent, reducesTransparency: reducesTransparency)
             }
           }
         }
       }
-      .padding()
+      .padding(.horizontal, horizontalPadding)
+      .padding(.top, 14)
+      .padding(.bottom, 12)
+
+      if context.state.targetTimeInSeconds != nil {
+        LiveActivityProgressView(state: context.state)
+          .progressViewStyle(.linear)
+          .tint(context.state.isCompleted ? LiquidGlassTokens.successTint : .accentColor)
+          .frame(maxWidth: .infinity)
+          .padding(.horizontal, 1)
+          .accessibilityLabel("Session progress")
+      }
     }
 
     content
@@ -92,8 +98,36 @@ struct LiveActivityElapsedTimeView: View {
     } else if state.showSeconds {
       Text(state.startDate, style: .timer)
     } else {
-      Text(state.startDate, style: .relative)
+      Text(
+        TimeDataSource<Duration>.durationOffset(to: state.startDate),
+        format: ElapsedMinutesFormatStyle()
+      )
     }
+  }
+}
+
+private struct ElapsedMinutesFormatStyle: DiscreteFormatStyle {
+  private var schedule: Duration.UnitsFormatStyle {
+    Duration.UnitsFormatStyle(
+      allowedUnits: [.minutes],
+      width: .narrow,
+      maximumUnitCount: 1,
+      zeroValueUnits: .show(length: 1),
+      fractionalPart: .hide(rounded: .towardZero)
+    )
+  }
+
+  func format(_ value: Duration) -> String {
+    let elapsed = value < .zero ? .zero - value : value
+    return String(elapsed.components.seconds / 60)
+  }
+
+  func discreteInput(before input: Duration) -> Duration? {
+    schedule.discreteInput(before: input)
+  }
+
+  func discreteInput(after input: Duration) -> Duration? {
+    schedule.discreteInput(after: input)
   }
 }
 
@@ -104,13 +138,16 @@ struct LiveActivityProgressView: View {
   var body: some View {
     if state.isCompleted, let targetTime = state.targetTimeInSeconds, targetTime > 0 {
       ProgressView(value: min(state.secondsElapsed / targetTime, 1.0))
+        .labelsHidden()
     } else if let targetEndDate = state.targetEndDate, targetEndDate > state.startDate {
       ProgressView(
         timerInterval: state.startDate...targetEndDate,
         countsDown: false
       )
+      .labelsHidden()
     } else {
       ProgressView(value: 0)
+        .labelsHidden()
     }
   }
 }
@@ -148,8 +185,8 @@ extension MeditationLiveActivityView {
         .font(.system(.subheadline, design: .rounded).weight(.semibold))
         .foregroundStyle(role.foregroundColor(for: .prominent))
         .padding(.horizontal, 6)
-        .padding(.vertical, 8)
+        .padding(.vertical, 6)
     }
-    .frame(maxWidth: .infinity, minHeight: 38)
+    .frame(maxWidth: .infinity, minHeight: 34)
   }
 }
