@@ -55,26 +55,22 @@ final class TimerTests: XCTestCase {
 
   /// Tests that time formatting respects showSeconds setting after time has elapsed
   func testTimeFormattingWithSettings() {
-    timerViewModel?.start()
-
-    // Wait for 1 second to elapse
-    let expectation = XCTestExpectation(description: "Timer running")
-    // Wait just over 1 second.
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [weak self] in
-      Task { @MainActor in
-        guard let self else { return }
-        // Test with showSeconds = true
-        self.setShowSeconds(true)
-        XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:01")
-
-        // Test with showSeconds = false
-        self.setShowSeconds(false)
-        XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0")
-        expectation.fulfill()
-      }
-    }
-
-    wait(for: [expectation], timeout: 2)
+    XCTAssertEqual(
+      TimerViewModel.formatElapsedTime(secondsElapsed: 1, showSeconds: true),
+      "0:01"
+    )
+    XCTAssertEqual(
+      TimerViewModel.formatElapsedTime(secondsElapsed: 1, showSeconds: false),
+      "0"
+    )
+    XCTAssertEqual(
+      TimerViewModel.formatElapsedTime(secondsElapsed: 61, showSeconds: true),
+      "1:01"
+    )
+    XCTAssertEqual(
+      TimerViewModel.formatElapsedTime(secondsElapsed: 61, showSeconds: false),
+      "1"
+    )
   }
 
   /// Tests the scheduled alert functionality
@@ -100,26 +96,16 @@ final class TimerTests: XCTestCase {
   }
 
   /// Tests that the timer properly tracks progress
-  /// Uses an async expectation to verify timer behavior over time
-  func testTimerProgress() {
+  /// Suspends briefly so the main actor remains available while time advances.
+  func testTimerProgress() async throws {
     let fiveMinAlert = timerViewModel?.scheduledAlertOptions[0]  // 5-minute timer
     timerViewModel?.scheduledAlert = fiveMinAlert
 
     timerViewModel?.start()
+    try await Task.sleep(for: .milliseconds(10))
 
-    // Wait for 1 second to ensure timer has started
-    let expectation = XCTestExpectation(description: "Timer running")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-      Task { @MainActor in
-        guard let self else { return }
-        // Verify that time has elapsed and progress is being tracked
-        XCTAssertTrue(self.timerViewModel?.secondsElapsed ?? 0 > 0)
-        XCTAssertTrue(self.timerViewModel?.progress ?? 0 > 0)
-        expectation.fulfill()
-      }
-    }
-
-    wait(for: [expectation], timeout: 2)
+    XCTAssertTrue(timerViewModel?.secondsElapsed ?? 0 > 0)
+    XCTAssertTrue(timerViewModel?.progress ?? 0 > 0)
   }
 
   /// Tests the timer reset functionality
@@ -129,21 +115,10 @@ final class TimerTests: XCTestCase {
     setShowSeconds(true)
 
     timerViewModel?.start()
+    timerViewModel?.reset()
 
-    // Wait briefly then reset
-    let expectation = XCTestExpectation(description: "Timer reset")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-      Task { @MainActor in
-        guard let self else { return }
-        self.timerViewModel?.reset()
-        // Verify that all values are reset to their initial state
-        XCTAssertEqual(self.timerViewModel?.timeElapsedFormatted, "0:00")
-        XCTAssertEqual(self.timerViewModel?.progress, 0.0)
-        expectation.fulfill()
-      }
-    }
-
-    wait(for: [expectation], timeout: 1)
+    XCTAssertEqual(timerViewModel?.timeElapsedFormatted, "0:00")
+    XCTAssertEqual(timerViewModel?.progress, 0.0)
   }
 
   /// Tests basic view creation and initialization
@@ -154,36 +129,23 @@ final class TimerTests: XCTestCase {
     XCTAssertEqual(view.buttonsPerRow, 4)
   }
 
-  /// Tests writing to Health Store when setting is enabled
-  func testWriteToHealthStore() {
-    // Create a mock HealthKitManager
-    let mockHealthManager = MockHealthKitManager()
-
-    // Set up conditions for health write
-    let settings = JustNowSettings.shared
-    settings.writeToHealth = true
-
-    // Start timer
-    timerViewModel?.start()
-
-    // Wait briefly then write to health
-    let expectation = XCTestExpectation(description: "Health write")
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-      Task { @MainActor in
-        guard self != nil else { return }
-        // Use the mock directly instead of trying to replace the shared instance
-        mockHealthManager.saveMindfulSession(
-          startDate: Date().addingTimeInterval(-10),
-          endDate: Date()
-        ) { success, _ in
-          XCTAssertTrue(success)
-          XCTAssertTrue(mockHealthManager.saveWasCalled)
-          expectation.fulfill()
-        }
-      }
+  /// Tests that the legacy Health-writing entry point queues the completed session.
+  func testWriteToHealthStoreQueuesCompletedSession() throws {
+    guard let timerViewModel else {
+      XCTFail("TimerViewModel should be initialized")
+      return
     }
 
-    wait(for: [expectation], timeout: 1)
+    timerViewModel.start()
+    timerViewModel.writeToHealthStore()
+
+    let entries = try SessionHistoryStore.shared.fetchAllEntriesNewestFirst()
+    XCTAssertEqual(entries.count, 1)
+    let entry = try XCTUnwrap(entries.first)
+    XCTAssertTrue(
+      entry.healthWriteStatus == .pendingHealthWrite
+        || entry.healthWriteStatus == .writtenToHealth
+    )
   }
 
   func testRecordCompletedSessionAddsHistoryEntry() throws {
