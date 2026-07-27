@@ -24,10 +24,27 @@ enum CustomDurationSheetMode: Equatable {
       return "Set bell for \(duration.shortLabel)"
     }
   }
+
+  func projectedFinishDate(
+    duration: TimeInterval,
+    now: Date,
+    sessionStartDate: Date?
+  ) -> Date {
+    let referenceDate: Date
+    switch self {
+    case .start:
+      referenceDate = now
+    case .running:
+      referenceDate = sessionStartDate ?? now
+    }
+
+    return referenceDate.addingTimeInterval(duration)
+  }
 }
 
 struct CustomDurationSheet: View {
   let mode: CustomDurationSheetMode
+  let sessionStartDate: Date?
   let onApply: (MeditationDuration) -> Void
   let onCancel: () -> Void
 
@@ -41,10 +58,12 @@ struct CustomDurationSheet: View {
   init(
     mode: CustomDurationSheetMode,
     initialMinutes: Int,
+    sessionStartDate: Date? = nil,
     onApply: @escaping (MeditationDuration) -> Void,
     onCancel: @escaping () -> Void
   ) {
     self.mode = mode
+    self.sessionStartDate = sessionStartDate
     self.onApply = onApply
     self.onCancel = onCancel
     _draftMinutes = State(initialValue: max(initialMinutes, MeditationDuration.minimumMinutes))
@@ -257,7 +276,11 @@ struct CustomDurationSheet: View {
   )
 
   private func projectedFinishTime(from now: Date) -> String {
-    let finishDate = now.addingTimeInterval(TimeInterval(currentDuration.seconds))
+    let finishDate = mode.projectedFinishDate(
+      duration: TimeInterval(currentDuration.seconds),
+      now: now,
+      sessionStartDate: sessionStartDate
+    )
     return Self.finishTimeFormatter.string(from: finishDate)
   }
 

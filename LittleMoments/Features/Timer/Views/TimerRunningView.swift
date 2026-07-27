@@ -76,6 +76,7 @@ struct TimerRunningView: View {
       CustomDurationSheet(
         mode: .running,
         initialMinutes: customDurationInitialMinutes,
+        sessionStartDate: timerViewModel.sessionStartDate,
         onApply: applyCustomDuration,
         onCancel: { showCustomDurationSheet = false }
       )

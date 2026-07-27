@@ -29,6 +29,7 @@ class TimerViewModel: ObservableObject {
 
   // Running timer
   private var startDate: Date?
+  var sessionStartDate: Date? { startDate }
   var timer: Timer?
   var timeElapsedFormatted: String {
     return getTimeElapsedFormatted()
