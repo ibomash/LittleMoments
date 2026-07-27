@@ -98,36 +98,8 @@ struct LiveActivityElapsedTimeView: View {
     } else if state.showSeconds {
       Text(state.startDate, style: .timer)
     } else {
-      Text(
-        TimeDataSource<Duration>.durationOffset(to: state.startDate),
-        format: ElapsedMinutesFormatStyle()
-      )
+      Text(state.startDate, style: .relative)
     }
-  }
-}
-
-private struct ElapsedMinutesFormatStyle: DiscreteFormatStyle {
-  private var schedule: Duration.UnitsFormatStyle {
-    Duration.UnitsFormatStyle(
-      allowedUnits: [.minutes],
-      width: .narrow,
-      maximumUnitCount: 1,
-      zeroValueUnits: .show(length: 1),
-      fractionalPart: .hide(rounded: .towardZero)
-    )
-  }
-
-  func format(_ value: Duration) -> String {
-    let elapsed = value < .zero ? .zero - value : value
-    return String(elapsed.components.seconds / 60)
-  }
-
-  func discreteInput(before input: Duration) -> Duration? {
-    schedule.discreteInput(before: input)
-  }
-
-  func discreteInput(after input: Duration) -> Duration? {
-    schedule.discreteInput(after: input)
   }
 }
 
