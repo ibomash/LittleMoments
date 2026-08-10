@@ -236,10 +236,16 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
   private func scheduleCompletionBell(planID: UUID, remainingSeconds: TimeInterval) {
     completionTask = Task { [weak self] in
       let nanoseconds = UInt64(max(0, remainingSeconds) * 1_000_000_000)
-      try? await Task.sleep(nanoseconds: nanoseconds)
+      do {
+        try await Task.sleep(nanoseconds: nanoseconds)
+      } catch {
+        return
+      }
+      guard !Task.isCancelled else { return }
 
       await MainActor.run {
-        guard let self, !Task.isCancelled, self.watchdogState.planID == planID else {
+        guard let self else { return }
+        guard self.watchdogState.planID == planID else {
           BellPlaybackDiagnostics.foregroundFallbackSkipped(reason: "stale_plan")
           return
         }
