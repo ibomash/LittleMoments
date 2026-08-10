@@ -1,4 +1,3 @@
-import AVFoundation
 import Foundation
 
 protocol ScheduledAlert: Equatable {
@@ -6,7 +5,8 @@ protocol ScheduledAlert: Equatable {
   var hasTarget: Bool { get }
 
   func getProgress(secondsElapsed: CGFloat) -> CGFloat
-  func checkTrigger(secondsElapsed: CGFloat)
+  @discardableResult
+  func checkTrigger(secondsElapsed: CGFloat) -> Bool
 }
 
 class OneTimeScheduledBellAlert: ScheduledAlert {
@@ -50,31 +50,15 @@ class OneTimeScheduledBellAlert: ScheduledAlert {
     return secondsElapsed >= targetTimeInSec
   }
 
-  func checkTrigger(secondsElapsed: CGFloat) {
+  @discardableResult
+  func checkTrigger(secondsElapsed: CGFloat) -> Bool {
     if hasTriggered {
-      return
+      return false
     }
     if self.isDone(secondsElapsed: secondsElapsed) {
-      self.doTrigger(secondsElapsed: secondsElapsed)
       hasTriggered = true
+      return true
     }
-  }
-
-  func doTrigger(secondsElapsed: CGFloat) {
-    let maxDelay: CGFloat = 5.0
-    if secondsElapsed - targetTimeInSec > maxDelay {
-      print("Skipping sound due to delay")
-      return
-    }
-    print("Triggered \(name) alert")
-    Task { @MainActor in
-      if BellPlaybackCoordinator.shared.shouldSuppressForegroundTimerBell {
-        BellPlaybackDiagnostics.foregroundBellSuppressed()
-        print("Skipping foreground timer bell because robust bell audio is active")
-        return
-      }
-
-      SoundManager.playSound()
-    }
+    return false
   }
 }

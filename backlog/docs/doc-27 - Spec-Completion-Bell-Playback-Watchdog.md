@@ -146,6 +146,20 @@ The change does not add a user setting or alter notification authorization. The 
 - Automated tests cover successful, stalled, inactive, repeated, and stale-generation paths.
 - Existing locked-screen playback tests and quality gates pass.
 - `doc-25` remains historical context; this spec defines the current recovery policy.
+
+## Implementation Result
+
+Implemented on `codex/foreground-bell-watchdog`:
+
+- Robust queue playback remains the primary path in every playback mode that uses audio.
+- The coordinator checks for at least 50 milliseconds of bell-item progress after a 500 millisecond grace period.
+- An active foreground scene receives one `SoundManager` fallback per target generation when progress is missing, non-finite, or unobservable.
+- The UI timer routes its first due event through `ensureCompletionBellAudible`, allowing it to recover an exact-deadline task that has not yet transitioned the queue.
+- Clearing/changing a target and resetting/cancelling a session invalidate stale generations and watchdog tasks.
+- Foreground playback restarts from time zero, and robust teardown avoids deactivating the shared audio session underneath an accepted fallback.
+- Structured diagnostics report progress, fallback starts, and fallback skip reasons.
+
+Validation completed with `bin/fastlane quality_check`: repository-wide formatting and strict lint passed, 122 unit tests passed, 11 UI tests passed, and the `LittleMoments`, `LittleMoments-UI`, and `LittleMomentsWidgetExtension` schemes built successfully.
 id: doc-27
 title: 'Spec: Completion Bell Playback Watchdog'
 type: spec

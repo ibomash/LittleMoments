@@ -41,14 +41,22 @@ final class SoundManager {
     }
   }
 
-  static func playSound() {
+  @discardableResult
+  static func playSound() -> Bool {
     guard let audioPlayer else {
       print("Audio player not initialized")
-      return
+      return false
     }
-    if !audioPlayer.play() {
+
+    audioPlayer.stop()
+    audioPlayer.currentTime = 0
+    audioPlayer.prepareToPlay()
+
+    let didStart = audioPlayer.play()
+    if !didStart {
       print("Error playing audio")
     }
+    return didStart
   }
 
   static func dispose() {
