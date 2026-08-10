@@ -78,11 +78,18 @@ class TimerViewModel: ObservableObject {
   }
 
   func getTimeElapsedFormatted() -> String {
+    Self.formatElapsedTime(
+      secondsElapsed: secondsElapsed,
+      showSeconds: settings.showSeconds
+    )
+  }
+
+  static func formatElapsedTime(secondsElapsed: CGFloat, showSeconds: Bool) -> String {
     let fullSecondsElapsed = Int(secondsElapsed)
     let minutes = fullSecondsElapsed / 60
     let seconds = fullSecondsElapsed % 60
 
-    if settings.showSeconds {
+    if showSeconds {
       return String(format: "%d:%02d", minutes, seconds)
     } else {
       return String(format: "%d", minutes)
