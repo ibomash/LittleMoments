@@ -1,5 +1,9 @@
 ---
-
+id: doc-26
+title: 'Feature: Reliable Completion Bell Playback'
+type: feature
+created_date: '2026-08-10 19:18'
+---
 # Feature: Reliable Completion Bell Playback
 
 ## Summary
@@ -72,8 +76,3 @@ This retains one scheduling authority and one primary playback mechanism while u
 
 - `doc-25`: original robust completion bell playback design and spike.
 - `TASK-8`: lower-overhead robust bell playback investigation.
-id: doc-26
-title: 'Feature: Reliable Completion Bell Playback'
-type: feature
-created_date: '2026-08-10 19:18'
----

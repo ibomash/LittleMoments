@@ -138,6 +138,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
 
   private let applicationIsActive: @MainActor () -> Bool
   private let foregroundBellPlayer: @MainActor () -> Bool
+  private let foregroundBellIsPlaying: @MainActor () -> Bool
 
   init(
     applicationIsActive: @escaping @MainActor () -> Bool = {
@@ -147,10 +148,14 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     },
     foregroundBellPlayer: @escaping @MainActor () -> Bool = {
       SoundManager.playSound()
+    },
+    foregroundBellIsPlaying: @escaping @MainActor () -> Bool = {
+      SoundManager.isPlaying
     }
   ) {
     self.applicationIsActive = applicationIsActive
     self.foregroundBellPlayer = foregroundBellPlayer
+    self.foregroundBellIsPlaying = foregroundBellIsPlaying
   }
 
   var mode: BellPlaybackMode {
@@ -463,6 +468,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     }
 
     let didStart = foregroundBellPlayer()
+    watchdogState.recordFallbackPlaybackStart(planID: planID, didStart: didStart)
     BellPlaybackDiagnostics.foregroundFallbackStarted(didStart: didStart)
   }
 
@@ -479,7 +485,9 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       Task { @MainActor in
         BellPlaybackDiagnostics.finalBellEnded()
         guard let self else { return }
-        let foregroundFallbackIsPlaying = self.watchdogState.fallbackPlanID == planID
+        let foregroundFallbackIsPlaying =
+          self.watchdogState.fallbackPlaybackPlanID == planID
+          && self.foregroundBellIsPlaying()
         self.stopPlayback(deactivateSession: !foregroundFallbackIsPlaying)
       }
     }
@@ -573,11 +581,13 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
 struct CompletionBellWatchdogState {
   private(set) var planID = UUID()
   private(set) var fallbackPlanID: UUID?
+  private(set) var fallbackPlaybackPlanID: UUID?
 
   @discardableResult
   mutating func replacePlan() -> UUID {
     planID = UUID()
     fallbackPlanID = nil
+    fallbackPlaybackPlanID = nil
     return planID
   }
 
@@ -600,5 +610,10 @@ struct CompletionBellWatchdogState {
 
     fallbackPlanID = candidatePlanID
     return true
+  }
+
+  mutating func recordFallbackPlaybackStart(planID candidatePlanID: UUID, didStart: Bool) {
+    guard candidatePlanID == planID, fallbackPlanID == candidatePlanID, didStart else { return }
+    fallbackPlaybackPlanID = candidatePlanID
   }
 }

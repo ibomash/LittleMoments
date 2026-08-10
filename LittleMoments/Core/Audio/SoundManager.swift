@@ -16,6 +16,10 @@ final class SoundManager {
     forResource: "42095__fauxpress__bell-meditation", withExtension: "aif")
   static var audioPlayer: AVAudioPlayer?
 
+  static var isPlaying: Bool {
+    audioPlayer?.isPlaying == true
+  }
+
   static func initialize() {
     if audioPlayer != nil {
       return

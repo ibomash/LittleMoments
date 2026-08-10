@@ -98,6 +98,40 @@ final class BellPlaybackCoordinatorTests: XCTestCase {
     XCTAssertFalse(secondClaim)
   }
 
+  func testFailedFallbackStartIsNotTrackedAsPlayback() {
+    var state = CompletionBellWatchdogState()
+    let planID = state.replacePlan()
+    XCTAssertTrue(
+      state.claimFallback(
+        planID: planID,
+        progressSeconds: nil,
+        minimumConfirmedProgressSeconds: 0.05,
+        applicationIsActive: true
+      )
+    )
+
+    state.recordFallbackPlaybackStart(planID: planID, didStart: false)
+
+    XCTAssertNil(state.fallbackPlaybackPlanID)
+  }
+
+  func testSuccessfulFallbackStartIsTrackedAsPlayback() {
+    var state = CompletionBellWatchdogState()
+    let planID = state.replacePlan()
+    XCTAssertTrue(
+      state.claimFallback(
+        planID: planID,
+        progressSeconds: nil,
+        minimumConfirmedProgressSeconds: 0.05,
+        applicationIsActive: true
+      )
+    )
+
+    state.recordFallbackPlaybackStart(planID: planID, didStart: true)
+
+    XCTAssertEqual(state.fallbackPlaybackPlanID, planID)
+  }
+
   func testReplacingPlanInvalidatesStaleWatchdog() {
     var state = CompletionBellWatchdogState()
     let stalePlanID = state.replacePlan()

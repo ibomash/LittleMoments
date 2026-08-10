@@ -1,5 +1,9 @@
 ---
-
+id: doc-27
+title: 'Spec: Completion Bell Playback Watchdog'
+type: spec
+created_date: '2026-08-10 19:18'
+---
 # Spec: Completion Bell Playback Watchdog
 
 ## Objective
@@ -160,8 +164,3 @@ Implemented on `codex/foreground-bell-watchdog`:
 - Structured diagnostics report progress, fallback starts, and fallback skip reasons.
 
 Validation completed with `bin/fastlane quality_check`: repository-wide formatting and strict lint passed, 122 unit tests passed, 11 UI tests passed, and the `LittleMoments`, `LittleMoments-UI`, and `LittleMomentsWidgetExtension` schemes built successfully.
-id: doc-27
-title: 'Spec: Completion Bell Playback Watchdog'
-type: spec
-created_date: '2026-08-10 19:18'
----
