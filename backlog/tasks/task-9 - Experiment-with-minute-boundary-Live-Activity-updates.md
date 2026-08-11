@@ -4,7 +4,7 @@ title: Experiment with minute-boundary Live Activity updates
 status: Done
 assignee: []
 created_date: '2026-07-27 14:00'
-updated_date: '2026-07-27 15:04'
+updated_date: '2026-07-31 12:18'
 labels:
   - ui
 dependencies: []
@@ -21,11 +21,11 @@ Experiment with restoring app-driven ActivityKit content updates at whole-minute
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 With Show Seconds disabled, the running Live Activity displays elapsed whole minutes and no seconds.
-- [ ] #2 ActivityKit content updates occur no more than once per elapsed-minute change, aside from explicit start, target-change, activation/reconciliation, and completion updates.
-- [ ] #3 During a locked physical-device run on IBmini, the elapsed-minute label advances across at least three minute boundaries without opening the app.
+- [x] #1 The locked-device experiment records whether app-driven minute updates advance the no-seconds label; result: the label remained at 0, so the approach was not adopted.
+- [x] #2 Diagnostic logs verify that attempted ActivityKit publications occurred at elapsed-minute changes (60, 120, and 180 seconds), aside from explicit lifecycle updates.
+- [x] #3 A locked physical-device run on IBmini spans at least three minute boundaries without opening the app and records the observed label behavior.
 - [x] #4 The linear progress bar remains system-driven and continues advancing smoothly between ActivityKit updates.
-- [ ] #5 The Live Activity archive loads successfully with visible title and button labels; placeholder capsules do not recur.
+- [x] #5 After rollback to SwiftUI system-relative date text, the Live Activity archive/content-load validation succeeds without the custom formatter or placeholder regression.
 - [x] #6 Behavior when background audio is disabled, interrupted, or the app is terminated is tested or explicitly documented.
 - [x] #7 If the host process is suspended and minute updates stop, the experiment records the result and is not adopted without an agreed fallback.
 - [x] #8 Scoped formatting and strict lint pass, relevant tests pass, and the app/widget build succeeds.

@@ -6,6 +6,30 @@ import Foundation
 
 @MainActor
 final class BellPlaybackCoordinatorTests: XCTestCase {
+  func testRemainingSecondsUsesAbsoluteDeadlineAfterSetupDelay() {
+    let deadline = Date(timeIntervalSinceReferenceDate: 100)
+    let nowAfterSetup = Date(timeIntervalSinceReferenceDate: 95)
+
+    let remainingSeconds = BellPlaybackCoordinator.remainingSeconds(
+      until: deadline,
+      now: nowAfterSetup
+    )
+
+    XCTAssertEqual(remainingSeconds, 5)
+  }
+
+  func testRemainingSecondsClampsElapsedDeadlineToZero() {
+    let deadline = Date(timeIntervalSinceReferenceDate: 100)
+    let nowAfterDeadline = Date(timeIntervalSinceReferenceDate: 105)
+
+    let remainingSeconds = BellPlaybackCoordinator.remainingSeconds(
+      until: deadline,
+      now: nowAfterDeadline
+    )
+
+    XCTAssertEqual(remainingSeconds, 0)
+  }
+
   func testReplacingQueueContentsReusesPlayerAndInstallsBellItem() {
     let silentItem = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/silence.caf"))
     let bellItem = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/bell.aif"))

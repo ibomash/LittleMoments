@@ -191,12 +191,13 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       return
     }
 
-    guard sessionStartDate != nil, let secondsFromSessionStart else {
+    guard let sessionStartDate, let secondsFromSessionStart else {
       stopPlayback(deactivateSession: true)
       return
     }
 
-    let remainingSeconds = TimeInterval(secondsFromSessionStart) - elapsedSeconds
+    let deadline = sessionStartDate.addingTimeInterval(TimeInterval(secondsFromSessionStart))
+    let remainingSeconds = Self.remainingSeconds(until: deadline)
     guard remainingSeconds > 0 else {
       BellPlaybackDiagnostics.completionPlanCancelled(
         planID: planID, reason: "target_elapsed")
@@ -205,14 +206,19 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     }
 
     guard startPlaybackPlan() else { return }
+    let adjustedRemainingSeconds = Self.remainingSeconds(until: deadline)
 
     BellPlaybackDiagnostics.completionPlanScheduled(
       planID: planID,
       targetSeconds: secondsFromSessionStart,
       elapsedSeconds: elapsedSeconds,
-      remainingSeconds: remainingSeconds
+      remainingSeconds: adjustedRemainingSeconds
     )
-    scheduleCompletionBell(planID: planID, remainingSeconds: remainingSeconds)
+    scheduleCompletionBell(planID: planID, remainingSeconds: adjustedRemainingSeconds)
+  }
+
+  static func remainingSeconds(until deadline: Date, now: Date = Date()) -> TimeInterval {
+    max(0, deadline.timeIntervalSince(now))
   }
 
   private func cancelCompletionTask(reason: String) {
