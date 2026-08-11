@@ -205,8 +205,16 @@ class TimerViewModel: ObservableObject {
     timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
       Task { @MainActor in
         guard let self else { return }
-        self.scheduledAlert?.checkTrigger(secondsElapsed: self.secondsElapsed)
+        self.checkScheduledAlert(secondsElapsed: self.secondsElapsed)
       }
+    }
+  }
+
+  func checkScheduledAlert(secondsElapsed: CGFloat) {
+    if scheduledAlert?.checkTrigger(secondsElapsed: secondsElapsed) == true {
+      bellPlaybackCoordinator.ensureCompletionBellAudible(
+        elapsedSeconds: TimeInterval(secondsElapsed)
+      )
     }
   }
 

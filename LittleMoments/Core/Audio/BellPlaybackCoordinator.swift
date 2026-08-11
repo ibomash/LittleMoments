@@ -7,6 +7,7 @@
 
 import AVFoundation
 import Foundation
+import UIKit
 
 enum BellPlaybackMode: String, CaseIterable {
   case off
@@ -97,6 +98,7 @@ protocol BellPlaybackCoordinating: AnyObject {
 
   func startSession(startDate: Date, ringBellAtStart: Bool)
   func setTarget(secondsFromSessionStart: Int?, elapsedSeconds: TimeInterval)
+  func ensureCompletionBellAudible(elapsedSeconds: TimeInterval)
   func finishSession()
   func cancelSession()
 }
@@ -116,27 +118,54 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
   static let shared = BellPlaybackCoordinator()
 
   private static let silentLoopDurationSeconds: Double = 60
+  private static let foregroundFallbackGraceSeconds: TimeInterval = 0.5
+  private static let minimumConfirmedBellProgressSeconds: TimeInterval = 0.05
+  private static let maximumForegroundFallbackDelaySeconds: TimeInterval = 5
 
   private var sessionStartDate: Date?
-  private var targetPlanID = UUID()
+  private var watchdogState = CompletionBellWatchdogState()
+  private var targetSecondsFromSessionStart: Int?
   private var completionTask: Task<Void, Never>?
+  private var fallbackWatchdogTask: Task<Void, Never>?
   private var queuePlayer: AVQueuePlayer?
   private var playerLooper: AVPlayerLooper?
+  private var completionBellItem: AVPlayerItem?
+  private var completionBellPlanID: UUID?
+  private var completionBellAttemptDate: Date?
   private var completionObserver: NSObjectProtocol?
   private var cachedSilentAudioURL: URL?
   private var isAudioSessionActive = false
+
+  private let applicationIsActive: @MainActor () -> Bool
+  private let foregroundBellPlayer: @MainActor () -> Bool
+  private let foregroundBellIsPlaying: @MainActor () -> Bool
+
+  init(
+    applicationIsActive: @escaping @MainActor () -> Bool = {
+      UIApplication.shared.connectedScenes.contains {
+        $0.activationState == .foregroundActive
+      }
+    },
+    foregroundBellPlayer: @escaping @MainActor () -> Bool = {
+      SoundManager.playSound()
+    },
+    foregroundBellIsPlaying: @escaping @MainActor () -> Bool = {
+      SoundManager.isPlaying
+    }
+  ) {
+    self.applicationIsActive = applicationIsActive
+    self.foregroundBellPlayer = foregroundBellPlayer
+    self.foregroundBellIsPlaying = foregroundBellIsPlaying
+  }
 
   var mode: BellPlaybackMode {
     BellPlaybackMode.resolved()
   }
 
-  var shouldSuppressForegroundTimerBell: Bool {
-    mode.usesAudioPlayback
-  }
-
   func startSession(startDate: Date, ringBellAtStart: Bool) {
     sessionStartDate = startDate
-    targetPlanID = UUID()
+    _ = watchdogState.replacePlan()
+    targetSecondsFromSessionStart = nil
     BellPlaybackDiagnostics.sessionStarted(
       startDate: startDate,
       mode: mode,
@@ -152,11 +181,13 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
       elapsedSeconds: elapsedSeconds
     )
 
-    targetPlanID = UUID()
+    let planID = watchdogState.replacePlan()
+    targetSecondsFromSessionStart = secondsFromSessionStart
+    clearCompletionBellState()
 
     guard mode.usesAudioPlayback else {
       BellPlaybackDiagnostics.notificationSkipped(reason: "mode_does_not_use_audio", mode: mode)
-      stopPlayback(deactivateSession: true)
+      stopPlayback(deactivateSession: true, invalidatePlan: false)
       return
     }
 
@@ -168,12 +199,11 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     let remainingSeconds = TimeInterval(secondsFromSessionStart) - elapsedSeconds
     guard remainingSeconds > 0 else {
       BellPlaybackDiagnostics.completionPlanCancelled(
-        planID: targetPlanID, reason: "target_elapsed")
+        planID: planID, reason: "target_elapsed")
       stopPlayback(deactivateSession: true)
       return
     }
 
-    let planID = targetPlanID
     guard startPlaybackPlan() else { return }
 
     BellPlaybackDiagnostics.completionPlanScheduled(
@@ -187,10 +217,12 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
 
   private func cancelCompletionTask(reason: String) {
     if completionTask != nil {
-      BellPlaybackDiagnostics.completionPlanCancelled(planID: targetPlanID, reason: reason)
+      BellPlaybackDiagnostics.completionPlanCancelled(planID: watchdogState.planID, reason: reason)
     }
     completionTask?.cancel()
     completionTask = nil
+    fallbackWatchdogTask?.cancel()
+    fallbackWatchdogTask = nil
   }
 
   private func startPlaybackPlan() -> Bool {
@@ -201,7 +233,7 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     } catch {
       BellPlaybackDiagnostics.audioSessionActivationFailed(error)
       print("Failed to start robust bell silence loop: \(error.localizedDescription)")
-      stopPlayback(deactivateSession: true)
+      stopPlayback(deactivateSession: true, invalidatePlan: false)
       return false
     }
   }
@@ -209,14 +241,57 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
   private func scheduleCompletionBell(planID: UUID, remainingSeconds: TimeInterval) {
     completionTask = Task { [weak self] in
       let nanoseconds = UInt64(max(0, remainingSeconds) * 1_000_000_000)
-      try? await Task.sleep(nanoseconds: nanoseconds)
+      do {
+        try await Task.sleep(nanoseconds: nanoseconds)
+      } catch {
+        return
+      }
+      guard !Task.isCancelled else { return }
 
       await MainActor.run {
-        guard let self, !Task.isCancelled, self.targetPlanID == planID else { return }
+        guard let self else { return }
+        guard self.watchdogState.planID == planID else {
+          BellPlaybackDiagnostics.foregroundFallbackSkipped(reason: "stale_plan")
+          return
+        }
         BellPlaybackDiagnostics.completionPlanFired(planID: planID)
-        self.playCompletionBell()
+        self.playCompletionBell(planID: planID)
       }
     }
+  }
+
+  func ensureCompletionBellAudible(elapsedSeconds: TimeInterval) {
+    guard
+      let targetSecondsFromSessionStart,
+      elapsedSeconds >= TimeInterval(targetSecondsFromSessionStart),
+      elapsedSeconds - TimeInterval(targetSecondsFromSessionStart)
+        <= Self.maximumForegroundFallbackDelaySeconds
+    else { return }
+
+    let planID = watchdogState.planID
+    guard mode.usesAudioPlayback else {
+      startForegroundFallbackIfNeeded(planID: planID, progressSeconds: nil)
+      return
+    }
+
+    if completionBellPlanID == planID, let completionBellItem {
+      guard
+        let completionBellAttemptDate,
+        Date().timeIntervalSince(completionBellAttemptDate)
+          >= Self.foregroundFallbackGraceSeconds
+      else { return }
+
+      evaluateForegroundFallback(
+        planID: planID,
+        player: queuePlayer,
+        item: completionBellItem
+      )
+      return
+    }
+
+    completionTask?.cancel()
+    completionTask = nil
+    playCompletionBell(planID: planID)
   }
 
   func finishSession() {
@@ -254,24 +329,30 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     BellPlaybackDiagnostics.silentLoopStarted(url: silentAudioURL)
   }
 
-  private func playCompletionBell() {
+  private func playCompletionBell(planID: UUID) {
+    guard watchdogState.planID == planID else {
+      BellPlaybackDiagnostics.foregroundFallbackSkipped(reason: "stale_plan")
+      return
+    }
+
     completionTask?.cancel()
     completionTask = nil
-    targetPlanID = UUID()
     playerLooper?.disableLooping()
     playerLooper = nil
 
     guard let soundURL = SoundManager.soundURL else {
       BellPlaybackDiagnostics.finalBellMissingSound()
       print("Could not find bell sound file for robust playback")
-      stopPlayback(deactivateSession: true)
+      stopPlayback(deactivateSession: true, invalidatePlan: false)
+      startForegroundFallbackIfNeeded(planID: planID, progressSeconds: nil)
       return
     }
 
     guard let queuePlayer else {
       BellPlaybackDiagnostics.finalBellQueueUnavailable()
       print("Could not play robust completion bell because the audio queue was unavailable")
-      stopPlayback(deactivateSession: true)
+      stopPlayback(deactivateSession: true, invalidatePlan: false)
+      startForegroundFallbackIfNeeded(planID: planID, progressSeconds: nil)
       return
     }
 
@@ -279,18 +360,22 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     guard Self.replaceQueueContents(with: bellItem, in: queuePlayer) else {
       BellPlaybackDiagnostics.finalBellQueueTransitionFailed()
       print("Could not insert robust completion bell into the active audio queue")
-      stopPlayback(deactivateSession: true)
+      stopPlayback(deactivateSession: true, invalidatePlan: false)
+      startForegroundFallbackIfNeeded(planID: planID, progressSeconds: nil)
       return
     }
 
-    observeCompletion(of: bellItem)
+    completionBellItem = bellItem
+    completionBellPlanID = planID
+    completionBellAttemptDate = Date()
+    observeCompletion(of: bellItem, planID: planID)
     queuePlayer.play()
     BellPlaybackDiagnostics.finalBellStarted(
       playerStatus: queuePlayer.status,
       timeControlStatus: queuePlayer.timeControlStatus,
       itemStatus: bellItem.status
     )
-    scheduleFinalBellProgressCheck(player: queuePlayer, item: bellItem)
+    scheduleForegroundFallbackWatchdog(planID: planID, player: queuePlayer, item: bellItem)
   }
 
   @discardableResult
@@ -304,24 +389,42 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     return true
   }
 
-  private func scheduleFinalBellProgressCheck(
+  private func scheduleForegroundFallbackWatchdog(
+    planID: UUID,
     player: AVQueuePlayer,
     item: AVPlayerItem
   ) {
-    Task { [weak self, weak player, weak item] in
-      try? await Task.sleep(for: .seconds(1))
+    fallbackWatchdogTask?.cancel()
+    fallbackWatchdogTask = Task { [weak self, weak player, weak item] in
+      try? await Task.sleep(for: .seconds(Self.foregroundFallbackGraceSeconds))
 
       guard
+        !Task.isCancelled,
         let self,
         let player,
-        let item,
-        self.queuePlayer === player,
-        player.currentItem === item
+        let item
       else { return }
 
+      self.evaluateForegroundFallback(planID: planID, player: player, item: item)
+    }
+  }
+
+  private func evaluateForegroundFallback(
+    planID: UUID,
+    player: AVQueuePlayer?,
+    item: AVPlayerItem
+  ) {
+    let progressSeconds: TimeInterval?
+    if let player,
+      queuePlayer === player,
+      player.currentItem === item,
+      completionBellItem === item,
+      completionBellPlanID == planID
+    {
+      progressSeconds = player.currentTime().seconds
       BellPlaybackDiagnostics.finalBellProgressChecked(
         BellPlaybackDiagnostics.FinalBellPlaybackState(
-          elapsedSeconds: player.currentTime().seconds,
+          elapsedSeconds: progressSeconds ?? .nan,
           playerStatus: player.status.rawValue,
           timeControlStatus: player.timeControlStatus.rawValue,
           itemStatus: item.status.rawValue,
@@ -330,10 +433,46 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
           itemError: item.error?.localizedDescription
         )
       )
+    } else {
+      progressSeconds = nil
     }
+
+    startForegroundFallbackIfNeeded(planID: planID, progressSeconds: progressSeconds)
   }
 
-  private func observeCompletion(of item: AVPlayerItem) {
+  private func startForegroundFallbackIfNeeded(
+    planID: UUID,
+    progressSeconds: TimeInterval?
+  ) {
+    let isActive = applicationIsActive()
+    guard
+      watchdogState.claimFallback(
+        planID: planID,
+        progressSeconds: progressSeconds,
+        minimumConfirmedProgressSeconds: Self.minimumConfirmedBellProgressSeconds,
+        applicationIsActive: isActive
+      )
+    else {
+      let reason: String
+      if planID != watchdogState.planID {
+        reason = "stale_plan"
+      } else if !isActive {
+        reason = "application_inactive"
+      } else if watchdogState.fallbackPlanID == planID {
+        reason = "already_started"
+      } else {
+        reason = "primary_progress_confirmed"
+      }
+      BellPlaybackDiagnostics.foregroundFallbackSkipped(reason: reason)
+      return
+    }
+
+    let didStart = foregroundBellPlayer()
+    watchdogState.recordFallbackPlaybackStart(planID: planID, didStart: didStart)
+    BellPlaybackDiagnostics.foregroundFallbackStarted(didStart: didStart)
+  }
+
+  private func observeCompletion(of item: AVPlayerItem, planID: UUID) {
     if let completionObserver {
       NotificationCenter.default.removeObserver(completionObserver)
     }
@@ -345,17 +484,27 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     ) { [weak self] _ in
       Task { @MainActor in
         BellPlaybackDiagnostics.finalBellEnded()
-        self?.stopPlayback(deactivateSession: true)
+        guard let self else { return }
+        let foregroundFallbackIsPlaying =
+          self.watchdogState.fallbackPlaybackPlanID == planID
+          && self.foregroundBellIsPlaying()
+        self.stopPlayback(deactivateSession: !foregroundFallbackIsPlaying)
       }
     }
   }
 
-  private func stopPlayback(deactivateSession: Bool) {
+  private func stopPlayback(deactivateSession: Bool, invalidatePlan: Bool = true) {
     let hadTask = completionTask != nil
     let hadPlayer = queuePlayer != nil
     completionTask?.cancel()
     completionTask = nil
-    targetPlanID = UUID()
+    fallbackWatchdogTask?.cancel()
+    fallbackWatchdogTask = nil
+    if invalidatePlan {
+      _ = watchdogState.replacePlan()
+      targetSecondsFromSessionStart = nil
+    }
+    clearCompletionBellState()
     playerLooper = nil
     queuePlayer?.pause()
     queuePlayer?.removeAllItems()
@@ -382,6 +531,12 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
         print("Failed to deactivate robust bell audio session: \(error.localizedDescription)")
       }
     }
+  }
+
+  private func clearCompletionBellState() {
+    completionBellItem = nil
+    completionBellPlanID = nil
+    completionBellAttemptDate = nil
   }
 
   private func silentAudioURL() throws -> URL {
@@ -420,5 +575,45 @@ final class BellPlaybackCoordinator: BellPlaybackCoordinating {
     cachedSilentAudioURL = url
     BellPlaybackDiagnostics.silentAudioCreated(url: url)
     return url
+  }
+}
+
+struct CompletionBellWatchdogState {
+  private(set) var planID = UUID()
+  private(set) var fallbackPlanID: UUID?
+  private(set) var fallbackPlaybackPlanID: UUID?
+
+  @discardableResult
+  mutating func replacePlan() -> UUID {
+    planID = UUID()
+    fallbackPlanID = nil
+    fallbackPlaybackPlanID = nil
+    return planID
+  }
+
+  mutating func claimFallback(
+    planID candidatePlanID: UUID,
+    progressSeconds: TimeInterval?,
+    minimumConfirmedProgressSeconds: TimeInterval,
+    applicationIsActive: Bool
+  ) -> Bool {
+    guard candidatePlanID == planID else { return false }
+    guard applicationIsActive else { return false }
+    guard fallbackPlanID != candidatePlanID else { return false }
+
+    if let progressSeconds,
+      progressSeconds.isFinite,
+      progressSeconds >= minimumConfirmedProgressSeconds
+    {
+      return false
+    }
+
+    fallbackPlanID = candidatePlanID
+    return true
+  }
+
+  mutating func recordFallbackPlaybackStart(planID candidatePlanID: UUID, didStart: Bool) {
+    guard candidatePlanID == planID, fallbackPlanID == candidatePlanID, didStart else { return }
+    fallbackPlaybackPlanID = candidatePlanID
   }
 }

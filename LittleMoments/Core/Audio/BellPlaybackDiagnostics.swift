@@ -136,8 +136,12 @@ enum BellPlaybackDiagnostics {
       logger.error("final_bell_queue_transition_failed")
     }
 
-    static func foregroundBellSuppressed() {
-      logger.info("foreground_bell_suppressed")
+    static func foregroundFallbackStarted(didStart: Bool) {
+      logger.info("foreground_fallback_started accepted=\(didStart, privacy: .public)")
+    }
+
+    static func foregroundFallbackSkipped(reason: String) {
+      logger.info("foreground_fallback_skipped reason=\(reason, privacy: .public)")
     }
 
     static func notificationSkipped(reason: String, mode: BellPlaybackMode? = nil) {
@@ -184,7 +188,8 @@ enum BellPlaybackDiagnostics {
     static func finalBellMissingSound() {}
     static func finalBellQueueUnavailable() {}
     static func finalBellQueueTransitionFailed() {}
-    static func foregroundBellSuppressed() {}
+    static func foregroundFallbackStarted(didStart: Bool) {}
+    static func foregroundFallbackSkipped(reason: String) {}
     static func notificationSkipped(reason: String, mode: BellPlaybackMode? = nil) {}
     static func notificationScheduled(remainingSeconds: TimeInterval, mode: BellPlaybackMode) {}
   #endif

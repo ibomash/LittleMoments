@@ -52,6 +52,16 @@ final class TimerViewModelBellPlaybackTests: XCTestCase {
 
     XCTAssertEqual(coordinator.cancelCallCount, 1)
   }
+
+  func testDueScheduledAlertRequestsAudibilityOnce() {
+    timerViewModel.start()
+    timerViewModel.setDurationTarget(seconds: 300)
+
+    timerViewModel.checkScheduledAlert(secondsElapsed: 300)
+    timerViewModel.checkScheduledAlert(secondsElapsed: 301)
+
+    XCTAssertEqual(coordinator.ensureAudibleCalls, [300])
+  }
 }
 
 @MainActor
@@ -59,6 +69,7 @@ private final class SpyBellPlaybackCoordinator: BellPlaybackCoordinating {
   var mode: BellPlaybackMode = .off
   var startCalls: [(startDate: Date, ringBellAtStart: Bool)] = []
   var targetCalls: [(secondsFromSessionStart: Int?, elapsedSeconds: TimeInterval)] = []
+  var ensureAudibleCalls: [TimeInterval] = []
   var finishCallCount = 0
   var cancelCallCount = 0
 
@@ -68,6 +79,10 @@ private final class SpyBellPlaybackCoordinator: BellPlaybackCoordinating {
 
   func setTarget(secondsFromSessionStart: Int?, elapsedSeconds: TimeInterval) {
     targetCalls.append((secondsFromSessionStart, elapsedSeconds))
+  }
+
+  func ensureCompletionBellAudible(elapsedSeconds: TimeInterval) {
+    ensureAudibleCalls.append(elapsedSeconds)
   }
 
   func finishSession() {
