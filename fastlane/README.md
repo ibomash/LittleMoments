@@ -121,6 +121,27 @@ Generate repository overview with Repomix
 
 ----
 
+
+## Mac
+
+### mac build_mac
+
+```sh
+[bundle exec] fastlane mac build_mac
+```
+
+Build the native macOS app
+
+### mac test_mac
+
+```sh
+[bundle exec] fastlane mac test_mac
+```
+
+Run native macOS unit tests
+
+----
+
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 
 More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
