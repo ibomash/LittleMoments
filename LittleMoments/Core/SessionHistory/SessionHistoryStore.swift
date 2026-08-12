@@ -19,9 +19,16 @@ final class SessionHistoryStore {
 
   init(
     modelContainer: ModelContainer? = nil,
-    userDefaults: UserDefaults = .standard
+    userDefaults: UserDefaults = .standard,
+    usesCloudKit: Bool = true
   ) {
-    self.modelContainer = modelContainer ?? SessionHistoryStore.makeDefaultModelContainer()
+    if let modelContainer {
+      self.modelContainer = modelContainer
+    } else if usesCloudKit {
+      self.modelContainer = SessionHistoryStore.makeDefaultModelContainer()
+    } else {
+      self.modelContainer = SessionHistoryStore.makeLocalOnlyModelContainer()
+    }
     self.userDefaults = userDefaults
   }
 
@@ -148,6 +155,18 @@ final class SessionHistoryStore {
       } catch {
         fatalError("SessionHistoryStore: unable to initialize model container: \(error)")
       }
+    }
+  }
+
+  static func makeLocalOnlyModelContainer() -> ModelContainer {
+    do {
+      let configuration = try makeLocalConfiguration()
+      return try ModelContainer(
+        for: SessionHistoryEntry.self,
+        configurations: configuration
+      )
+    } catch {
+      fatalError("SessionHistoryStore: unable to initialize local model container: \(error)")
     }
   }
 

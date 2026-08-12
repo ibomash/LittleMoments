@@ -25,13 +25,15 @@ final class SoundManager {
       return
     }
 
-    // Set the audio session category to playback
-    let audioSession = AVAudioSession.sharedInstance()
-    do {
-      try audioSession.setCategory(.playback)
-    } catch {
-      print("Error setting audio session category: \(error.localizedDescription)")
-    }
+    #if os(iOS)
+      // macOS does not use AVAudioSession; AVAudioPlayer is shared by both apps.
+      let audioSession = AVAudioSession.sharedInstance()
+      do {
+        try audioSession.setCategory(.playback)
+      } catch {
+        print("Error setting audio session category: \(error.localizedDescription)")
+      }
+    #endif
 
     // Create an AVAudioPlayer instance and play the audio file
     if let soundURL {

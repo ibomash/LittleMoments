@@ -3,6 +3,7 @@ excluded:
   - Carthage
   - Pods
   - DerivedData
+  - .build
 
 # Let swift-format own layout
 disabled_rules:

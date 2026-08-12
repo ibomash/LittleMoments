@@ -173,3 +173,18 @@ platform :ios do
     sh "cd .. && repomix"
   end
 end
+
+platform :mac do
+  MAC_DESTINATION = "platform=macOS,arch=arm64".freeze
+  MAC_DERIVED_DATA_PATH = ".build/macos".freeze
+
+  desc "Build the native macOS app"
+  lane :build_mac do
+    sh "cd .. && unset CPATH; xcodebuild build -project LittleMoments.xcodeproj -scheme \"LittleMomentsMac\" -configuration Debug -destination \"#{MAC_DESTINATION}\" -derivedDataPath \"#{MAC_DERIVED_DATA_PATH}\""
+  end
+
+  desc "Run native macOS unit tests"
+  lane :test_mac do
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMomentsMac\" -configuration Debug -destination \"#{MAC_DESTINATION}\" -derivedDataPath \"#{MAC_DERIVED_DATA_PATH}\" -only-testing:LittleMomentsMacTests"
+  end
+end

@@ -27,10 +27,11 @@ let project = Project(
       infoPlist: .file(path: "Little-Moments-Info.plist"),
       sources: [
         "LittleMoments/Core/**",
-        "LittleMoments/Features/**",
+        .glob(
+          "LittleMoments/Features/**",
+          excluding: ["LittleMoments/Features/macOS/**"]
+        ),
         "LittleMoments/App/iOS/**",
-        // Exclude files that are part of the widget extension
-        "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift",
       ],
       resources: ["LittleMoments/Resources/**"],
       entitlements: .file(path: "Little Moments.entitlements"),
@@ -141,6 +142,86 @@ let project = Project(
       ],
       settings: .settings(base: baseSettings)
     ),
+    .target(
+      name: "LittleMomentsMac",
+      destinations: .macOS,
+      product: .app,
+      bundleId: "net.bomash.illya.LittleMoments",
+      deploymentTargets: .macOS("26.0"),
+      infoPlist: .extendingDefault(
+        with: [
+          "CFBundleDisplayName": "Little Moments",
+          "CFBundleName": "Little Moments",
+          "LSApplicationCategoryType": "public.app-category.healthcare-fitness",
+        ]
+      ),
+      sources: [
+        "LittleMoments/App/macOS/**",
+        "LittleMoments/Features/macOS/**",
+        "LittleMoments/Core/Audio/MeditationDuration.swift",
+        "LittleMoments/Core/Audio/SoundManager.swift",
+        "LittleMoments/Core/Session/MeditationSessionController.swift",
+        "LittleMoments/Core/SessionHistory/SessionHistoryEntry.swift",
+        "LittleMoments/Core/SessionHistory/SessionHistoryStore.swift",
+      ],
+      resources: [
+        "LittleMoments/Resources/Assets.xcassets",
+        "LittleMoments/Resources/Sounds/**",
+      ],
+      entitlements: .file(path: "LittleMoments/App/macOS/LittleMomentsMac.entitlements"),
+      dependencies: [
+        .sdk(name: "AppKit", type: .framework),
+        .sdk(name: "AVFoundation", type: .framework),
+        .sdk(name: "SwiftData", type: .framework),
+        .sdk(name: "SwiftUI", type: .framework),
+      ],
+      settings: .settings(
+        base: baseSettings,
+        configurations: [
+          .debug(
+            name: "Debug",
+            settings: [
+              "CODE_SIGN_ENTITLEMENTS": "LittleMoments/App/macOS/LittleMomentsMac.entitlements",
+              "CODE_SIGN_IDENTITY": "Apple Development",
+              "CODE_SIGN_STYLE": "Automatic",
+              "ENABLE_HARDENED_RUNTIME": "YES",
+              "PROVISIONING_PROFILE_SPECIFIER": "",
+              "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "DEBUG",
+            ]
+          ),
+          .release(
+            name: "Release",
+            settings: [
+              "CODE_SIGN_ENTITLEMENTS": "LittleMoments/App/macOS/LittleMomentsMac.entitlements",
+              "CODE_SIGN_IDENTITY": "Apple Development",
+              "CODE_SIGN_STYLE": "Automatic",
+              "ENABLE_HARDENED_RUNTIME": "YES",
+              "PROVISIONING_PROFILE_SPECIFIER": "",
+            ]
+          ),
+        ]
+      )
+    ),
+    .target(
+      name: "LittleMomentsMacTests",
+      destinations: .macOS,
+      product: .unitTests,
+      bundleId: "net.bomash.illya.LittleMomentsMacTests",
+      deploymentTargets: .macOS("26.0"),
+      infoPlist: .default,
+      sources: ["LittleMoments/Tests/MacTests/**"],
+      dependencies: [
+        .target(name: "LittleMomentsMac")
+      ],
+      settings: .settings(
+        base: baseSettings.merging([
+          "CODE_SIGN_IDENTITY": .string("Apple Development"),
+          "CODE_SIGN_STYLE": .string("Automatic"),
+          "PROVISIONING_PROFILE_SPECIFIER": .string(""),
+          "SWIFT_STRICT_CONCURRENCY": .string("minimal"),
+        ]) { $1 }
+      )
+    ),
   ],
   schemes: [
     .scheme(
@@ -175,6 +256,20 @@ let project = Project(
       name: "LittleMomentsWidgetExtension",
       shared: true,
       buildAction: .buildAction(targets: ["LittleMomentsWidgetExtension"]),
+      runAction: .runAction(configuration: .debug),
+      archiveAction: .archiveAction(configuration: .release),
+      profileAction: .profileAction(configuration: .release),
+      analyzeAction: .analyzeAction(configuration: .debug)
+    ),
+    .scheme(
+      name: "LittleMomentsMac",
+      shared: true,
+      buildAction: .buildAction(targets: ["LittleMomentsMac"]),
+      testAction: .targets(
+        ["LittleMomentsMacTests"],
+        configuration: .debug,
+        options: .options(coverage: true, codeCoverageTargets: ["LittleMomentsMac"])
+      ),
       runAction: .runAction(configuration: .debug),
       archiveAction: .archiveAction(configuration: .release),
       profileAction: .profileAction(configuration: .release),
