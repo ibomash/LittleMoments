@@ -33,7 +33,7 @@ let project = Project(
         ),
         "LittleMoments/App/iOS/**",
       ],
-      resources: ["LittleMoments/Resources/**"],
+      resources: ["LittleMoments/Resources/**", "design/icon/Little Moments.icon"],
       entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: [
         .target(name: "LittleMomentsWidgetExtension"),
@@ -43,7 +43,9 @@ let project = Project(
         .sdk(name: "UIKit", type: .framework),
       ],
       settings: .settings(
-        base: baseSettings,
+        base: baseSettings.merging([
+          "ASSETCATALOG_COMPILER_APPICON_NAME": .string("Little Moments")
+        ]) { $1 },
         configurations: [
           .debug(
             name: "Debug",
@@ -167,6 +169,7 @@ let project = Project(
       resources: [
         "LittleMoments/Resources/Assets.xcassets",
         "LittleMoments/Resources/Sounds/**",
+        "design/icon/Little Moments.icon",
       ],
       entitlements: .file(path: "LittleMoments/App/macOS/LittleMomentsMac.entitlements"),
       dependencies: [
@@ -176,7 +179,9 @@ let project = Project(
         .sdk(name: "SwiftUI", type: .framework),
       ],
       settings: .settings(
-        base: baseSettings,
+        base: baseSettings.merging([
+          "ASSETCATALOG_COMPILER_APPICON_NAME": .string("Little Moments")
+        ]) { $1 },
         configurations: [
           .debug(
             name: "Debug",
