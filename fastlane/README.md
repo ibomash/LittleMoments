@@ -95,6 +95,22 @@ Run tests using an Xcode test plan
 
 Build app with Tuist
 
+### ios build_device
+
+```sh
+[bundle exec] fastlane ios build_device
+```
+
+Build app and widget for a generic iOS device
+
+### ios build_simulator
+
+```sh
+[bundle exec] fastlane ios build_simulator
+```
+
+Build app and widget for Simulator without booting a device
+
 ### ios quality_check
 
 ```sh

@@ -32,7 +32,10 @@ let project = Project(
         // Exclude files that are part of the widget extension
         "!LittleMoments/Features/LiveActivity/Views/LiveActivityWidgetBundle.swift",
       ],
-      resources: ["LittleMoments/Resources/**"],
+      resources: [
+        "LittleMoments/Resources/**",
+        "design/icon/Little Moments.icon",
+      ],
       entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: [
         .target(name: "LittleMomentsWidgetExtension"),
@@ -42,7 +45,9 @@ let project = Project(
         .sdk(name: "UIKit", type: .framework),
       ],
       settings: .settings(
-        base: baseSettings,
+        base: baseSettings.merging([
+          "ASSETCATALOG_COMPILER_APPICON_NAME": .string("Little Moments")
+        ]) { $1 },
         configurations: [
           .debug(
             name: "Debug",

@@ -44,7 +44,7 @@ There are many possible directions to take this work. Below are some ideas, with
 - [x] Set up an Apple Developer account to release the app
 - [x] Make a simple "About" screen / update it for the source code location
 - [x] Share via TestFlight
-- [ ] Get a real app icon
+- [x] Add a layered Liquid Glass app icon
 - [x] Change the launch page text
 - Set up a web page? (Privacy policy?)
 - [ ] Go through the app submission process
@@ -121,6 +121,6 @@ Developer notes:
 
 ## Credits
 
-- The initial alpha app icon is from DALL-E. I think it would be great to commission a human artist for a final app icon.
+- The app icon is the layered Icon Composer document at `design/icon/Little Moments.icon`, including a darker Dark appearance. Edit that document in Icon Composer; `Project.swift` includes it as an app resource and selects `Little Moments` as the primary icon for iPhone and iPad. Xcode compiles its platform and appearance variants.
 - I used ChatGPT Plus to help create this (given no prior experience with Swift and SwiftUI).
 - Sound file downloaded from https://freesound.org/people/fauxpress/sounds/42095/

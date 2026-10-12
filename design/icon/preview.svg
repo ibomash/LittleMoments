@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="850" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#293B61"/><stop offset=".30" stop-color="#475B7B"/>
+    <stop offset=".54" stop-color="#8F899E"/><stop offset=".73" stop-color="#D4A699"/>
+    <stop offset=".88" stop-color="#EAC0A3"/><stop offset="1" stop-color="#E7BCA1"/>
+  </linearGradient>
+  <linearGradient id="sun" x1="302" y1="332" x2="344" y2="464" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#FFE0AF"/><stop offset="1" stop-color="#F3B88F"/>
+  </linearGradient>
+  <radialGradient id="warmth">
+    <stop stop-color="#F5C49B" stop-opacity=".20"/>
+    <stop offset="1" stop-color="#F5C49B" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="horizon" x1="150" y1="630" x2="520" y2="1000" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#345A75"/><stop offset="1" stop-color="#244461"/>
+  </linearGradient>
+  <linearGradient id="sweep" x1="740" y1="558" x2="490" y2="1024" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#CAE0DF" stop-opacity=".91"/>
+    <stop offset=".36" stop-color="#91C1CF" stop-opacity=".87"/>
+    <stop offset="1" stop-color="#468CAB" stop-opacity=".96"/>
+  </linearGradient>
+</defs><defs><clipPath id="preview-mask"><path d="M256 0 H768 C954 0 1024 70 1024 256 V768 C1024 954 954 1024 768 1024 H256 C70 1024 0 954 0 768 V256 C0 70 70 0 256 0 Z"/></clipPath></defs><g clip-path="url(#preview-mask)"><g id="01-sky"><rect width="1024" height="1024" fill="url(#sky)"/>
+<ellipse cx="323" cy="398" rx="185" ry="185" fill="url(#warmth)"/></g>
+<g id="02-sun"><circle cx="323" cy="398" r="66" fill="url(#sun)"/></g>
+<g id="03-horizon"><path d="M0 634 C177 616 324 704 507 739 C690 774 870 752 1024 731 L1024 1024 L0 1024 Z" fill="url(#horizon)"/></g>
+<g id="04-foreground"><path d="M0 858 C193 888 359 816 542 719 C715 628 871 555 1024 558 L1024 1024 L0 1024 Z" fill="url(#sweep)"/>
+<path d="M0 858 C193 888 359 816 542 719 C715 628 871 555 1024 558" fill="none" stroke="#DAE9E4" stroke-opacity=".60" stroke-width="3"/></g></g></svg>
