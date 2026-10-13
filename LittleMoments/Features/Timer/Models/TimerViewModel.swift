@@ -26,24 +26,29 @@ class TimerViewModel: ObservableObject {
   // Timestamp of the last cancelSession notification
   private var lastCancelTime: Date?
   private let bellPlaybackCoordinator: BellPlaybackCoordinating
+  private let sessionController: MeditationSessionController
 
   // Running timer
-  private var startDate: Date?
-  var sessionStartDate: Date? { startDate }
+  var sessionStartDate: Date? { sessionController.activeSession?.startDate }
   var timer: Timer?
   var timeElapsedFormatted: String {
     return getTimeElapsedFormatted()
   }
 
   var secondsElapsed: CGFloat {
-    guard let startDate else { return 0 }
-    return -startDate.timeIntervalSinceNow
+    CGFloat(sessionController.elapsed())
   }
 
   // Options for and actually scheduled "end time" alert
   @Published var scheduledAlertOptions: [OneTimeScheduledBellAlert]
   @Published var scheduledAlert: OneTimeScheduledBellAlert? {
     didSet {
+      if sessionController.isRunning {
+        sessionController.setTarget(
+          durationSeconds: scheduledAlert.map { Int($0.targetTimeInSec) }
+        )
+      }
+
       // Update Live Activity when timer duration changes
       if JustNowSettings.shared.enableLiveActivities {
         let targetSeconds: Double? = scheduledAlert.map { Double($0.targetTimeInSec) }
@@ -64,17 +69,11 @@ class TimerViewModel: ObservableObject {
   }
 
   var isDone: Bool {
-    if !hasEndTarget {
-      return false
-    }
-    return scheduledAlert?.isDone(secondsElapsed: secondsElapsed) ?? false
+    sessionController.isDone()
   }
 
   var progress: CGFloat {
-    if !hasEndTarget {
-      return 0.0
-    }
-    return scheduledAlert?.getProgress(secondsElapsed: secondsElapsed) ?? 0.0
+    CGFloat(sessionController.progress())
   }
 
   func getTimeElapsedFormatted() -> String {
@@ -85,15 +84,10 @@ class TimerViewModel: ObservableObject {
   }
 
   static func formatElapsedTime(secondsElapsed: CGFloat, showSeconds: Bool) -> String {
-    let fullSecondsElapsed = Int(secondsElapsed)
-    let minutes = fullSecondsElapsed / 60
-    let seconds = fullSecondsElapsed % 60
-
-    if showSeconds {
-      return String(format: "%d:%02d", minutes, seconds)
-    } else {
-      return String(format: "%d", minutes)
-    }
+    MeditationSessionController.formatElapsed(
+      TimeInterval(secondsElapsed),
+      showSeconds: showSeconds
+    )
   }
 
   var hasCustomDurationTarget: Bool {
@@ -194,8 +188,10 @@ class TimerViewModel: ObservableObject {
 
   func start() {
     timer?.invalidate()
-    startDate = Date()
-    if let startDate {
+    sessionController.start(
+      targetDurationSeconds: scheduledAlert.map { Int($0.targetTimeInSec) }
+    )
+    if let startDate = sessionStartDate {
       bellPlaybackCoordinator.startSession(
         startDate: startDate,
         ringBellAtStart: settings.ringBellAtStart
@@ -219,7 +215,7 @@ class TimerViewModel: ObservableObject {
   }
 
   private func updateBellPlaybackTarget() {
-    guard timer != nil || startDate != nil else { return }
+    guard timer != nil || sessionStartDate != nil else { return }
 
     bellPlaybackCoordinator.setTarget(
       secondsFromSessionStart: scheduledAlert.map { Int($0.targetTimeInSec) },
@@ -239,12 +235,11 @@ class TimerViewModel: ObservableObject {
       return
     }
 
-    let sessionStartDate = sessionStartDateForFinish ?? startDate
+    let sessionStartDate = sessionStartDateForFinish ?? self.sessionStartDate
     guard let sessionStartDate else {
       print("Error: Cannot record session history - startDate is nil")
       return
     }
-
     let endDate = Date()
     guard endDate >= sessionStartDate else {
       print("Error: Cannot record session history - endDate precedes startDate")
@@ -280,8 +275,8 @@ class TimerViewModel: ObservableObject {
 
     // Store the current startDate for Health integration
     if sessionStartDateForFinish == nil {
-      sessionStartDateForFinish = startDate
-      if let startDate = startDate {
+      sessionStartDateForFinish = sessionStartDate
+      if let startDate = sessionStartDate {
         print("Session start date preserved: \(startDate)")
       } else {
         print("Warning: No start date to preserve")
@@ -300,7 +295,7 @@ class TimerViewModel: ObservableObject {
     LiveActivityManager.shared.startActivity(
       sessionName: "Meditation",
       targetTimeInSeconds: targetSeconds,
-      startDate: startDate ?? Date()
+      startDate: sessionStartDate ?? Date()
     )
   }
 
@@ -321,8 +316,12 @@ class TimerViewModel: ObservableObject {
   private var finishObserver: NSObjectProtocol?
   private var cancelObserver: NSObjectProtocol?
 
-  init(bellPlaybackCoordinator: BellPlaybackCoordinating = BellPlaybackCoordinator.shared) {
+  init(
+    bellPlaybackCoordinator: BellPlaybackCoordinating = BellPlaybackCoordinator.shared,
+    sessionController: MeditationSessionController = MeditationSessionController()
+  ) {
     self.bellPlaybackCoordinator = bellPlaybackCoordinator
+    self.sessionController = sessionController
 
     // Initialize scheduledAlertOptions with default values
     self.scheduledAlertOptions = [
@@ -439,7 +438,7 @@ class TimerViewModel: ObservableObject {
     bellPlaybackCoordinator.cancelSession()
     timer?.invalidate()
     timer = nil
-    startDate = nil
+    sessionController.end()
 
     scheduledAlert = nil
 

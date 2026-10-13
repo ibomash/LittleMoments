@@ -23,4 +23,4 @@ Validation: all SVGs parsed as XML and rendered with librsvg. Preview visually i
 
 ## Project integration
 
-`Little Moments.icon` is the canonical app icon resource selected by `Project.swift`. It includes four SVG layers and Dark appearance overrides. The previous raster AppIcon catalog has been removed. The SVGs and previews elsewhere in this folder are design references; edit the `.icon` document for production changes. Feature logic and planning specifications are unchanged.
+`Little Moments.icon` is the canonical app icon resource selected by `Project.swift`. It includes four SVG layers and Dark appearance overrides. The previous raster AppIcon catalog has been removed. The SVGs and previews elsewhere in this folder are design references; edit the `.icon` document for production changes. Both iOS and native macOS targets use this shared icon document.

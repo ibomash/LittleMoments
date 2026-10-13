@@ -53,7 +53,7 @@ Generate Xcode project with Tuist
 [bundle exec] fastlane ios test_unit
 ```
 
-Run unit tests
+Run unit tests (optionally scoped via only_testing:)
 
 ### ios test_ui
 
@@ -134,6 +134,27 @@ CI: build + test on Simulator
 ```
 
 Generate repository overview with Repomix
+
+----
+
+
+## Mac
+
+### mac build_mac
+
+```sh
+[bundle exec] fastlane mac build_mac
+```
+
+Build the native macOS app
+
+### mac test_mac
+
+```sh
+[bundle exec] fastlane mac test_mac
+```
+
+Run native macOS unit tests
 
 ----
 

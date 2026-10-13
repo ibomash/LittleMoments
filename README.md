@@ -121,6 +121,6 @@ Developer notes:
 
 ## Credits
 
-- The app icon is the layered Icon Composer document at `design/icon/Little Moments.icon`, including a darker Dark appearance. Edit that document in Icon Composer; `Project.swift` includes it as an app resource and selects `Little Moments` as the primary icon for iPhone and iPad. Xcode compiles its platform and appearance variants.
+- Both the iPhone/iPad and native macOS apps use `design/icon/Little Moments.icon`, a shared four-layer Icon Composer document with Dark appearance overrides. Edit this document in Icon Composer; the app targets select it through `Project.swift`.
 - I used ChatGPT Plus to help create this (given no prior experience with Swift and SwiftUI).
 - Sound file downloaded from https://freesound.org/people/fauxpress/sounds/42095/
