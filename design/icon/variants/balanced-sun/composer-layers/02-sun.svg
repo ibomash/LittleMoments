@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="850" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#293B61"/><stop offset=".30" stop-color="#475B7B"/>
+    <stop offset=".54" stop-color="#8F899E"/><stop offset=".73" stop-color="#D4A699"/>
+    <stop offset=".88" stop-color="#EAC0A3"/><stop offset="1" stop-color="#E7BCA1"/>
+  </linearGradient>
+  <linearGradient id="sun" x1="285.2" y1="231.2" x2="360.8" y2="468.8" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#FFE0AF"/><stop offset="1" stop-color="#F3B88F"/>
+  </linearGradient>
+  <radialGradient id="warmth">
+    <stop stop-color="#F5C49B"/>
+    <stop offset="1" stop-color="#F5C49B"/>
+  </radialGradient>
+  <linearGradient id="horizon" x1="150" y1="630" x2="520" y2="1000" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#345A75"/><stop offset="1" stop-color="#244461"/>
+  </linearGradient>
+  <linearGradient id="sweep" x1="740" y1="558" x2="490" y2="1024" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#CAE0DF"/>
+    <stop offset=".36" stop-color="#91C1CF"/>
+    <stop offset="1" stop-color="#468CAB"/>
+  </linearGradient>
+</defs><circle cx="323" cy="350" r="118.8" fill="url(#sun)"/></svg>

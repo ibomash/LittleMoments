@@ -71,10 +71,11 @@ platform :ios do
     sh "cd .. && unset CPATH; tuist generate"
   end
 
-  desc "Run unit tests"
-  lane :test_unit do
+  desc "Run unit tests (optionally scoped via only_testing:)"
+  lane :test_unit do |options|
     destination = (ENV["SIM_DESTINATION"] || DEFAULT_SIM_DESTINATION).to_s
-    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"#{destination}\" -only-testing:LittleMomentsTests"
+    selection = (options[:only_testing] || "LittleMomentsTests").to_s
+    sh "cd .. && unset CPATH; xcodebuild test -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"#{destination}\" -only-testing:#{Shellwords.shellescape(selection)}"
   end
 
   desc "Run UI tests"
@@ -102,7 +103,7 @@ platform :ios do
     unknown = targets - ["LittleMomentsTests", "LittleMomentsUITests"]
     UI.user_error!("Unknown targets: #{unknown.join(", ")}") unless unknown.empty?
 
-    test_unit if run_unit
+    test_unit(options) if run_unit
     test_ui if run_ui
   end
 
@@ -124,8 +125,18 @@ platform :ios do
     rescue => e
       UI.important("Tuist build failed, attempting device build via xcodebuild as fallback…")
       # Build for a generic iOS Device to avoid simulator SDK module map issues
-      sh "cd .. && unset CPATH; xcodebuild build -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphoneos -destination \"generic/platform=iOS\""
+      build_device
     end
+  end
+
+  desc "Build app and widget for a generic iOS device"
+  lane :build_device do
+    sh "cd .. && unset CPATH; xcodebuild build -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphoneos -destination \"generic/platform=iOS\" -destination-timeout 15"
+  end
+
+  desc "Build app and widget for Simulator without booting a device"
+  lane :build_simulator do
+    sh "cd .. && unset CPATH; xcodebuild build -project LittleMoments.xcodeproj -scheme \"LittleMoments\" -configuration Debug -sdk iphonesimulator -destination \"generic/platform=iOS Simulator\" -destination-timeout 15"
   end
 
   desc "Format, lint, test, and build"

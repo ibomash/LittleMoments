@@ -19,7 +19,9 @@ final class MacTerminationCoordinator {
   private var model: MacSessionModel?
   private var terminationIsApproved = false
 
-  private init() {}
+  init(model: MacSessionModel? = nil) {
+    self.model = model
+  }
 
   func attach(model: MacSessionModel) {
     self.model = model
@@ -70,9 +72,7 @@ final class MacTerminationCoordinator {
 
     switch alert.runModal() {
     case .alertSecondButtonReturn:
-      model.complete()
-      terminationIsApproved = true
-      return true
+      return completeSessionForTermination()
     case .alertThirdButtonReturn:
       model.cancel()
       terminationIsApproved = true
@@ -80,6 +80,12 @@ final class MacTerminationCoordinator {
     default:
       return false
     }
+  }
+
+  func completeSessionForTermination() -> Bool {
+    guard let model, model.complete() else { return false }
+    terminationIsApproved = true
+    return true
   }
 
   private func requestApplicationTermination() {

@@ -33,7 +33,10 @@ let project = Project(
         ),
         "LittleMoments/App/iOS/**",
       ],
-      resources: ["LittleMoments/Resources/**", "design/icon/Little Moments.icon"],
+      resources: [
+        "LittleMoments/Resources/**",
+        "design/icon/Little Moments.icon",
+      ],
       entitlements: .file(path: "Little Moments.entitlements"),
       dependencies: [
         .target(name: "LittleMomentsWidgetExtension"),

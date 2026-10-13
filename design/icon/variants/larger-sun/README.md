@@ -1,0 +1,1 @@
+Larger-sun variant: diameter 264 (was 132); center (323, 350), raised 48 units on the 1024-unit canvas. Sun gradient and surrounding glow follow the new geometry. Other artwork unchanged. See ../../README.md for Icon Composer setup.

@@ -10,17 +10,28 @@ final class MacSessionModel {
   private(set) var sessionController: MeditationSessionController
   var errorMessage: String?
 
-  private let historyStore: SessionHistoryStore
+  private let saveSession: (Date, Date) throws -> Void
   private let userDefaults: UserDefaults
   @ObservationIgnored private var targetBellTask: Task<Void, Never>?
 
   init(
     sessionController: MeditationSessionController = MeditationSessionController(),
     historyStore: SessionHistoryStore = SessionHistoryStore(usesCloudKit: false),
-    userDefaults: UserDefaults = .standard
+    userDefaults: UserDefaults = .standard,
+    saveSession: ((Date, Date) throws -> Void)? = nil
   ) {
     self.sessionController = sessionController
-    self.historyStore = historyStore
+    self.saveSession =
+      saveSession ?? { startDate, endDate in
+        do {
+          try historyStore.recordCompletedSession(startDate: startDate, endDate: endDate)
+        } catch {
+          // This context belongs to the Mac session model. Discard the failed
+          // insertion so retrying cannot save a duplicate history entry.
+          historyStore.modelContext.rollback()
+          throw error
+        }
+      }
     self.userDefaults = userDefaults
   }
 
@@ -63,22 +74,26 @@ final class MacSessionModel {
     scheduleTargetBell()
   }
 
-  func complete(at endDate: Date = Date()) {
-    guard let session = sessionController.end() else { return }
-    targetBellTask?.cancel()
-    targetBellTask = nil
+  @discardableResult
+  func complete(at endDate: Date = Date()) -> Bool {
+    guard let session = sessionController.activeSession else { return false }
 
     do {
-      try historyStore.recordCompletedSession(
-        startDate: session.startDate,
-        endDate: endDate
-      )
+      try saveSession(session.startDate, endDate)
     } catch {
-      errorMessage = "The session ended, but its history could not be saved."
+      errorMessage = "Your session is still running. Try completing it again to save its history."
+      return false
     }
+
+    sessionController.end()
+    targetBellTask?.cancel()
+    targetBellTask = nil
+    errorMessage = nil
+    return true
   }
 
   func cancel() {
+    errorMessage = nil
     targetBellTask?.cancel()
     targetBellTask = nil
     sessionController.end()

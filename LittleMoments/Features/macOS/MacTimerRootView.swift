@@ -60,7 +60,8 @@ struct MacTimerRootView: View {
         }
       )
     ) {
-      Button("OK") { model.errorMessage = nil }
+      Button("Retry Saving") { model.complete() }
+      Button("Keep Session Running", role: .cancel) { model.errorMessage = nil }
     } message: {
       Text(model.errorMessage ?? "")
     }

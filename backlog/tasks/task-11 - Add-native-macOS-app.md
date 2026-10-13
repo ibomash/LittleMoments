@@ -4,10 +4,12 @@ title: Add native macOS app
 status: Done
 assignee: []
 created_date: '2026-08-11 21:29'
-updated_date: '2026-08-12 02:27'
+updated_date: '2026-10-13 02:25'
 labels:
   - ui
 dependencies: []
+documentation:
+  - doc-28
 priority: high
 ---
 
@@ -43,6 +45,10 @@ Add a native SwiftUI macOS version of Little Moments with one main window, a min
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented a minimal shared MeditationSessionController and kept iOS-only integrations in TimerViewModel. Added separate native macOS app and test targets, desktop-specific SwiftUI views and settings, a narrow AppKit window/termination bridge, local-only Mac session history, Mac app icons, and Fastlane build/test/run support. Manually verified preset selection, session start and completion, settings, guarded close with Keep Open, and idle-window quit in the launched app.
+
+Merge readiness follow-up: resolved main conflicts. Completion now saves before clearing the session; failure preserves the active session and offers Retry Saving. Complete and Quit is blocked until saving succeeds. A failed Mac history insertion is rolled back before retry. Nine Mac tests passed, including four new recovery tests. Local development signing is retained. Cross-device sync remains a separate proposed change.
+
+Validation update: all 131 iOS unit tests passed; the session-history test completed after about 54 seconds. Recovery requirements are documented in doc-28.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
